@@ -12,3 +12,17 @@ fn linux_tray_svg_avoids_filters_qt_rejects() {
     );
     assert!(svg.contains("viewBox"), "icon must remain a valid SVG mark");
 }
+
+#[test]
+fn packaging_uses_the_supplied_spotifast_x_svg() {
+    let root = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
+    let supplied = fs::read(root.join("assets/SpotifastX.svg")).unwrap();
+    assert_eq!(
+        fs::read(root.join("packaging/icons/spotifast.svg")).unwrap(),
+        supplied
+    );
+    assert_eq!(
+        fs::read(root.join("docs/assets/images/logo.svg")).unwrap(),
+        supplied
+    );
+}
