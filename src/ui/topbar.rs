@@ -518,7 +518,7 @@ pub fn show(app: &mut App, ui: &mut egui::Ui) {
                     }
                     response.on_hover_text(gettext(
                         locale,
-                        "Spotifast is offline. Reconnecting automatically when connection returns.",
+                        "Spotifast X is offline. Reconnecting automatically when connection returns.",
                     ));
                 }
                 ui.add_space(4.0);
@@ -533,40 +533,6 @@ pub fn show(app: &mut App, ui: &mut egui::Ui) {
                 .clicked()
                 {
                     app.actions.push(Action::Open(Page::Settings));
-                }
-                if theme::icon_button(
-                    ui,
-                    Icon::AudioLines,
-                    ICON_BUTTON_ICON,
-                    if app.settings.milkdrop_open {
-                        palette.accent
-                    } else {
-                        palette.secondary
-                    },
-                    palette.text,
-                    super::keys::platform_shortcut(
-                        &gettext(locale, "MilkDrop visualiser (Ctrl+Shift+K)"),
-                        &gettext(locale, "MilkDrop visualiser (Cmd+Shift+K)"),
-                    ),
-                )
-                .clicked()
-                {
-                    app.actions.push(Action::ToggleWinampMilkdrop);
-                }
-                if theme::icon_button(
-                    ui,
-                    Icon::Shrink,
-                    ICON_BUTTON_ICON,
-                    palette.secondary,
-                    palette.text,
-                    super::keys::platform_shortcut(
-                        &gettext(locale, "Winamp mini player (Ctrl+M)"),
-                        &gettext(locale, "Winamp mini player (Cmd+Shift+M)"),
-                    ),
-                )
-                .clicked()
-                {
-                    app.actions.push(Action::ToggleWinampWindow);
                 }
                 // A quiet spinner once the app has been at something in the
                 // background for a while, long enough that fast requests

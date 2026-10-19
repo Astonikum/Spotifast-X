@@ -1,6 +1,6 @@
-# Contributing to Spotifast
+# Contributing to Spotifast X
 
-Spotifast is a native Spotify client. Changes should improve the
+Spotifast X is a native Spotify client. Changes should improve the
 desktop app without adding a browser, fallback services, or another backend.
 
 ## Before opening an issue
@@ -16,13 +16,13 @@ project.
 Some boundaries come from Spotify or from upstream libraries:
 
 - Local playback requires Spotify Premium because librespot requires it.
-- Spotify Lossless is not available through librespot. Spotifast will
+- Spotify Lossless is not available through librespot. Spotifast X will
   reconsider it if librespot gains lawful upstream support; proposals that
   depend on bypassing Spotify's DRM are out of scope.
 - Spotify tracks must come from Spotify. Substituting audio from YouTube,
   Piped, `yt-dlp`, or another catalogue is out of scope.
-- Spotifast will not embed a browser engine, add telemetry, or introduce a
-  Spotifast-operated service.
+- Spotifast X will not embed a browser engine, add telemetry, or introduce a
+  Spotifast X-operated service.
 
 [What Spotify Lets a Client Do](docs/_reference/what-spotify-allows.md)
 lists what each of the three surfaces offers and the requests none of them
@@ -82,9 +82,23 @@ implementation and regression tests live in the Copilot Triage repository.
    should be respected, and credentials must never appear in logs. Network
    behaviour belongs in the documentation.
 
+### Interface design
+
+- Preserve the existing visual language and reuse its components, spacing,
+  typography, and theme colours.
+- Support localization for every user-facing string. Follow the existing
+  translation workflow, allow text to expand, and preserve right-to-left support.
+- Support all existing themes, including light, dark, system, and custom colours.
+  Check changes in light and dark themes at narrow and normal window sizes.
+- Keep controls and text to the minimum needed for the task. Use short, clear
+  labels. Do not add UI subtitles or secondary headings, duplicate titles,
+  slogans, taglines, or decorative explanatory copy.
+- Keep documentation concise too. Describe implemented behaviour only; do not
+  invent features, APIs, or instructions to fill an empty section.
+
 ## Pull requests
 
-Keep each pull request to one change. Explain why it belongs in Spotifast,
+Keep each pull request to one change. Explain why it belongs in Spotifast X,
 what changed, and how you tested it. Avoid unrelated formatting, refactors,
 generated prose, and large mechanical rewrites.
 
@@ -185,11 +199,7 @@ Linux needs the development packages listed under
 [Build from source](https://spotifast.rocks/getting-started/#build-from-source); `nix develop`
 provides the complete development environment. The command compatibility test
 also needs `dbus-run-session`, to use a private bus instead of the desktop's.
-MilkDrop builds libprojectM
-from source, so every platform also needs CMake, a C++ compiler, and
-libclang (on Windows, vcpkg with `glew:x64-windows-static` installed and
-`VCPKG_INSTALLATION_ROOT` pointing at it); `--no-default-features` leaves
-MilkDrop out and needs none of that. CI repeats the test suite on Linux,
+CI repeats the test suite on Linux,
 macOS, and Windows. Passing CI is required, but does not replace review
 for correctness, product fit, maintainability, or security.
 
@@ -211,7 +221,7 @@ Translation changes also need `.github/scripts/update-translations.sh --check`,
 using GNU gettext tools with Rust support. Run the script without `--check` when
 translatable source strings change, and review any fuzzy or missing entries in
 the updated PO files. Normal Cargo builds compile the catalogs without gettext
-tools. See [Translating Spotifast](docs/_reference/translating.md) for language
+tools. See [Translating Spotifast X](docs/_reference/translating.md) for language
 coverage and the contributor workflow.
 
 Documentation deployments take their canonical URL from the domain configured

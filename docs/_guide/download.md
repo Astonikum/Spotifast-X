@@ -25,7 +25,7 @@ One download for both Apple Silicon and Intel:
 
 - [Download for Mac]({{ base }}/spotifast-v{{ v }}-macos-universal.dmg)
 
-Open the downloaded file and drag **Spotifast** to **Applications**.
+Open the downloaded file and drag **Spotifast X** to **Applications**.
 
 If you use [Homebrew](https://brew.sh), you can install it with:
 
@@ -35,33 +35,33 @@ brew install --cask crmne/tap/spotifast
 
 ### First open on macOS
 
-Open **Spotifast** from Applications. If your Mac asks whether you want to
+Open **Spotifast X** from Applications. If your Mac asks whether you want to
 open an app downloaded from the internet, choose **Open**.
 
 Starting with 0.8.0, the Mac download passes Apple's security checks. You do
 not need to change security settings or run commands in Terminal to open it.
 
-Quit the old app before opening Spotifast. Your saved settings and sign-ins
+Quit the old app before opening Spotifast X. Your saved settings and sign-ins
 carry over. If an older version reports that its update helper exited before
 it was ready, install the DMG above manually once. The helper changes take
 effect for updates started from 0.9.1 onward.
 
 ## Windows
 
-Download and run the installer. It adds Spotifast to the Start menu and does
+Download and run the installer. It adds Spotifast X to the Start menu and does
 not need an administrator password. Choose the first download for most PCs,
 or the ARM version if your PC uses an ARM processor:
 
 - [Windows installer (most PCs)]({{ base }}/spotifast-v{{ v }}-x86_64-pc-windows-msvc{{ windows_installer }})
 - [Windows installer (ARM PCs)]({{ base }}/spotifast-v{{ v }}-aarch64-pc-windows-msvc{{ windows_installer }})
 {% if windows_installer == ".msi" %}
-The installer is a Windows Installer package (`.msi`). Spotifast installed
+The installer is a Windows Installer package (`.msi`). Spotifast X installed
 with the earlier setup program (`-setup.exe`) moves to it through its own
 updates, or right away when you run the new installer, and keeps its settings,
-its folder and its Start menu entry. Windows then lists one Spotifast under
+its folder and its Start menu entry. Windows then lists one Spotifast X under
 installed apps.
 {% endif %}
-To run Spotifast without an installer, download a ZIP file, extract it, and
+To run Spotifast X without an installer, download a ZIP file, extract it, and
 open `spotifast.exe`. Since 0.13.4, it keeps its settings, state and caches
 in a `spotifast-data` folder next to it, so the folder carries everything
 (see [portable copies](/settings-and-files/#portable-copies)).
@@ -73,7 +73,7 @@ Either way, SmartScreen may warn about an unknown publisher on first run;
 choose **More info**, then **Run anyway**. The Windows files are not signed
 with a publisher certificate, so Windows has no publisher name to show.
 
-Spotifast needs OpenGL 2.0 or newer, which every current Windows graphics
+Spotifast X needs OpenGL 2.0 or newer, which every current Windows graphics
 driver provides. In a virtual machine or remote session that only has the
 Microsoft Basic Display Adapter, it cannot open its window and says so in a
 message that links to this page; install the machine's graphics driver, or
@@ -82,7 +82,7 @@ enable GPU acceleration for the virtual machine.
 To choose which app opens Spotify links, use **Settings → Apps → Default apps**
 in Windows.
 
-Uninstalling while Spotifast runs removes nothing until it is closed. The
+Uninstalling while Spotifast X runs removes nothing until it is closed. The
 installer offers to close it for you; closing it that way ends it at once.
 
 ### Check a Windows download
@@ -107,7 +107,7 @@ as incorrectly detected.
 
 ### Arch Linux
 
-Spotifast is in the AUR, Arch's community package collection. Installing it
+Spotifast X is in the AUR, Arch's community package collection. Installing it
 also adds it to your app launcher:
 
 ```sh
@@ -118,7 +118,7 @@ yay -S spotifast-git      # built from the latest commit
 
 ### Flatpak
 
-Download the [Spotifast Flatpak]({{ base }}/spotifast-v{{ v }}-x86_64.flatpak?flatpak-id=rocks.spotifast.Spotifast).
+Download the [Spotifast X Flatpak]({{ base }}/spotifast-v{{ v }}-x86_64.flatpak?flatpak-id=rocks.spotifast.Spotifast).
 It requires Flatpak and the Freedesktop 25.08 runtime, a set of shared
 components used by Flatpak apps:
 
@@ -153,7 +153,7 @@ FUSE, start it with `--appimage-extract-and-run`.
 
 From the release after 0.13.3, the AppImage updates itself like the portable
 downloads, as long as it sits in a folder of your own, such as
-`~/Applications`: Spotifast replaces the file in place and restarts it. It
+`~/Applications`: Spotifast X replaces the file in place and restarts it. It
 also carries update information, so AppImageUpdate, AppImageLauncher, AM and
 Gear Lever can update it too, downloading only what changed. Copies of 0.13.3
 and earlier need one more manual download.
@@ -189,7 +189,7 @@ environment.systemPackages = [
 
 ### nix-darwin
 
-On macOS, use the same `spotifast` package to install Spotifast as a Mac app:
+On macOS, use the same `spotifast` package to install Spotifast X as a Mac app:
 
 ```nix
 environment.systemPackages = [

@@ -63,8 +63,7 @@ pub fn show(app: &mut App, ui: &mut egui::Ui) {
             if visualizer(app, ui, behind, now.as_ref()) {
                 theme::visualiser_frame(ui.ctx(), app.visualiser_fps());
             }
-            // Its empty space is the visualizer's control, as Winamp's
-            // visualizer was: a click moves to the next mode. The controls
+            // Clicking empty space moves to the next visualizer mode. The controls
             // drawn after it take their own clicks.
             if app.settings.player_bar_vis_click {
                 let empty = ui.interact(
@@ -122,8 +121,8 @@ pub fn show(app: &mut App, ui: &mut egui::Ui) {
 
 /// Draws the chosen spectrum or waveform of the song playing on this
 /// computer across `rect`, in colours drawn from the cover. It reads the
-/// same post-equalizer, pre-volume sound as the mini player's visualizer,
-/// so the volume never moves it. Returns whether it is still moving.
+/// post-equalizer, pre-volume sound, so the volume never moves it.
+/// Returns whether it is still moving.
 fn visualizer(app: &mut App, ui: &egui::Ui, rect: Rect, now: Option<&NowPlaying>) -> bool {
     use crate::settings::PlayerBarVis;
     use crate::vis;
@@ -142,7 +141,7 @@ fn visualizer(app: &mut App, ui: &egui::Ui, rect: Rect, now: Option<&NowPlaying>
                 return false;
             }
             let samples = if sounding {
-                app.winamp.tap.window(vis::WIDE_SAMPLES, vis::LAG)
+                app.audio_tap.window(vis::WIDE_SAMPLES, vis::LAG)
             } else {
                 Vec::new()
             };
@@ -157,9 +156,9 @@ fn visualizer(app: &mut App, ui: &egui::Ui, rect: Rect, now: Option<&NowPlaying>
             if !sounding {
                 return false;
             }
-            // Winamp's scope with a column every eight points or so.
+            // A scope with a column every eight points or so.
             let count = (rect.width() / 8.0).clamp(75.0, 320.0) as usize;
-            let samples = app.winamp.tap.window(count * vis::SCOPE_STEP, vis::LAG);
+            let samples = app.audio_tap.window(count * vis::SCOPE_STEP, vis::LAG);
             waveform(
                 &painter,
                 rect,
@@ -961,7 +960,7 @@ fn extras(app: &mut App, ui: &mut egui::Ui, now: Option<&NowPlaying>, transport_
         )
         .on_hover_text(gettext(
             app.locale,
-            "This device's volume can't be changed from Spotifast",
+            "This device's volume can't be changed from Spotifast X",
         ));
     }
     ui.add_space(4.0);

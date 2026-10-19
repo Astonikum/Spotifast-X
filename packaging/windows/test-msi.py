@@ -6,7 +6,7 @@ Runs on Windows with what build-msi.py needs (WiX 5 and the MSVC tools for
 this machine, which also build a harmless stand-in for spotifast.exe that
 never reaches Spotify). Every package it builds has an identity of its own:
 another upgrade code, link scheme, registry keys, folder and shortcut names,
-so nothing it does can touch a real Spotifast installation. Inno Setup's
+so nothing it does can touch a real Spotifast X installation. Inno Setup's
 ISCC is needed only for the takeover tests, which are skipped without it.
 """
 
@@ -96,7 +96,7 @@ BEGIN
     BLOCK "040904b0"
     BEGIN
       VALUE "FileVersion", "{version}"
-      VALUE "ProductName", "Spotifast test stand-in"
+      VALUE "ProductName", "Spotifast X test stand-in"
     END
   END
   BLOCK "VarFileInfo"
@@ -123,7 +123,7 @@ def build_inno_setup(root, binary):
     """spotifast.iss as it ships, under the test identity."""
     script = (HERE / "spotifast.iss").read_text(encoding="utf-8-sig")
     for old, new in (
-        ('#define AppName "Spotifast"', f'#define AppName "{IDENTITY}"'),
+        ('#define AppName "Spotifast X"', f'#define AppName "{IDENTITY}"'),
         ('#define AppIdentity "Spotifast"', f'#define AppIdentity "{IDENTITY}"'),
         ("AppId={{FCED1EA0-EBF5-4C32-BA3B-A3AD724BACC3}", "AppId={" + INNO_APP_ID),
         ("Spotifast.spotify", f"{IDENTITY}.spotify"),
@@ -231,7 +231,7 @@ class PackageTest(unittest.TestCase):
 
     def setUp(self):
         # A space, as in most real profile paths, exercises the quoting.
-        self.folder = self.root / uuid.uuid4().hex / "Spotifast Test"
+        self.folder = self.root / uuid.uuid4().hex / "Spotifast X Test"
         self.processes = []
         self.logs = []
         self.addCleanup(self.clean_up)
@@ -382,14 +382,14 @@ class PackageTest(unittest.TestCase):
         handle = self.hold(held / "helper.exe")
         mine = self.folder / "notes"
         mine.mkdir()
-        (mine / "keep.txt").write_text("not Spotifast's")
+        (mine / "keep.txt").write_text("not Spotifast X's")
         (self.folder / ".spotifast-update-file").write_text("not a folder")
         (self.folder / ".spotifast-updater").mkdir()
         self.assertSucceeded(self.uninstall(FIRST))
         self.assertRemoved()
         self.assertFalse(cleared.exists())
         self.assertEqual({path.name for path in held.rglob("*")}, {"helper.exe"})
-        self.assertEqual((mine / "keep.txt").read_text(), "not Spotifast's")
+        self.assertEqual((mine / "keep.txt").read_text(), "not Spotifast X's")
         self.assertTrue((self.folder / ".spotifast-update-file").is_file())
         self.assertTrue((self.folder / ".spotifast-updater").is_dir())
         handle.close()

@@ -46,10 +46,6 @@
               (rust-bin.fromRustupToolchainFile ./rust-toolchain.toml)
               rust-analyzer
               pkg-config
-              # libprojectM (MilkDrop) is built from source by CMake, and its
-              # bindings by bindgen, which needs libclang.
-              cmake
-              rustPlatform.bindgenHook
             ]
             ++ lib.optionals stdenv.hostPlatform.isDarwin [
               apple-sdk
@@ -120,24 +116,13 @@
                 pname = "spotifast";
                 version = (pkgs.lib.importTOML ./Cargo.toml).package.version;
                 src = self;
+                # Refresh after dependency removal with nix build .#default on a Nix host.
                 hash = "sha256-Zl7eufVaXpmWUMnZOGZXN4eZJaN/BLFifWvgIBBkhBY=";
               };
-              # projectm-sys only searches lib, while CMake may otherwise install to lib64.
-              postPatch = ''
-                substituteInPlace "$cargoDepsCopy"/source-git-*/projectm-sys-*/build.rs \
-                  --replace-fail \
-                  '.define("BUILD_SHARED_LIBS", build_shared_libs)' \
-                  '.define("CMAKE_INSTALL_LIBDIR", "lib").define("BUILD_SHARED_LIBS", build_shared_libs)'
-              '';
-
               nativeBuildInputs =
                 with pkgs;
                 [
                   pkg-config
-                  # libprojectM (MilkDrop) is built from source by CMake, and
-                  # its bindings by bindgen, which needs libclang.
-                  cmake
-                  rustPlatform.bindgenHook
                 ]
                 ++ pkgs.lib.optionals pkgs.stdenv.hostPlatform.isLinux [ makeWrapper ]
                 ++ pkgs.lib.optionals pkgs.stdenv.hostPlatform.isDarwin [
@@ -153,10 +138,6 @@
                   [
                     alsa-lib
                     libpulseaudio
-                    # libprojectM links OpenGL directly and its GL loader needs
-                    # X11 headers while it is built.
-                    libGL
-                    libx11
                   ]
                 )
                 ++ pkgs.lib.optionals pkgs.stdenv.hostPlatform.isDarwin [ pkgs.apple-sdk ];
@@ -176,7 +157,7 @@
                     --prefix LD_LIBRARY_PATH : ${pkgs.lib.makeLibraryPath runtimeLibs}
                 ''
                 + pkgs.lib.optionalString pkgs.stdenv.hostPlatform.isDarwin ''
-                  rcodesign sign "$out/Applications/Spotifast.app"
+                  rcodesign sign "$out/Applications/Spotifast X.app"
                 '';
 
               postInstall =
@@ -191,7 +172,7 @@
                     $out/share/spotifast/omarchy/spotifast-theme
                 ''
                 + pkgs.lib.optionalString pkgs.stdenv.hostPlatform.isDarwin ''
-                  app="$out/Applications/Spotifast.app/Contents"
+                  app="$out/Applications/Spotifast X.app/Contents"
                   mkdir -p "$app/MacOS" "$app/Resources"
                   executable=Spotifast
                   identifier=rocks.spotifast.Spotifast

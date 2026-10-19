@@ -692,7 +692,7 @@ pub fn table(app: &mut App, ui: &mut egui::Ui, table: Table<'_>) {
             &gettext(locale, "You're offline"),
             &gettext(
                 locale,
-                "Spotifast will reconnect automatically when your connection returns.",
+                "Spotifast X will reconnect automatically when your connection returns.",
             ),
         );
         return;
@@ -1694,7 +1694,7 @@ pub fn playlist(app: &mut App, ui: &mut egui::Ui, id: &str) {
                     &gettext(app.locale, "You're offline"),
                     &gettext(
                         app.locale,
-                        "Spotifast will reconnect automatically when your connection returns.",
+                        "Spotifast X will reconnect automatically when your connection returns.",
                     ),
                 );
                 return;
@@ -1830,7 +1830,7 @@ pub fn playlist(app: &mut App, ui: &mut egui::Ui, id: &str) {
                     &gettext(app.locale, "You're offline"),
                     &gettext(
                         app.locale,
-                        "Spotifast will reconnect automatically when your connection returns.",
+                        "Spotifast X will reconnect automatically when your connection returns.",
                     ),
                 );
             } else {
@@ -1856,7 +1856,7 @@ pub fn playlist(app: &mut App, ui: &mut egui::Ui, id: &str) {
                     &gettext(app.locale, "You're offline"),
                     &gettext(
                         app.locale,
-                        "Spotifast will reconnect automatically when your connection returns.",
+                        "Spotifast X will reconnect automatically when your connection returns.",
                     ),
                 );
             } else {
@@ -1920,7 +1920,7 @@ pub fn album(app: &mut App, ui: &mut egui::Ui, id: &str) {
                     &gettext(app.locale, "You're offline"),
                     &gettext(
                         app.locale,
-                        "Spotifast will reconnect automatically when your connection returns.",
+                        "Spotifast X will reconnect automatically when your connection returns.",
                     ),
                 );
                 return;
@@ -2036,7 +2036,7 @@ pub fn album(app: &mut App, ui: &mut egui::Ui, id: &str) {
                     &gettext(app.locale, "You're offline"),
                     &gettext(
                         app.locale,
-                        "Spotifast will reconnect automatically when your connection returns.",
+                        "Spotifast X will reconnect automatically when your connection returns.",
                     ),
                 );
             } else {
@@ -2062,7 +2062,7 @@ pub fn album(app: &mut App, ui: &mut egui::Ui, id: &str) {
                     &gettext(app.locale, "You're offline"),
                     &gettext(
                         app.locale,
-                        "Spotifast will reconnect automatically when your connection returns.",
+                        "Spotifast X will reconnect automatically when your connection returns.",
                     ),
                 );
             } else {
@@ -2309,7 +2309,7 @@ pub fn liked(app: &mut App, ui: &mut egui::Ui) {
             &gettext(app.locale, "You're offline"),
             &gettext(
                 app.locale,
-                "Spotifast will reconnect automatically when your connection returns.",
+                "Spotifast X will reconnect automatically when your connection returns.",
             ),
         );
         return;

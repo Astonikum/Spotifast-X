@@ -1,14 +1,14 @@
-# Simplified Chinese translation of the Spotifast navigation pilot.
-# Distributed under the same MIT license as Spotifast.
+# Simplified Chinese translation of the Spotifast X navigation pilot.
+# Distributed under the same MIT license as Spotifast X.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Spotifast\n"
+"Project-Id-Version: Spotifast X\n"
 "Report-Msgid-Bugs-To: https://github.com/crmne/spotifast/issues/new?"
 "template=translation.yml\n"
 "POT-Creation-Date: 2026-10-17 22:02+0200\n"
 "PO-Revision-Date: 2026-09-09 13:30+0000\n"
-"Last-Translator: Spotifast contributors\n"
+"Last-Translator: Spotifast X contributors\n"
 "Language-Team: Simplified Chinese\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
@@ -32,12 +32,6 @@ msgstr "播放 {name}"
 #: src/ui/collection.rs:2119 src/ui/collection.rs:2336
 msgid "Playlist"
 msgstr "歌单"
-
-#: src/ui/sidebar.rs:312 src/ui/friends.rs:286 src/app.rs:3250 src/app.rs:21233
-#: src/ui/collection.rs:2329 src/ui/home.rs:93 src/ui/keys.rs:264
-#: src/ui/winamp/playlist.rs:653
-msgid "Liked Songs"
-msgstr "已点赞的歌曲"
 
 #: src/ui/sidebar.rs:353
 msgid "Library order"
@@ -138,12 +132,6 @@ msgstr "由你创建"
 #: src/ui/sidebar.rs:1139
 msgid "Search in Your Library"
 msgstr "在音乐库中搜索"
-
-#: src/ui/sidebar.rs:1243 src/app.rs:3311 src/ui/artist.rs:221
-#: src/ui/artist.rs:364 src/ui/home.rs:791 src/ui/library.rs:101
-#: src/ui/search.rs:159 src/ui/search.rs:491 src/ui/winamp/playlist.rs:746
-msgid "Artist"
-msgstr "艺人"
 
 #. Translators: {publisher} is the podcast's publisher.
 #: src/ui/sidebar.rs:1278 src/ui/search.rs:253
@@ -289,8 +277,8 @@ msgid "Mute"
 msgstr "静音"
 
 #: src/ui/player_bar.rs:964
-msgid "This device's volume can't be changed from Spotifast"
-msgstr "无法从 Spotifast 更改此设备的音量"
+msgid "This device's volume can't be changed from Spotifast X"
+msgstr "无法从 Spotifast X 更改此设备的音量"
 
 #: src/ui/player_bar.rs:984 src/ui/devices.rs:369
 msgid "Connect to a device"
@@ -399,8 +387,8 @@ msgstr "当前处于离线状态"
 #: src/ui/collection.rs:2065 src/ui/collection.rs:2312 src/ui/home.rs:34
 #: src/ui/library.rs:262 src/ui/show.rs:69 src/ui/show.rs:115
 #: src/ui/show.rs:145
-msgid "Spotifast will reconnect automatically when your connection returns."
-msgstr "连接恢复后，Spotifast 将自动重新连接。"
+msgid "Spotifast X will reconnect automatically when your connection returns."
+msgstr "连接恢复后，Spotifast X 将自动重新连接。"
 
 #. Translators: Keep {error} unchanged. It is the original failure detail.
 #: src/ui/lyrics.rs:171 src/ui/lyrics.rs:455 src/ui/lyrics.rs:691
@@ -698,8 +686,8 @@ msgid "Restoring proxy settings"
 msgstr "正在恢复代理设置"
 
 #: src/app.rs:1467
-msgid "Couldn't change how Spotifast starts with your computer."
-msgstr "无法更改 Spotifast 随电脑启动的方式。"
+msgid "Couldn't change how Spotifast X starts with your computer."
+msgstr "无法更改 Spotifast X 随电脑启动的方式。"
 
 #. Translators: {name} is the name of a speaker or other playback device.
 #: src/app.rs:2467
@@ -718,12 +706,12 @@ msgstr "{error}原始设置文件保持不变，更改的偏好设置尚未保�
 #. Translators: {version} is a version number such as 1.4.0.
 #: src/app.rs:2650
 #, rust-format
-msgid "Spotifast {version} is available"
-msgstr "Spotifast {version} 已推出"
+msgid "Spotifast X {version} is available"
+msgstr "Spotifast X {version} 已推出"
 
 #: src/app.rs:2667
-msgid "Spotifast is up to date"
-msgstr "Spotifast 已是最新版本"
+msgid "Spotifast X is up to date"
+msgstr "Spotifast X 已是最新版本"
 
 #. Translators: {error} is an error message.
 #: src/app.rs:2675
@@ -757,30 +745,11 @@ msgstr "专辑"
 msgid "Podcast"
 msgstr "播客"
 
-#. Translators: {count} is the number of visualizer presets added.
-#: src/app.rs:3849
-#, rust-format
-msgid "Added {count} MilkDrop preset"
-msgid_plural "Added {count} MilkDrop presets"
-msgstr[0] "已添加 {count} 个 MilkDrop 预设"
-
-#. Translators: {error} is an error message.
-#: src/app.rs:3865
-#, rust-format
-msgid "Couldn't fetch presets: {error}"
-msgstr "无法获取预设：{error}"
-
 #. Translators: {folder} is a folder path and {error} is an error message.
 #: src/app.rs:3998
 #, rust-format
 msgid "Couldn't open {folder}: {error}"
 msgstr "无法打开 {folder}：{error}"
-
-#. Translators: {skin} is the name of a Winamp skin.
-#: src/app.rs:4014
-#, rust-format
-msgid "Added {skin} skin"
-msgstr "已添加皮肤“{skin}”"
 
 #: src/app.rs:4111
 msgid "Proxy applied. Restarting local playback."
@@ -950,8 +919,8 @@ msgid "This song's album is not on Spotify"
 msgstr "这首歌曲所属的专辑不在 Spotify 上"
 
 #: src/app.rs:8226
-msgid "Spotifast cannot open this kind of Spotify link"
-msgstr "Spotifast 无法打开这类 Spotify 链接"
+msgid "Spotifast X cannot open this kind of Spotify link"
+msgstr "Spotifast X 无法打开这类 Spotify 链接"
 
 #: src/app.rs:8474
 msgid "Nothing is playing. Pick something first"
@@ -1064,16 +1033,6 @@ msgstr "已清除 {size} MB 封面图片"
 #, rust-format
 msgid "Couldn't clear artwork: {error}"
 msgstr "无法清除封面图片：{error}"
-
-#: src/app.rs:11756
-msgid "Downloading MilkDrop preset packs"
-msgstr "正在下载 MilkDrop 预设包"
-
-#. Translators: {name} is the name of a visualizer preset pack.
-#: src/app.rs:11790
-#, rust-format
-msgid "Downloading {name} presets"
-msgstr "正在下载 {name} 预设"
 
 #: src/app.rs:12876
 msgid "Couldn't start playback"
@@ -1411,13 +1370,13 @@ msgstr "歌曲之间不插入静音。"
 
 #: src/ui/settings.rs:664
 msgid ""
-"Spotifast hides to the system tray. Quit from the tray menu or with Ctrl+Q."
-msgstr "Spotifast 会隐藏到系统托盘。可通过托盘菜单或 Ctrl+Q 退出。"
+"Spotifast X hides to the system tray. Quit from the tray menu or with Ctrl+Q."
+msgstr "Spotifast X 会隐藏到系统托盘。可通过托盘菜单或 Ctrl+Q 退出。"
 
 #: src/ui/settings.rs:668
 msgid ""
-"Spotifast hides to the system tray. Quit from the tray menu or with Cmd+Q."
-msgstr "Spotifast 会隐藏到系统托盘。可通过托盘菜单或 Cmd+Q 退出。"
+"Spotifast X hides to the system tray. Quit from the tray menu or with Cmd+Q."
+msgstr "Spotifast X 会隐藏到系统托盘。可通过托盘菜单或 Cmd+Q 退出。"
 
 #: src/ui/settings.rs:675
 msgid "Checks GitHub once a day. No personal data is sent."
@@ -1467,10 +1426,10 @@ msgstr "本地文件"
 
 #: src/ui/settings.rs:719
 msgid ""
-"When off, Spotifast lives in the menu bar and leaves Cmd+Tab. Open it from "
+"When off, Spotifast X lives in the menu bar and leaves Cmd+Tab. Open it from "
 "its menu-bar icon."
 msgstr ""
-"关闭后，Spotifast 只留在菜单栏，也不会出现在 Cmd+Tab 中。请从菜单栏图标打开"
+"关闭后，Spotifast X 只留在菜单栏，也不会出现在 Cmd+Tab 中。请从菜单栏图标打开"
 "它。"
 
 #: src/ui/settings.rs:725
@@ -1632,8 +1591,8 @@ msgstr ""
 
 #: src/ui/settings.rs:1226
 msgid ""
-"Draw Spotifast's own title bar and window buttons instead of the desktop's."
-msgstr "使用 Spotifast 自己的标题栏和窗口按钮，而不是桌面环境提供的。"
+"Draw Spotifast X's own title bar and window buttons instead of the desktop's."
+msgstr "使用 Spotifast X 自己的标题栏和窗口按钮，而不是桌面环境提供的。"
 
 #: src/ui/settings.rs:1234
 msgid ""
@@ -1647,14 +1606,6 @@ msgstr "允许点击播放栏的空白区域来切换可视化效果。"
 #: src/ui/settings.rs:1242 src/ui/settings.rs:1927
 msgid "Frame rate"
 msgstr "帧率"
-
-#: src/ui/settings.rs:1245
-msgid ""
-"How often the player bar and mini player visualizers draw. Lower rates use "
-"fewer resources. MilkDrop has its own."
-msgstr ""
-"播放栏和迷你播放器可视化效果的绘制频率。帧率越低占用资源越少。MilkDrop 有单独"
-"的设置。"
 
 #: src/ui/settings.rs:1390
 msgid "Off"
@@ -1705,195 +1656,17 @@ msgstr "未使用代理。"
 msgid "Using the system proxy."
 msgstr "正在使用系统代理。"
 
-#: src/ui/settings.rs:1681
-msgid "Winamp skins"
-msgstr "Winamp 皮肤"
-
-#: src/ui/settings.rs:1682 src/ui/winamp/mod.rs:721 src/ui/winamp/mod.rs:867
-msgid "Always on top"
-msgstr "窗口置顶"
-
-#: src/ui/settings.rs:1683
-msgid "Show Winamp in taskbar"
-msgstr "在任务栏中显示 Winamp"
-
-#: src/ui/settings.rs:1686
-msgid "Mini player"
-msgstr "迷你播放器"
-
-#: src/ui/settings.rs:1690
-msgid ""
-"Use classic Winamp .wsz skins. Press Ctrl+M or click the skin logo to "
-"return. Drop a skin on either window to add it."
-msgstr ""
-"使用经典的 Winamp .wsz 皮肤。按 Ctrl+M 或点击皮肤标志即可返回。将皮肤拖放到任"
-"一窗口即可添加。"
-
-#: src/ui/settings.rs:1694
-msgid ""
-"Use classic Winamp .wsz skins. Press Cmd+Shift+M or click the skin logo to "
-"return. Drop a skin on either window to add it."
-msgstr ""
-"使用经典的 Winamp .wsz 皮肤。按 Cmd+Shift+M 或点击皮肤标志即可返回。将皮肤拖"
-"放到任一窗口即可添加。"
-
-#: src/ui/settings.rs:1700
-msgid "Skin"
-msgstr "皮肤"
-
-#. Translators: {folder} is the path of the skins folder.
-#: src/ui/settings.rs:1704
-#, rust-format
-msgid "Installed skins are in {folder}. Find more at the Winamp Skin Museum."
-msgstr "已安装的皮肤位于 {folder}。可在 Winamp Skin Museum 中找到更多皮肤。"
-
-#: src/ui/settings.rs:1709 src/ui/winamp/mod.rs:708
-msgid "Size"
-msgstr "大小"
-
-#: src/ui/settings.rs:1710
-msgid "Whole-number scaling keeps skin pixels sharp."
-msgstr "按整数倍缩放可使皮肤像素保持清晰。"
-
-#: src/ui/settings.rs:1715
-msgid "Keep the Winamp window above everything else."
-msgstr "让 Winamp 窗口始终位于其他窗口之上。"
-
-#: src/ui/settings.rs:1721 src/ui/winamp/mod.rs:731
-msgid "Show in taskbar"
-msgstr "在任务栏中显示"
-
-#: src/ui/settings.rs:1724
-msgid ""
-"Keep a taskbar button for the mini player. The tray icon stays available "
-"when hidden."
-msgstr "在任务栏中保留迷你播放器的按钮。隐藏后，托盘图标仍然可用。"
-
-#: src/ui/settings.rs:1729
-msgid "Installed skins"
-msgstr "已安装的皮肤"
-
 #: src/ui/settings.rs:1742
 msgid "Switch to it"
 msgstr "切换到此皮肤"
-
-#: src/ui/settings.rs:1755
-msgid "Skin Museum"
-msgstr "Skin Museum"
 
 #: src/ui/settings.rs:1781
 msgid "Random"
 msgstr "随机"
 
-#: src/ui/settings.rs:1820
-#, rust-format
-msgid ""
-"Now showing {skin}. Another one is picked each time the mini player opens."
-msgstr "当前皮肤：{skin}。每次打开迷你播放器都会换一个。"
-
-#: src/ui/settings.rs:1876
-msgid "MilkDrop window"
-msgstr "MilkDrop 窗口"
-
-#: src/ui/settings.rs:1884
-msgid ""
-"A projectM visualiser for local playback. Open it here, from the top bar, "
-"with Ctrl+Shift+K, or from the mini player's V menu. Press ? or F1 for its "
-"shortcuts."
-msgstr ""
-"用于本地播放的 projectM 可视化效果。可在此处、顶部栏、按 Ctrl+Shift+K 或通过"
-"迷你播放器的 V 菜单打开。按 ? 或 F1 查看快捷键。"
-
-#: src/ui/settings.rs:1888
-msgid ""
-"A projectM visualiser for local playback. Open it here, from the top bar, "
-"with Cmd+Shift+K, or from the mini player's V menu. Press ? or F1 for its "
-"shortcuts."
-msgstr ""
-"用于本地播放的 projectM 可视化效果。可在此处、顶部栏、按 Cmd+Shift+K 或通过迷"
-"你播放器的 V 菜单打开。按 ? 或 F1 查看快捷键。"
-
 #: src/ui/settings.rs:1894 src/ui/settings.rs:2073
 msgid "Presets"
 msgstr "预设"
-
-#. Translators: {folder} is the path of the MilkDrop presets folder.
-#: src/ui/settings.rs:1899
-#, rust-format
-msgid ""
-"None yet in {folder}. Add .milk files here. Spotifast downloads presets when "
-"MilkDrop first opens with an empty folder."
-msgstr ""
-"{folder} 中还没有预设。请将 .milk 文件添加到此处。首次打开 MilkDrop 时如果文"
-"件夹为空，Spotifast 会下载预设。"
-
-#. Translators: {folder} is the path of the MilkDrop presets folder.
-#: src/ui/settings.rs:1905
-#, rust-format
-msgid ""
-"One preset in {folder}. Add .milk files here. Spotifast downloads presets "
-"when MilkDrop first opens with an empty folder."
-msgstr ""
-"{folder} 中有 1 个预设。请将 .milk 文件添加到此处。首次打开 MilkDrop 时如果文"
-"件夹为空，Spotifast 会下载预设。"
-
-#. Translators: {count} is the number of presets, {folder} the path of the MilkDrop presets folder.
-#: src/ui/settings.rs:1911
-#, rust-format
-msgid ""
-"{count} preset in {folder}. Add .milk files here. Spotifast downloads "
-"presets when MilkDrop first opens with an empty folder."
-msgid_plural ""
-"{count} presets in {folder}. Add .milk files here. Spotifast downloads "
-"presets when MilkDrop first opens with an empty folder."
-msgstr[0] ""
-"{folder} 中有 {count} 个预设。请将 .milk 文件添加到此处。首次打开 MilkDrop 时"
-"如果文件夹为空，Spotifast 会下载预设。"
-
-#: src/ui/settings.rs:1920
-msgid "Time per preset"
-msgstr "每个预设的时长"
-
-#: src/ui/settings.rs:1923
-msgid "How long each preset plays before the next fades in."
-msgstr "每个预设播放多长时间后淡入下一个。"
-
-#: src/ui/settings.rs:1931
-msgid "Lower rates use fewer resources. Uncapped draws as fast as possible."
-msgstr "帧率越低占用资源越少。“不限制”会尽可能快地绘制。"
-
-#. Translators: {hz} is the screen's refresh rate in hertz.
-#: src/ui/settings.rs:1936
-#, rust-format
-msgid ""
-"Your screen refreshes at {hz} Hz. Higher rates do not add visible frames. "
-"Uncapped draws as fast as possible."
-msgstr ""
-"你的屏幕刷新率为 {hz} Hz，更高的帧率不会增加可见帧数。“不限制”会尽可能快地绘"
-"制。"
-
-#: src/ui/settings.rs:1943
-msgid "Resolution"
-msgstr "分辨率"
-
-#: src/ui/settings.rs:1946
-msgid "Half and Quarter use fewer resources and scale the image back up."
-msgstr "“一半”和“四分之一”占用资源更少，并会将图像放大显示。"
-
-#. Translators: search keywords for the MilkDrop preset download buttons.
-#: src/ui/settings.rs:1953
-msgid "Get presets"
-msgstr "获取预设"
-
-#: src/ui/settings.rs:1991
-msgid "Fetching..."
-msgstr "正在获取..."
-
-#. Translators: {pack} is the name of a MilkDrop preset pack.
-#: src/ui/settings.rs:1994
-#, rust-format
-msgid "Get {pack}"
-msgstr "获取 {pack}"
 
 #: src/ui/settings.rs:2045
 msgctxt "resolution"
@@ -1904,11 +1677,6 @@ msgstr "完整"
 msgctxt "resolution"
 msgid "Half"
 msgstr "一半"
-
-#: src/ui/settings.rs:2047
-msgctxt "resolution"
-msgid "Quarter"
-msgstr "四分之一"
 
 #: src/ui/settings.rs:2061
 msgid "Equalizer"
@@ -2029,8 +1797,8 @@ msgid "In the tray"
 msgstr "在托盘中"
 
 #: src/ui/settings.rs:2377
-msgid "Allow Spotifast in System Settings, General, Login Items."
-msgstr "请在“系统设置”>“通用”>“登录项”中允许 Spotifast。"
+msgid "Allow Spotifast X in System Settings, General, Login Items."
+msgstr "请在“系统设置”>“通用”>“登录项”中允许 Spotifast X。"
 
 #: src/ui/settings.rs:2382
 msgid ""
@@ -2039,8 +1807,8 @@ msgid ""
 msgstr "要在托盘中启动，需要开启“关闭窗口后继续播放音乐”。在此之前会打开窗口。"
 
 #: src/ui/settings.rs:2387
-msgid "Open Spotifast when you log in, with its window or in the tray."
-msgstr "登录时打开 Spotifast，显示窗口或留在托盘中。"
+msgid "Open Spotifast X when you log in, with its window or in the tray."
+msgstr "登录时打开 Spotifast X，显示窗口或留在托盘中。"
 
 #: src/ui/settings.rs:2493
 msgctxt "language"
@@ -2058,16 +1826,6 @@ msgstr "合辑"
 #: src/api/models.rs:298 src/model.rs:848
 msgid "Appears On"
 msgstr "参与作品"
-
-#: src/milkdrop.rs:59
-msgid "Uncapped"
-msgstr "不限制"
-
-#. Translators: A frame rate that matches the display. Keep {rate}.
-#: src/milkdrop.rs:63
-#, rust-format
-msgid "{rate} fps, your screen"
-msgstr "{rate} fps，与屏幕一致"
 
 #: src/model.rs:718 src/model.rs:845
 msgctxt "filter"
@@ -2347,11 +2105,11 @@ msgstr "减少等待 Spotify 的时间"
 
 #: src/ui/dialogs.rs:47
 msgid ""
-"Spotifast's default connection shares Spotify's request limit with other "
+"Spotifast X's default connection shares Spotify's request limit with other "
 "listeners. When it gets busy, loading music and using playback controls can "
 "take longer."
 msgstr ""
-"Spotifast 的默认连接与其他听众共享 Spotify 的请求限额。繁忙时，加载音乐和使用"
+"Spotifast X 的默认连接与其他听众共享 Spotify 的请求限额。繁忙时，加载音乐和使用"
 "播放控制可能需要更长时间。"
 
 #: src/ui/dialogs.rs:48
@@ -2425,9 +2183,9 @@ msgstr "此账户无法在此播放音乐"
 #: src/ui/dialogs.rs:219
 msgid ""
 "Playback needs Spotify Premium. Free accounts can browse and search, but "
-"cannot play music through Spotifast."
+"cannot play music through Spotifast X."
 msgstr ""
-"播放需要 Spotify Premium。免费账户可以浏览和搜索，但无法通过 Spotifast 播放音"
+"播放需要 Spotify Premium。免费账户可以浏览和搜索，但无法通过 Spotifast X 播放音"
 "乐。"
 
 #: src/ui/dialogs.rs:228
@@ -2673,39 +2431,6 @@ msgstr "前往正在播放的艺人"
 msgid "Go to the playing album"
 msgstr "前往正在播放的专辑"
 
-#: src/ui/keys.rs:274
-msgid "Winamp mini player"
-msgstr "Winamp 迷你播放器"
-
-#: src/ui/keys.rs:277
-msgid "MilkDrop, under the mini player"
-msgstr "MilkDrop，位于迷你播放器下方"
-
-#. Translators: Keep the key name F. Translate "or" and "double-click".
-#: src/ui/keys.rs:281
-msgid "F  or  double-click"
-msgstr "F  或  双击"
-
-#: src/ui/keys.rs:282
-msgid "MilkDrop: fill the screen"
-msgstr "MilkDrop：全屏"
-
-#: src/ui/keys.rs:284
-msgid "MilkDrop: next preset"
-msgstr "MilkDrop：下一个预设"
-
-#: src/ui/keys.rs:287
-msgid "MilkDrop: previous preset"
-msgstr "MilkDrop：上一个预设"
-
-#: src/ui/keys.rs:289
-msgid "MilkDrop: keep this preset"
-msgstr "MilkDrop：保持当前预设"
-
-#: src/ui/keys.rs:292
-msgid "MilkDrop: leave full screen, or close"
-msgstr "MilkDrop：退出全屏或关闭"
-
 #. Translators: Keep the key names. Only the word "or" is translated.
 #: src/ui/keys.rs:301
 msgid "Cmd+/ or ?"
@@ -2719,10 +2444,6 @@ msgstr "Ctrl+/ 或 ?"
 #: src/ui/keys.rs:310
 msgid "Close the window"
 msgstr "关闭窗口"
-
-#: src/ui/keys.rs:312 src/ui/winamp/mod.rs:755
-msgid "Quit"
-msgstr "退出"
 
 #: src/ui/library.rs:18
 msgid "No saved albums"
@@ -2790,10 +2511,10 @@ msgstr "使用 Spotify 登录"
 
 #: src/ui/login.rs:136
 msgid ""
-"Sign in through your browser. Spotifast never sees your password. Local "
+"Sign in through your browser. Spotifast X never sees your password. Local "
 "playback needs Spotify Premium."
 msgstr ""
-"通过浏览器登录。Spotifast 永远不会看到你的密码。本地播放需要 Spotify "
+"通过浏览器登录。Spotifast X 永远不会看到你的密码。本地播放需要 Spotify "
 "Premium。"
 
 #: src/ui/login.rs:169
@@ -2803,8 +2524,8 @@ msgstr "代理设置"
 #. Translators: {version} is the app's version number, such as 1.2.0.
 #: src/ui/login.rs:195
 #, rust-format
-msgid "Spotifast {version} • not affiliated with Spotify"
-msgstr "Spotifast {version} • 与 Spotify 无关"
+msgid "Spotifast X {version} • not affiliated with Spotify"
+msgstr "Spotifast X {version} • 与 Spotify 无关"
 
 #: src/ui/mod.rs:476
 msgid "Minimize"
@@ -2926,10 +2647,6 @@ msgstr "请检查拼写，或减少字词。"
 msgid "Connect to the internet to search songs, artists, and playlists."
 msgstr "请连接互联网以搜索歌曲、艺人和播放列表。"
 
-#: src/ui/search.rs:104 src/ui/winamp/playlist.rs:647
-msgid "Search Spotify"
-msgstr "搜索 Spotify"
-
 #: src/ui/search.rs:107
 msgid "Find songs, artists, albums, playlists, and podcasts."
 msgstr "查找歌曲、艺人、专辑、歌单和播客。"
@@ -3028,24 +2745,8 @@ msgstr "想听什么？"
 
 #: src/ui/topbar.rs:521
 msgid ""
-"Spotifast is offline. Reconnecting automatically when connection returns."
-msgstr "Spotifast 处于离线状态。连接恢复后将自动重新连接。"
-
-#: src/ui/topbar.rs:548
-msgid "MilkDrop visualiser (Ctrl+Shift+K)"
-msgstr "MilkDrop 可视化效果 (Ctrl+Shift+K)"
-
-#: src/ui/topbar.rs:549
-msgid "MilkDrop visualiser (Cmd+Shift+K)"
-msgstr "MilkDrop 可视化效果 (Cmd+Shift+K)"
-
-#: src/ui/topbar.rs:563
-msgid "Winamp mini player (Ctrl+M)"
-msgstr "Winamp 迷你播放器 (Ctrl+M)"
-
-#: src/ui/topbar.rs:564
-msgid "Winamp mini player (Cmd+Shift+M)"
-msgstr "Winamp 迷你播放器 (Cmd+Shift+M)"
+"Spotifast X is offline. Reconnecting automatically when connection returns."
+msgstr "Spotifast X 处于离线状态。连接恢复后将自动重新连接。"
 
 #: src/ui/topbar.rs:576
 msgid "Updating your library…"
@@ -3066,8 +2767,8 @@ msgid "Version {version} is available."
 msgstr "版本 {version} 已推出。"
 
 #: src/ui/update.rs:19
-msgid "Update Spotifast"
-msgstr "更新 Spotifast"
+msgid "Update Spotifast X"
+msgstr "更新 Spotifast X"
 
 #: src/ui/update.rs:51
 msgid "Close update"
@@ -3088,8 +2789,8 @@ msgid "Ready to install"
 msgstr "可以安装"
 
 #: src/ui/update.rs:115
-msgid "Music playing on this computer will stop when Spotifast restarts."
-msgstr "Spotifast 重启时，这台电脑上正在播放的音乐将停止。"
+msgid "Music playing on this computer will stop when Spotifast X restarts."
+msgstr "Spotifast X 重启时，这台电脑上正在播放的音乐将停止。"
 
 #: src/ui/update.rs:122
 msgid "Restart to update"
@@ -3110,155 +2811,6 @@ msgstr "重新下载"
 #: src/ui/update.rs:167
 msgid "Download update"
 msgstr "下载更新"
-
-#: src/ui/winamp/equalizer.rs:59
-msgid "Roll the equalizer up"
-msgstr "收起均衡器"
-
-#: src/ui/winamp/equalizer.rs:225
-msgid "Roll the equalizer down"
-msgstr "展开均衡器"
-
-#: src/ui/winamp/mod.rs:435 src/ui/winamp/mod.rs:482 src/ui/winamp/mod.rs:649
-msgid "Back to the big window (Ctrl+M)"
-msgstr "返回大窗口 (Ctrl+M)"
-
-#: src/ui/winamp/mod.rs:436 src/ui/winamp/mod.rs:480 src/ui/winamp/mod.rs:647
-msgid "Back to the big window (Cmd+Shift+M)"
-msgstr "返回大窗口 (Cmd+Shift+M)"
-
-#: src/ui/winamp/mod.rs:514
-msgid "Roll the window down"
-msgstr "展开窗口"
-
-#: src/ui/winamp/mod.rs:681
-msgid "Roll the window up"
-msgstr "收起窗口"
-
-#: src/ui/winamp/mod.rs:746
-msgid "Choose a skin"
-msgstr "选择皮肤"
-
-#: src/ui/winamp/mod.rs:752
-msgid "Big window"
-msgstr "大窗口"
-
-#: src/ui/winamp/mod.rs:885 src/ui/winamp/playlist.rs:735
-#: src/ui/winamp/playlist.rs:740
-msgid "Song info"
-msgstr "歌曲信息"
-
-#: src/ui/winamp/mod.rs:906
-msgid "Size: 2x, 3x, 4x"
-msgstr "大小：2x、3x、4x"
-
-#: src/ui/winamp/mod.rs:925
-msgid "Visualisation"
-msgstr "可视化"
-
-#: src/ui/winamp/mod.rs:929
-msgid "Spectrum analyser"
-msgstr "频谱分析器"
-
-#: src/ui/winamp/mod.rs:930
-msgid "Oscilloscope"
-msgstr "示波器"
-
-#. Translators: The visualiser choice that shows no visualisation.
-#: src/ui/winamp/mod.rs:932
-msgctxt "visualiser"
-msgid "Nothing"
-msgstr "无"
-
-#: src/ui/winamp/mod.rs:1063
-msgid "Play in mono"
-msgstr "以单声道播放"
-
-#: src/ui/winamp/mod.rs:1071
-msgid "Play in stereo"
-msgstr "以立体声播放"
-
-#. Translators: {percent} is a number from 0 to 100, followed by a percent sign.
-#: src/ui/winamp/mod.rs:1162
-#, rust-format
-msgid "Balance: {percent}% left"
-msgstr "声道平衡：左 {percent}%"
-
-#. Translators: {percent} is a number from 0 to 100, followed by a percent sign.
-#: src/ui/winamp/mod.rs:1167
-#, rust-format
-msgid "Balance: {percent}% right"
-msgstr "声道平衡：右 {percent}%"
-
-#: src/ui/winamp/mod.rs:1170
-msgid "Balance: center"
-msgstr "声道平衡：居中"
-
-#. Translators: {percent} is a number from 0 to 100, followed by a percent sign.
-#: src/ui/winamp/mod.rs:1175
-#, rust-format
-msgid "Volume: {percent}%"
-msgstr "音量：{percent}%"
-
-#. Translators: {position} and {duration} are times such as 2:12, {percent} a number from 0 to 100.
-#: src/ui/winamp/mod.rs:1191
-#, rust-format
-msgid "Seek to: {position}/{duration} ({percent}%)"
-msgstr "跳转到：{position}/{duration} ({percent}%)"
-
-#: src/ui/winamp/mod.rs:1523
-msgid "Open the big window"
-msgstr "打开大窗口"
-
-#: src/ui/winamp/playlist.rs:671
-msgid "Remove selected"
-msgstr "移除所选"
-
-#: src/ui/winamp/playlist.rs:675
-msgid "You can only change this computer's queue."
-msgstr "只能更改这台电脑的播放队列。"
-
-#: src/ui/winamp/playlist.rs:688
-msgid "Remove all"
-msgstr "全部移除"
-
-#: src/ui/winamp/playlist.rs:691
-msgid "You can only clear this computer's queue."
-msgstr "只能清空这台电脑的播放队列。"
-
-#. Translators: Selects every song in the list.
-#: src/ui/winamp/playlist.rs:702
-msgctxt "selection"
-msgid "All"
-msgstr "全选"
-
-#. Translators: Clears the selection of songs in the list.
-#: src/ui/winamp/playlist.rs:704
-msgctxt "selection"
-msgid "None"
-msgstr "全不选"
-
-#. Translators: Selects the songs that are not selected, and clears the rest.
-#: src/ui/winamp/playlist.rs:706
-msgctxt "selection"
-msgid "Invert"
-msgstr "反选"
-
-#: src/ui/winamp/playlist.rs:767
-msgid "Load list"
-msgstr "载入列表"
-
-#: src/ui/winamp/playlist.rs:776
-msgid "No playlists yet"
-msgstr "还没有歌单"
-
-#: src/ui/winamp/playlist.rs:796
-msgid "Save list"
-msgstr "保存列表"
-
-#: src/ui/winamp/playlist.rs:798
-msgid "Save the queue as a new playlist"
-msgstr "将播放队列保存为新歌单"
 
 #. Translators: A length of time, abbreviated. Keep {hours} and {minutes}.
 #: src/util.rs:28 src/util.rs:47
@@ -3408,29 +2960,29 @@ msgid "On Wayland, use your desktop's Keep Above shortcut or window rule."
 msgstr "在 Wayland 上，请使用桌面环境的“保持在最上层”快捷键或窗口规则。"
 
 #: src/window.rs:39
-msgid "Spotifast cannot open its window"
-msgstr "Spotifast 无法打开窗口"
+msgid "Spotifast X cannot open its window"
+msgstr "Spotifast X 无法打开窗口"
 
 #: src/window.rs:45
 msgid ""
-"On Windows on ARM, the OpenGL that Spotifast draws with comes from "
+"On Windows on ARM, the OpenGL that Spotifast X draws with comes from "
 "Microsoft's OpenCL, OpenGL & Vulkan Compatibility Pack. Open its Microsoft "
 "Store page to install or repair it?"
 msgstr ""
-"在 ARM 版 Windows 上，Spotifast 用于绘制界面的 OpenGL 由 Microsoft 的 "
+"在 ARM 版 Windows 上，Spotifast X 用于绘制界面的 OpenGL 由 Microsoft 的 "
 "OpenCL, OpenGL & Vulkan Compatibility Pack 提供。要打开其 Microsoft Store 页"
 "面以安装或修复吗？"
 
 #. Translators: Keep {url} exactly as written. It becomes the address
-#. of the Spotifast download page.
+#. of the Spotifast X download page.
 #: src/window.rs:55
 #, rust-format
 msgid ""
-"Spotifast needs a graphics driver with OpenGL 2.0 or newer, and this PC or "
+"Spotifast X needs a graphics driver with OpenGL 2.0 or newer, and this PC or "
 "virtual machine does not provide one. Install the graphics driver, or turn "
 "on GPU acceleration for the virtual machine. Open {url} to read more?"
 msgstr ""
-"Spotifast 需要支持 OpenGL 2.0 或更高版本的显卡驱动程序，而这台电脑或虚拟机没"
+"Spotifast X 需要支持 OpenGL 2.0 或更高版本的显卡驱动程序，而这台电脑或虚拟机没"
 "有提供。请安装显卡驱动程序，或为虚拟机开启 GPU 加速。要打开 {url} 了解更多"
 "吗？"
 

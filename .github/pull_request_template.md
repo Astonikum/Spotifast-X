@@ -1,6 +1,6 @@
 ## Why
 
-What user problem does this solve, and why does it belong in Spotifast?
+What user problem does this solve, and why does it belong in Spotifast X?
 
 ## What changed
 

@@ -1,14 +1,14 @@
 ---
 title: Privacy
-description: What Spotifast stores on your computer, what it sends and to whom, and what it never collects.
+description: What Spotifast X stores on your computer, what it sends and to whom, and what it never collects.
 nav_order: 4
 ---
 
-Spotifast is a desktop app that runs entirely on your computer. It has no
+Spotifast X is a desktop app that runs entirely on your computer. It has no
 account of its own, no server, no telemetry, no analytics, and no advertising.
 Its author receives nothing about you or how you use it.
 
-This page covers the Spotifast app, version 0.8.0 and later. Earlier versions
+This page covers the Spotifast X app, version 0.8.0 and later. Earlier versions
 kept sign-ins in files instead of the system credential store; update to a
 current release.
 
@@ -19,10 +19,10 @@ current release.
   Credential Manager on Windows, Keychain on macOS, and Secret Service on
   Linux. On Windows a copy encrypted for your Windows account also stays in
   the data folder, for when Credential Manager loses it. Your Spotify
-  password never passes through Spotifast; you sign in on Spotify's own
+  password never passes through Spotifast X; you sign in on Spotify's own
   pages. A proxy password, if you set one, uses the same store.
 - **Settings and history.** Settings, window positions, recent plays, the
-  last session, skins, themes and MilkDrop presets live in the config
+  last session and themes live in the config
   directory. A copy started from the Windows ZIP keeps them, its state and
   its caches in `spotifast-data` next to it, so anyone who can read that
   folder, on a shared USB drive say, can read them.
@@ -38,7 +38,7 @@ cached library metadata: playlists, Home and Liked Songs.
 
 ## What is sent, and to whom
 
-Spotifast connects only to the services below.
+Spotifast X connects only to the services below.
 
 - **Spotify.** Sign-in, your library, search, playlists, playback and Spotify
   Connect all go to Spotify, under your account. Spotify's own
@@ -55,16 +55,15 @@ Spotifast connects only to the services below.
   cannot, the Web API is asked for the followed artists and their latest
   albums. The shelf is saved in the same Home cache.
 - **LRCLIB.** When the lyrics panel is open and Spotify has no lyrics for the
-  song, Spotifast sends its artist, title, album and length to
+  song, Spotifast X sends its artist, title, album and length to
   [lrclib.net](https://lrclib.net). Nothing identifying you is included.
-- **GitHub.** Once a day, Spotifast asks GitHub for the latest release. You
-  can turn automatic checks off in Settings. Downloading an update, and the
-  first opening of MilkDrop, also fetch files from GitHub. No Spotify data is
-  sent.
-- **Your local network.** Spotifast looks for Spotify Connect speakers over
+- **GitHub.** Once a day, Spotifast X asks GitHub for the latest release. You
+  can turn automatic checks off in Settings. Downloading an update also fetches files from GitHub.
+  No Spotify data is sent.
+- **Your local network.** Spotifast X looks for Spotify Connect speakers over
   mDNS and talks to the ones you choose.
 
-Links you open from the app, such as the Winamp Skin Museum or this website,
+Links you open from the app, such as this website,
 open in your browser.
 
 ## This website

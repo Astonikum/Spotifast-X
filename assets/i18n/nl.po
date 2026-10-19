@@ -1,14 +1,14 @@
-# Dutch translation of the Spotifast navigation pilot.
-# Distributed under the same MIT license as Spotifast.
+# Dutch translation of the Spotifast X navigation pilot.
+# Distributed under the same MIT license as Spotifast X.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Spotifast\n"
+"Project-Id-Version: Spotifast X\n"
 "Report-Msgid-Bugs-To: https://github.com/crmne/spotifast/issues/new?"
 "template=translation.yml\n"
 "POT-Creation-Date: 2026-10-17 22:02+0200\n"
 "PO-Revision-Date: 2026-09-09 13:30+0000\n"
-"Last-Translator: Spotifast contributors\n"
+"Last-Translator: Spotifast X contributors\n"
 "Language-Team: Dutch\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
@@ -32,12 +32,6 @@ msgstr "{name} afspelen"
 #: src/ui/collection.rs:2119 src/ui/collection.rs:2336
 msgid "Playlist"
 msgstr "Playlist"
-
-#: src/ui/sidebar.rs:312 src/ui/friends.rs:286 src/app.rs:3250 src/app.rs:21233
-#: src/ui/collection.rs:2329 src/ui/home.rs:93 src/ui/keys.rs:264
-#: src/ui/winamp/playlist.rs:653
-msgid "Liked Songs"
-msgstr "Gelikete nummers"
 
 #: src/ui/sidebar.rs:353
 msgid "Library order"
@@ -138,12 +132,6 @@ msgstr "Door jou"
 #: src/ui/sidebar.rs:1139
 msgid "Search in Your Library"
 msgstr "Zoeken in je bibliotheek"
-
-#: src/ui/sidebar.rs:1243 src/app.rs:3311 src/ui/artist.rs:221
-#: src/ui/artist.rs:364 src/ui/home.rs:791 src/ui/library.rs:101
-#: src/ui/search.rs:159 src/ui/search.rs:491 src/ui/winamp/playlist.rs:746
-msgid "Artist"
-msgstr "Artiest"
 
 #. Translators: {publisher} is the podcast's publisher.
 #: src/ui/sidebar.rs:1278 src/ui/search.rs:253
@@ -293,8 +281,8 @@ msgid "Mute"
 msgstr "Dempen"
 
 #: src/ui/player_bar.rs:964
-msgid "This device's volume can't be changed from Spotifast"
-msgstr "Het volume van dit apparaat kan niet vanuit Spotifast worden gewijzigd"
+msgid "This device's volume can't be changed from Spotifast X"
+msgstr "Het volume van dit apparaat kan niet vanuit Spotifast X worden gewijzigd"
 
 #: src/ui/player_bar.rs:984 src/ui/devices.rs:369
 msgid "Connect to a device"
@@ -403,9 +391,9 @@ msgstr "Je bent offline"
 #: src/ui/collection.rs:2065 src/ui/collection.rs:2312 src/ui/home.rs:34
 #: src/ui/library.rs:262 src/ui/show.rs:69 src/ui/show.rs:115
 #: src/ui/show.rs:145
-msgid "Spotifast will reconnect automatically when your connection returns."
+msgid "Spotifast X will reconnect automatically when your connection returns."
 msgstr ""
-"Spotifast maakt automatisch opnieuw verbinding zodra je verbinding is "
+"Spotifast X maakt automatisch opnieuw verbinding zodra je verbinding is "
 "hersteld."
 
 #. Translators: Keep {error} unchanged. It is the original failure detail.
@@ -709,8 +697,8 @@ msgid "Restoring proxy settings"
 msgstr "Proxyinstellingen worden hersteld"
 
 #: src/app.rs:1467
-msgid "Couldn't change how Spotifast starts with your computer."
-msgstr "Kan niet wijzigen hoe Spotifast met je computer start."
+msgid "Couldn't change how Spotifast X starts with your computer."
+msgstr "Kan niet wijzigen hoe Spotifast X met je computer start."
 
 #. Translators: {name} is the name of a speaker or other playback device.
 #: src/app.rs:2467
@@ -731,12 +719,12 @@ msgstr ""
 #. Translators: {version} is a version number such as 1.4.0.
 #: src/app.rs:2650
 #, rust-format
-msgid "Spotifast {version} is available"
-msgstr "Spotifast {version} is beschikbaar"
+msgid "Spotifast X {version} is available"
+msgstr "Spotifast X {version} is beschikbaar"
 
 #: src/app.rs:2667
-msgid "Spotifast is up to date"
-msgstr "Spotifast is up-to-date"
+msgid "Spotifast X is up to date"
+msgstr "Spotifast X is up-to-date"
 
 #. Translators: {error} is an error message.
 #: src/app.rs:2675
@@ -770,31 +758,11 @@ msgstr "Album"
 msgid "Podcast"
 msgstr "Podcast"
 
-#. Translators: {count} is the number of visualizer presets added.
-#: src/app.rs:3849
-#, rust-format
-msgid "Added {count} MilkDrop preset"
-msgid_plural "Added {count} MilkDrop presets"
-msgstr[0] "{count} MilkDrop-preset toegevoegd"
-msgstr[1] "{count} MilkDrop-presets toegevoegd"
-
-#. Translators: {error} is an error message.
-#: src/app.rs:3865
-#, rust-format
-msgid "Couldn't fetch presets: {error}"
-msgstr "Kan presets niet ophalen: {error}"
-
 #. Translators: {folder} is a folder path and {error} is an error message.
 #: src/app.rs:3998
 #, rust-format
 msgid "Couldn't open {folder}: {error}"
 msgstr "Kan {folder} niet openen: {error}"
-
-#. Translators: {skin} is the name of a Winamp skin.
-#: src/app.rs:4014
-#, rust-format
-msgid "Added {skin} skin"
-msgstr "Skin {skin} toegevoegd"
 
 #: src/app.rs:4111
 msgid "Proxy applied. Restarting local playback."
@@ -968,8 +936,8 @@ msgid "This song's album is not on Spotify"
 msgstr "Het album van dit nummer staat niet op Spotify"
 
 #: src/app.rs:8226
-msgid "Spotifast cannot open this kind of Spotify link"
-msgstr "Spotifast kan dit soort Spotify-link niet openen"
+msgid "Spotifast X cannot open this kind of Spotify link"
+msgstr "Spotifast X kan dit soort Spotify-link niet openen"
 
 #: src/app.rs:8474
 msgid "Nothing is playing. Pick something first"
@@ -1090,16 +1058,6 @@ msgstr "{size} MB aan covers gewist"
 #, rust-format
 msgid "Couldn't clear artwork: {error}"
 msgstr "Kan covers niet wissen: {error}"
-
-#: src/app.rs:11756
-msgid "Downloading MilkDrop preset packs"
-msgstr "MilkDrop-presetpakketten worden gedownload"
-
-#. Translators: {name} is the name of a visualizer preset pack.
-#: src/app.rs:11790
-#, rust-format
-msgid "Downloading {name} presets"
-msgstr "Presets van {name} worden gedownload"
 
 #: src/app.rs:12876
 msgid "Couldn't start playback"
@@ -1451,16 +1409,16 @@ msgstr "Speelt nummers af zonder stilte ertussen."
 
 #: src/ui/settings.rs:664
 msgid ""
-"Spotifast hides to the system tray. Quit from the tray menu or with Ctrl+Q."
+"Spotifast X hides to the system tray. Quit from the tray menu or with Ctrl+Q."
 msgstr ""
-"Spotifast verdwijnt naar het systeemvak. Sluit af via het menu in het "
+"Spotifast X verdwijnt naar het systeemvak. Sluit af via het menu in het "
 "systeemvak of met Ctrl+Q."
 
 #: src/ui/settings.rs:668
 msgid ""
-"Spotifast hides to the system tray. Quit from the tray menu or with Cmd+Q."
+"Spotifast X hides to the system tray. Quit from the tray menu or with Cmd+Q."
 msgstr ""
-"Spotifast verdwijnt naar het systeemvak. Sluit af via het menu in het "
+"Spotifast X verdwijnt naar het systeemvak. Sluit af via het menu in het "
 "systeemvak of met Cmd+Q."
 
 #: src/ui/settings.rs:675
@@ -1517,10 +1475,10 @@ msgstr "Lokale bestanden"
 
 #: src/ui/settings.rs:719
 msgid ""
-"When off, Spotifast lives in the menu bar and leaves Cmd+Tab. Open it from "
+"When off, Spotifast X lives in the menu bar and leaves Cmd+Tab. Open it from "
 "its menu-bar icon."
 msgstr ""
-"Uit: Spotifast staat alleen in de menubalk en verschijnt niet in Cmd+Tab. "
+"Uit: Spotifast X staat alleen in de menubalk en verschijnt niet in Cmd+Tab. "
 "Open het via het symbool in de menubalk."
 
 #: src/ui/settings.rs:725
@@ -1688,9 +1646,9 @@ msgstr ""
 
 #: src/ui/settings.rs:1226
 msgid ""
-"Draw Spotifast's own title bar and window buttons instead of the desktop's."
+"Draw Spotifast X's own title bar and window buttons instead of the desktop's."
 msgstr ""
-"Teken de eigen titelbalk en vensterknoppen van Spotifast in plaats van die "
+"Teken de eigen titelbalk en vensterknoppen van Spotifast X in plaats van die "
 "van de desktop."
 
 #: src/ui/settings.rs:1234
@@ -1708,14 +1666,6 @@ msgstr ""
 #: src/ui/settings.rs:1242 src/ui/settings.rs:1927
 msgid "Frame rate"
 msgstr "Framerate"
-
-#: src/ui/settings.rs:1245
-msgid ""
-"How often the player bar and mini player visualizers draw. Lower rates use "
-"fewer resources. MilkDrop has its own."
-msgstr ""
-"Hoe vaak de visualisaties van de spelerbalk en de minispeler tekenen. Lagere "
-"rates gebruiken minder middelen. MilkDrop heeft een eigen instelling."
 
 #: src/ui/settings.rs:1390
 msgid "Off"
@@ -1766,210 +1716,17 @@ msgstr "Er wordt geen proxy gebruikt."
 msgid "Using the system proxy."
 msgstr "De systeemproxy wordt gebruikt."
 
-#: src/ui/settings.rs:1681
-msgid "Winamp skins"
-msgstr "Winamp-skins"
-
-#: src/ui/settings.rs:1682 src/ui/winamp/mod.rs:721 src/ui/winamp/mod.rs:867
-msgid "Always on top"
-msgstr "Altijd bovenop"
-
-#: src/ui/settings.rs:1683
-msgid "Show Winamp in taskbar"
-msgstr "Winamp in taakbalk tonen"
-
-#: src/ui/settings.rs:1686
-msgid "Mini player"
-msgstr "Minispeler"
-
-#: src/ui/settings.rs:1690
-msgid ""
-"Use classic Winamp .wsz skins. Press Ctrl+M or click the skin logo to "
-"return. Drop a skin on either window to add it."
-msgstr ""
-"Gebruik klassieke Winamp-skins (.wsz). Druk op Ctrl+M of klik op het "
-"skinlogo om terug te gaan. Sleep een skin naar een van beide vensters om hem "
-"toe te voegen."
-
-#: src/ui/settings.rs:1694
-msgid ""
-"Use classic Winamp .wsz skins. Press Cmd+Shift+M or click the skin logo to "
-"return. Drop a skin on either window to add it."
-msgstr ""
-"Gebruik klassieke Winamp-skins (.wsz). Druk op Cmd+Shift+M of klik op het "
-"skinlogo om terug te gaan. Sleep een skin naar een van beide vensters om hem "
-"toe te voegen."
-
-#: src/ui/settings.rs:1700
-msgid "Skin"
-msgstr "Skin"
-
-#. Translators: {folder} is the path of the skins folder.
-#: src/ui/settings.rs:1704
-#, rust-format
-msgid "Installed skins are in {folder}. Find more at the Winamp Skin Museum."
-msgstr ""
-"Geïnstalleerde skins staan in {folder}. Vind er meer in het Winamp Skin "
-"Museum."
-
-#: src/ui/settings.rs:1709 src/ui/winamp/mod.rs:708
-msgid "Size"
-msgstr "Grootte"
-
-#: src/ui/settings.rs:1710
-msgid "Whole-number scaling keeps skin pixels sharp."
-msgstr "Schalen met hele getallen houdt de skinpixels scherp."
-
-#: src/ui/settings.rs:1715
-msgid "Keep the Winamp window above everything else."
-msgstr "Het Winamp-venster boven alle andere houden."
-
-#: src/ui/settings.rs:1721 src/ui/winamp/mod.rs:731
-msgid "Show in taskbar"
-msgstr "Tonen in taakbalk"
-
-#: src/ui/settings.rs:1724
-msgid ""
-"Keep a taskbar button for the mini player. The tray icon stays available "
-"when hidden."
-msgstr ""
-"Houd een taakbalkknop voor de minispeler. Het pictogram in het systeemvak "
-"blijft beschikbaar als die verborgen is."
-
-#: src/ui/settings.rs:1729
-msgid "Installed skins"
-msgstr "Geïnstalleerde skins"
-
 #: src/ui/settings.rs:1742
 msgid "Switch to it"
 msgstr "Overschakelen"
-
-#: src/ui/settings.rs:1755
-msgid "Skin Museum"
-msgstr "Skin Museum"
 
 #: src/ui/settings.rs:1781
 msgid "Random"
 msgstr "Willekeurig"
 
-#: src/ui/settings.rs:1820
-#, rust-format
-msgid ""
-"Now showing {skin}. Another one is picked each time the mini player opens."
-msgstr ""
-"Nu te zien: {skin}. Elke keer dat de minispeler opent, wordt een andere "
-"gekozen."
-
-#: src/ui/settings.rs:1876
-msgid "MilkDrop window"
-msgstr "MilkDrop-venster"
-
-#: src/ui/settings.rs:1884
-msgid ""
-"A projectM visualiser for local playback. Open it here, from the top bar, "
-"with Ctrl+Shift+K, or from the mini player's V menu. Press ? or F1 for its "
-"shortcuts."
-msgstr ""
-"Een projectM-visualisatie voor lokaal afspelen. Open hem hier, via de "
-"bovenste balk, met Ctrl+Shift+K of via het V-menu van de minispeler. Druk "
-"op ? of F1 voor de sneltoetsen."
-
-#: src/ui/settings.rs:1888
-msgid ""
-"A projectM visualiser for local playback. Open it here, from the top bar, "
-"with Cmd+Shift+K, or from the mini player's V menu. Press ? or F1 for its "
-"shortcuts."
-msgstr ""
-"Een projectM-visualisatie voor lokaal afspelen. Open hem hier, via de "
-"bovenste balk, met Cmd+Shift+K of via het V-menu van de minispeler. Druk "
-"op ? of F1 voor de sneltoetsen."
-
 #: src/ui/settings.rs:1894 src/ui/settings.rs:2073
 msgid "Presets"
 msgstr "Presets"
-
-#. Translators: {folder} is the path of the MilkDrop presets folder.
-#: src/ui/settings.rs:1899
-#, rust-format
-msgid ""
-"None yet in {folder}. Add .milk files here. Spotifast downloads presets when "
-"MilkDrop first opens with an empty folder."
-msgstr ""
-"Nog geen in {folder}. Zet hier .milk-bestanden neer. Spotifast downloadt "
-"presets als MilkDrop voor het eerst opent met een lege map."
-
-#. Translators: {folder} is the path of the MilkDrop presets folder.
-#: src/ui/settings.rs:1905
-#, rust-format
-msgid ""
-"One preset in {folder}. Add .milk files here. Spotifast downloads presets "
-"when MilkDrop first opens with an empty folder."
-msgstr ""
-"Eén preset in {folder}. Zet hier .milk-bestanden neer. Spotifast downloadt "
-"presets als MilkDrop voor het eerst opent met een lege map."
-
-#. Translators: {count} is the number of presets, {folder} the path of the MilkDrop presets folder.
-#: src/ui/settings.rs:1911
-#, rust-format
-msgid ""
-"{count} preset in {folder}. Add .milk files here. Spotifast downloads "
-"presets when MilkDrop first opens with an empty folder."
-msgid_plural ""
-"{count} presets in {folder}. Add .milk files here. Spotifast downloads "
-"presets when MilkDrop first opens with an empty folder."
-msgstr[0] ""
-"{count} preset in {folder}. Zet hier .milk-bestanden neer. Spotifast "
-"downloadt presets als MilkDrop voor het eerst opent met een lege map."
-msgstr[1] ""
-"{count} presets in {folder}. Zet hier .milk-bestanden neer. Spotifast "
-"downloadt presets als MilkDrop voor het eerst opent met een lege map."
-
-#: src/ui/settings.rs:1920
-msgid "Time per preset"
-msgstr "Tijd per preset"
-
-#: src/ui/settings.rs:1923
-msgid "How long each preset plays before the next fades in."
-msgstr "Hoe lang elke preset speelt voordat de volgende invloeit."
-
-#: src/ui/settings.rs:1931
-msgid "Lower rates use fewer resources. Uncapped draws as fast as possible."
-msgstr ""
-"Lagere rates gebruiken minder middelen. “Onbeperkt” tekent zo snel mogelijk."
-
-#. Translators: {hz} is the screen's refresh rate in hertz.
-#: src/ui/settings.rs:1936
-#, rust-format
-msgid ""
-"Your screen refreshes at {hz} Hz. Higher rates do not add visible frames. "
-"Uncapped draws as fast as possible."
-msgstr ""
-"Je scherm ververst op {hz} Hz. Hogere rates voegen geen zichtbare frames "
-"toe. “Onbeperkt” tekent zo snel mogelijk."
-
-#: src/ui/settings.rs:1943
-msgid "Resolution"
-msgstr "Resolutie"
-
-#: src/ui/settings.rs:1946
-msgid "Half and Quarter use fewer resources and scale the image back up."
-msgstr ""
-"“Half” en “Kwart” gebruiken minder middelen en schalen het beeld weer op."
-
-#. Translators: search keywords for the MilkDrop preset download buttons.
-#: src/ui/settings.rs:1953
-msgid "Get presets"
-msgstr "Presets ophalen"
-
-#: src/ui/settings.rs:1991
-msgid "Fetching..."
-msgstr "Ophalen..."
-
-#. Translators: {pack} is the name of a MilkDrop preset pack.
-#: src/ui/settings.rs:1994
-#, rust-format
-msgid "Get {pack}"
-msgstr "{pack} ophalen"
 
 #: src/ui/settings.rs:2045
 msgctxt "resolution"
@@ -1980,11 +1737,6 @@ msgstr "Volledig"
 msgctxt "resolution"
 msgid "Half"
 msgstr "Half"
-
-#: src/ui/settings.rs:2047
-msgctxt "resolution"
-msgid "Quarter"
-msgstr "Kwart"
 
 #: src/ui/settings.rs:2061
 msgid "Equalizer"
@@ -2111,8 +1863,8 @@ msgid "In the tray"
 msgstr "In het systeemvak"
 
 #: src/ui/settings.rs:2377
-msgid "Allow Spotifast in System Settings, General, Login Items."
-msgstr "Sta Spotifast toe in Systeeminstellingen, Algemeen, Inlogonderdelen."
+msgid "Allow Spotifast X in System Settings, General, Login Items."
+msgstr "Sta Spotifast X toe in Systeeminstellingen, Algemeen, Inlogonderdelen."
 
 #: src/ui/settings.rs:2382
 msgid ""
@@ -2123,8 +1875,8 @@ msgstr ""
 "sluit’. Tot die tijd opent het venster."
 
 #: src/ui/settings.rs:2387
-msgid "Open Spotifast when you log in, with its window or in the tray."
-msgstr "Open Spotifast als je inlogt, met het venster of in het systeemvak."
+msgid "Open Spotifast X when you log in, with its window or in the tray."
+msgstr "Open Spotifast X als je inlogt, met het venster of in het systeemvak."
 
 #: src/ui/settings.rs:2493
 msgctxt "language"
@@ -2142,16 +1894,6 @@ msgstr "Compilatie"
 #: src/api/models.rs:298 src/model.rs:848
 msgid "Appears On"
 msgstr "Komt voor op"
-
-#: src/milkdrop.rs:59
-msgid "Uncapped"
-msgstr "Onbeperkt"
-
-#. Translators: A frame rate that matches the display. Keep {rate}.
-#: src/milkdrop.rs:63
-#, rust-format
-msgid "{rate} fps, your screen"
-msgstr "{rate} fps, je scherm"
 
 #: src/model.rs:718 src/model.rs:845
 msgctxt "filter"
@@ -2445,11 +2187,11 @@ msgstr "Minder wachten op Spotify"
 
 #: src/ui/dialogs.rs:47
 msgid ""
-"Spotifast's default connection shares Spotify's request limit with other "
+"Spotifast X's default connection shares Spotify's request limit with other "
 "listeners. When it gets busy, loading music and using playback controls can "
 "take longer."
 msgstr ""
-"De standaardverbinding van Spotifast deelt de verzoeklimiet van Spotify met "
+"De standaardverbinding van Spotifast X deelt de verzoeklimiet van Spotify met "
 "andere luisteraars. Als het druk is, kan het laden van muziek en het gebruik "
 "van de afspeelknoppen langer duren."
 
@@ -2529,10 +2271,10 @@ msgstr "Met dit account kun je hier geen muziek afspelen"
 #: src/ui/dialogs.rs:219
 msgid ""
 "Playback needs Spotify Premium. Free accounts can browse and search, but "
-"cannot play music through Spotifast."
+"cannot play music through Spotifast X."
 msgstr ""
 "Afspelen vereist Spotify Premium. Met een Free-account kun je bladeren en "
-"zoeken, maar geen muziek afspelen via Spotifast."
+"zoeken, maar geen muziek afspelen via Spotifast X."
 
 #: src/ui/dialogs.rs:228
 msgid "OK"
@@ -2782,39 +2524,6 @@ msgstr "Ga naar de huidige artiest"
 msgid "Go to the playing album"
 msgstr "Ga naar het huidige album"
 
-#: src/ui/keys.rs:274
-msgid "Winamp mini player"
-msgstr "Winamp-minispeler"
-
-#: src/ui/keys.rs:277
-msgid "MilkDrop, under the mini player"
-msgstr "MilkDrop, onder de minispeler"
-
-#. Translators: Keep the key name F. Translate "or" and "double-click".
-#: src/ui/keys.rs:281
-msgid "F  or  double-click"
-msgstr "F  of  dubbelklikken"
-
-#: src/ui/keys.rs:282
-msgid "MilkDrop: fill the screen"
-msgstr "MilkDrop: volledig scherm"
-
-#: src/ui/keys.rs:284
-msgid "MilkDrop: next preset"
-msgstr "MilkDrop: volgende preset"
-
-#: src/ui/keys.rs:287
-msgid "MilkDrop: previous preset"
-msgstr "MilkDrop: vorige preset"
-
-#: src/ui/keys.rs:289
-msgid "MilkDrop: keep this preset"
-msgstr "MilkDrop: deze preset houden"
-
-#: src/ui/keys.rs:292
-msgid "MilkDrop: leave full screen, or close"
-msgstr "MilkDrop: volledig scherm verlaten of sluiten"
-
 #. Translators: Keep the key names. Only the word "or" is translated.
 #: src/ui/keys.rs:301
 msgid "Cmd+/ or ?"
@@ -2828,10 +2537,6 @@ msgstr "Ctrl+/ of ?"
 #: src/ui/keys.rs:310
 msgid "Close the window"
 msgstr "Venster sluiten"
-
-#: src/ui/keys.rs:312 src/ui/winamp/mod.rs:755
-msgid "Quit"
-msgstr "Afsluiten"
 
 #: src/ui/library.rs:18
 msgid "No saved albums"
@@ -2899,10 +2604,10 @@ msgstr "Inloggen met Spotify"
 
 #: src/ui/login.rs:136
 msgid ""
-"Sign in through your browser. Spotifast never sees your password. Local "
+"Sign in through your browser. Spotifast X never sees your password. Local "
 "playback needs Spotify Premium."
 msgstr ""
-"Log in via je browser. Spotifast ziet je wachtwoord nooit. Lokaal afspelen "
+"Log in via je browser. Spotifast X ziet je wachtwoord nooit. Lokaal afspelen "
 "vereist Spotify Premium."
 
 #: src/ui/login.rs:169
@@ -2912,8 +2617,8 @@ msgstr "Proxyinstellingen"
 #. Translators: {version} is the app's version number, such as 1.2.0.
 #: src/ui/login.rs:195
 #, rust-format
-msgid "Spotifast {version} • not affiliated with Spotify"
-msgstr "Spotifast {version} • niet verbonden aan Spotify"
+msgid "Spotifast X {version} • not affiliated with Spotify"
+msgstr "Spotifast X {version} • niet verbonden aan Spotify"
 
 #: src/ui/mod.rs:476
 msgid "Minimize"
@@ -3038,10 +2743,6 @@ msgstr ""
 "Maak verbinding met internet om nummers, artiesten en afspeellijsten te "
 "zoeken."
 
-#: src/ui/search.rs:104 src/ui/winamp/playlist.rs:647
-msgid "Search Spotify"
-msgstr "Zoeken in Spotify"
-
 #: src/ui/search.rs:107
 msgid "Find songs, artists, albums, playlists, and podcasts."
 msgstr "Vind nummers, artiesten, albums, playlists en podcasts."
@@ -3141,26 +2842,10 @@ msgstr "Wat wil je afspelen?"
 
 #: src/ui/topbar.rs:521
 msgid ""
-"Spotifast is offline. Reconnecting automatically when connection returns."
+"Spotifast X is offline. Reconnecting automatically when connection returns."
 msgstr ""
-"Spotifast is offline. Er wordt automatisch opnieuw verbinding gemaakt zodra "
+"Spotifast X is offline. Er wordt automatisch opnieuw verbinding gemaakt zodra "
 "de verbinding is hersteld."
-
-#: src/ui/topbar.rs:548
-msgid "MilkDrop visualiser (Ctrl+Shift+K)"
-msgstr "MilkDrop-visualisatie (Ctrl+Shift+K)"
-
-#: src/ui/topbar.rs:549
-msgid "MilkDrop visualiser (Cmd+Shift+K)"
-msgstr "MilkDrop-visualisatie (Cmd+Shift+K)"
-
-#: src/ui/topbar.rs:563
-msgid "Winamp mini player (Ctrl+M)"
-msgstr "Winamp-minispeler (Ctrl+M)"
-
-#: src/ui/topbar.rs:564
-msgid "Winamp mini player (Cmd+Shift+M)"
-msgstr "Winamp-minispeler (Cmd+Shift+M)"
 
 #: src/ui/topbar.rs:576
 msgid "Updating your library…"
@@ -3181,8 +2866,8 @@ msgid "Version {version} is available."
 msgstr "Versie {version} is beschikbaar."
 
 #: src/ui/update.rs:19
-msgid "Update Spotifast"
-msgstr "Spotifast bijwerken"
+msgid "Update Spotifast X"
+msgstr "Spotifast X bijwerken"
 
 #: src/ui/update.rs:51
 msgid "Close update"
@@ -3203,8 +2888,8 @@ msgid "Ready to install"
 msgstr "Klaar om te installeren"
 
 #: src/ui/update.rs:115
-msgid "Music playing on this computer will stop when Spotifast restarts."
-msgstr "Muziek die op deze computer speelt, stopt als Spotifast herstart."
+msgid "Music playing on this computer will stop when Spotifast X restarts."
+msgstr "Muziek die op deze computer speelt, stopt als Spotifast X herstart."
 
 #: src/ui/update.rs:122
 msgid "Restart to update"
@@ -3225,155 +2910,6 @@ msgstr "Download opnieuw proberen"
 #: src/ui/update.rs:167
 msgid "Download update"
 msgstr "Update downloaden"
-
-#: src/ui/winamp/equalizer.rs:59
-msgid "Roll the equalizer up"
-msgstr "Equalizer oprollen"
-
-#: src/ui/winamp/equalizer.rs:225
-msgid "Roll the equalizer down"
-msgstr "Equalizer uitrollen"
-
-#: src/ui/winamp/mod.rs:435 src/ui/winamp/mod.rs:482 src/ui/winamp/mod.rs:649
-msgid "Back to the big window (Ctrl+M)"
-msgstr "Terug naar het grote venster (Ctrl+M)"
-
-#: src/ui/winamp/mod.rs:436 src/ui/winamp/mod.rs:480 src/ui/winamp/mod.rs:647
-msgid "Back to the big window (Cmd+Shift+M)"
-msgstr "Terug naar het grote venster (Cmd+Shift+M)"
-
-#: src/ui/winamp/mod.rs:514
-msgid "Roll the window down"
-msgstr "Venster uitrollen"
-
-#: src/ui/winamp/mod.rs:681
-msgid "Roll the window up"
-msgstr "Venster oprollen"
-
-#: src/ui/winamp/mod.rs:746
-msgid "Choose a skin"
-msgstr "Skin kiezen"
-
-#: src/ui/winamp/mod.rs:752
-msgid "Big window"
-msgstr "Groot venster"
-
-#: src/ui/winamp/mod.rs:885 src/ui/winamp/playlist.rs:735
-#: src/ui/winamp/playlist.rs:740
-msgid "Song info"
-msgstr "Nummerinfo"
-
-#: src/ui/winamp/mod.rs:906
-msgid "Size: 2x, 3x, 4x"
-msgstr "Grootte: 2x, 3x, 4x"
-
-#: src/ui/winamp/mod.rs:925
-msgid "Visualisation"
-msgstr "Visualisatie"
-
-#: src/ui/winamp/mod.rs:929
-msgid "Spectrum analyser"
-msgstr "Spectrumanalyzer"
-
-#: src/ui/winamp/mod.rs:930
-msgid "Oscilloscope"
-msgstr "Oscilloscoop"
-
-#. Translators: The visualiser choice that shows no visualisation.
-#: src/ui/winamp/mod.rs:932
-msgctxt "visualiser"
-msgid "Nothing"
-msgstr "Niets"
-
-#: src/ui/winamp/mod.rs:1063
-msgid "Play in mono"
-msgstr "Mono afspelen"
-
-#: src/ui/winamp/mod.rs:1071
-msgid "Play in stereo"
-msgstr "Stereo afspelen"
-
-#. Translators: {percent} is a number from 0 to 100, followed by a percent sign.
-#: src/ui/winamp/mod.rs:1162
-#, rust-format
-msgid "Balance: {percent}% left"
-msgstr "Balans: {percent}% links"
-
-#. Translators: {percent} is a number from 0 to 100, followed by a percent sign.
-#: src/ui/winamp/mod.rs:1167
-#, rust-format
-msgid "Balance: {percent}% right"
-msgstr "Balans: {percent}% rechts"
-
-#: src/ui/winamp/mod.rs:1170
-msgid "Balance: center"
-msgstr "Balans: midden"
-
-#. Translators: {percent} is a number from 0 to 100, followed by a percent sign.
-#: src/ui/winamp/mod.rs:1175
-#, rust-format
-msgid "Volume: {percent}%"
-msgstr "Volume: {percent}%"
-
-#. Translators: {position} and {duration} are times such as 2:12, {percent} a number from 0 to 100.
-#: src/ui/winamp/mod.rs:1191
-#, rust-format
-msgid "Seek to: {position}/{duration} ({percent}%)"
-msgstr "Spoelen naar: {position}/{duration} ({percent}%)"
-
-#: src/ui/winamp/mod.rs:1523
-msgid "Open the big window"
-msgstr "Groot venster openen"
-
-#: src/ui/winamp/playlist.rs:671
-msgid "Remove selected"
-msgstr "Selectie verwijderen"
-
-#: src/ui/winamp/playlist.rs:675
-msgid "You can only change this computer's queue."
-msgstr "Je kunt alleen de wachtrij van deze computer wijzigen."
-
-#: src/ui/winamp/playlist.rs:688
-msgid "Remove all"
-msgstr "Alles verwijderen"
-
-#: src/ui/winamp/playlist.rs:691
-msgid "You can only clear this computer's queue."
-msgstr "Je kunt alleen de wachtrij van deze computer wissen."
-
-#. Translators: Selects every song in the list.
-#: src/ui/winamp/playlist.rs:702
-msgctxt "selection"
-msgid "All"
-msgstr "Alles"
-
-#. Translators: Clears the selection of songs in the list.
-#: src/ui/winamp/playlist.rs:704
-msgctxt "selection"
-msgid "None"
-msgstr "Niets"
-
-#. Translators: Selects the songs that are not selected, and clears the rest.
-#: src/ui/winamp/playlist.rs:706
-msgctxt "selection"
-msgid "Invert"
-msgstr "Omkeren"
-
-#: src/ui/winamp/playlist.rs:767
-msgid "Load list"
-msgstr "Lijst laden"
-
-#: src/ui/winamp/playlist.rs:776
-msgid "No playlists yet"
-msgstr "Nog geen playlists"
-
-#: src/ui/winamp/playlist.rs:796
-msgid "Save list"
-msgstr "Lijst opslaan"
-
-#: src/ui/winamp/playlist.rs:798
-msgid "Save the queue as a new playlist"
-msgstr "De wachtrij opslaan als nieuwe playlist"
 
 #. Translators: A length of time, abbreviated. Keep {hours} and {minutes}.
 #: src/util.rs:28 src/util.rs:47
@@ -3530,29 +3066,29 @@ msgstr ""
 "bureaublad."
 
 #: src/window.rs:39
-msgid "Spotifast cannot open its window"
-msgstr "Spotifast kan zijn venster niet openen"
+msgid "Spotifast X cannot open its window"
+msgstr "Spotifast X kan zijn venster niet openen"
 
 #: src/window.rs:45
 msgid ""
-"On Windows on ARM, the OpenGL that Spotifast draws with comes from "
+"On Windows on ARM, the OpenGL that Spotifast X draws with comes from "
 "Microsoft's OpenCL, OpenGL & Vulkan Compatibility Pack. Open its Microsoft "
 "Store page to install or repair it?"
 msgstr ""
-"Op Windows on ARM komt de OpenGL waarmee Spotifast tekent uit het OpenCL, "
+"Op Windows on ARM komt de OpenGL waarmee Spotifast X tekent uit het OpenCL, "
 "OpenGL & Vulkan Compatibility Pack van Microsoft. De pagina in de Microsoft "
 "Store openen om het te installeren of te herstellen?"
 
 #. Translators: Keep {url} exactly as written. It becomes the address
-#. of the Spotifast download page.
+#. of the Spotifast X download page.
 #: src/window.rs:55
 #, rust-format
 msgid ""
-"Spotifast needs a graphics driver with OpenGL 2.0 or newer, and this PC or "
+"Spotifast X needs a graphics driver with OpenGL 2.0 or newer, and this PC or "
 "virtual machine does not provide one. Install the graphics driver, or turn "
 "on GPU acceleration for the virtual machine. Open {url} to read more?"
 msgstr ""
-"Spotifast heeft een grafisch stuurprogramma met OpenGL 2.0 of nieuwer nodig, "
+"Spotifast X heeft een grafisch stuurprogramma met OpenGL 2.0 of nieuwer nodig, "
 "en deze pc of virtuele machine biedt dat niet. Installeer het grafische "
 "stuurprogramma of zet GPU-versnelling aan voor de virtuele machine. {url} "
 "openen voor meer informatie?"

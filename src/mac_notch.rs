@@ -630,7 +630,7 @@ fn update_artwork_path(ctrl: &mut NotchController, art_path: Option<PathBuf>) {
 
 fn screen_top_inset(screen: &NSScreen) -> f64 {
     // safeAreaInsets was introduced in macOS 12.0 (Monterey).
-    // Spotifast supports macOS 11.0+ (Big Sur), where calling the selector directly
+    // Spotifast X supports macOS 11.0+ (Big Sur), where calling the selector directly
     // would raise an unrecognized-selector exception. Notched MacBooks did not
     // exist before macOS 12, so a zero-inset fallback on macOS 11 is strictly correct.
     unsafe {
@@ -847,7 +847,7 @@ pub fn init() {
     view.addSubview(&card_view);
 
     // 1. Native dark frosted glass vibrancy layer (Bottom layer)
-    // HUDWindow gives the same dark semi-transparent blur that Spotifast uses for overlays.
+    // HUDWindow gives the same dark semi-transparent blur that Spotifast X uses for overlays.
     let visual_effect = NSVisualEffectView::initWithFrame(mtm.alloc(), card_bounds);
     visual_effect.setMaterial(NSVisualEffectMaterial::HUDWindow);
     visual_effect.setBlendingMode(NSVisualEffectBlendingMode::BehindWindow);
@@ -1266,7 +1266,7 @@ fn handle_canvas_mouse_down(view: &SpotifastCanvasView, event: &NSEvent) {
         }
     }
 
-    // Otherwise clicking anywhere on the card brings Spotifast to front
+    // Otherwise clicking anywhere on the card brings Spotifast X to front
     push_command(NotchCommand::ShowWindow);
 }
 
@@ -1319,12 +1319,12 @@ fn handle_draw_canvas(_view: &SpotifastCanvasView, _dirty: NSRect) {
     let card_rect = NSRect::new(NSPoint::new(0.0, 0.0), NSSize::new(card_w, card_h));
 
     // 1. Panel background: Subtle dark glass fill on top of HUDWindow blur.
-    //    Matches Spotifast's dark panel palette.panel (0x15, 0x18, 0x1c).
+    //    Matches Spotifast X's dark panel palette.panel (0x15, 0x18, 0x1c).
     let base_path = NSBezierPath::bezierPathWithRoundedRect_xRadius_yRadius(card_rect, 18.0, 18.0);
     NSColor::colorWithRed_green_blue_alpha(0.08, 0.09, 0.11, 0.78).set();
     base_path.fill();
 
-    // 2. 1px crisp outline: Matches Spotifast's palette.outline (0x2a, 0x30, 0x38).
+    // 2. 1px crisp outline: Matches Spotifast X's palette.outline (0x2a, 0x30, 0x38).
     let border_rect = NSRect::new(
         NSPoint::new(0.5, 0.5),
         NSSize::new(card_w - 1.0, card_h - 1.0),
@@ -1354,7 +1354,7 @@ fn handle_draw_canvas(_view: &SpotifastCanvasView, _dirty: NSRect) {
         accent.fill();
     }
 
-    // 4. Seek Bar (Row 2) - Matches Spotifast player bar thin_slider (shape, height, colors, handle)
+    // 4. Seek Bar (Row 2) - Matches Spotifast X player bar thin_slider (shape, height, colors, handle)
     let start_x = 60.0f64;
     let end_x = (card_w - 58.0).max(start_x + 20.0);
     let track_w = (end_x - start_x).max(1.0);
@@ -1413,7 +1413,7 @@ fn handle_draw_canvas(_view: &SpotifastCanvasView, _dirty: NSRect) {
     NSColor::whiteColor().set();
     thumb_path.fill();
 
-    // 5. Play button circular disc (Row 3, Center) - Matches Spotifast theme::circle_button (diameter 36.0)
+    // 5. Play button circular disc (Row 3, Center) - Matches Spotifast X theme::circle_button (diameter 36.0)
     let center_x = card_w / 2.0;
     let disc_rect = NSRect::new(NSPoint::new(center_x - 18.0, 97.0), NSSize::new(36.0, 36.0));
     let disc_path = NSBezierPath::bezierPathWithOvalInRect(disc_rect);
@@ -1574,7 +1574,7 @@ pub fn sync_state(enabled: bool, is_background: bool, track: Option<&NotchTrackI
 
         if let Some(t) = track {
             let title = if t.title.trim().is_empty() {
-                "Spotifast"
+                "Spotifast X"
             } else {
                 &t.title
             };
@@ -1603,7 +1603,7 @@ pub fn sync_state(enabled: bool, is_background: bool, track: Option<&NotchTrackI
             update_artwork_path(ctrl, t.art_path.clone());
         } else {
             ctrl.title_field
-                .setStringValue(&NSString::from_str("Spotifast"));
+                .setStringValue(&NSString::from_str("Spotifast X"));
             ctrl.artist_field
                 .setStringValue(&NSString::from_str("Nothing playing"));
             update_time_labels(

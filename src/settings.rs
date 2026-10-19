@@ -91,33 +91,12 @@ pub enum PlayerBarVis {
 
 impl PlayerBarVis {
     /// The mode a click on the player bar moves to: spectrum, waveform,
-    /// then off, as Winamp's visualizer cycles.
+    /// then off.
     pub fn next(self) -> Self {
         match self {
             Self::Off => Self::Spectrum,
             Self::Spectrum => Self::Waveform,
             Self::Waveform => Self::Off,
-        }
-    }
-}
-
-/// Mini-player visualizer mode.
-#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(rename_all = "lowercase")]
-pub enum VisMode {
-    #[default]
-    Bars,
-    Scope,
-    Off,
-}
-
-impl VisMode {
-    /// Next mode in the display's click cycle.
-    pub fn next(self) -> Self {
-        match self {
-            Self::Bars => Self::Scope,
-            Self::Scope => Self::Off,
-            Self::Off => Self::Bars,
         }
     }
 }
@@ -285,7 +264,7 @@ pub struct Settings {
     )]
     pub system_theme_cache: Option<crate::theme::CustomTheme>,
     /// The palettes Follow system shows in light and in dark mode, each with
-    /// its last accepted colours; empty slots are Spotifast's own Light and
+    /// its last accepted colours; empty slots are Spotifast X's own Light and
     /// Dark, as before this setting existed.
     #[serde(skip_serializing_if = "fastframe_theme::Pair::is_default")]
     pub theme_pair: crate::theme::ThemePair,
@@ -296,8 +275,7 @@ pub struct Settings {
     pub player_bar_vis: PlayerBarVis,
     /// Allow clicks on the player bar background to cycle visualizer modes.
     pub player_bar_vis_click: bool,
-    /// How many frames a second the player bar's visualizer and the mini
-    /// player's analyser draw; 0 is uncapped. MilkDrop has its own.
+    /// How many frames a second the player bar's visualizer draws; 0 is uncapped.
     pub visualizer_fps: u32,
     /// Last local volume, 0..=65535.
     pub volume: u16,
@@ -323,7 +301,7 @@ pub struct Settings {
     /// An optional personal Spotify Web API application id. The shared
     /// application remains active for coverage when this is present.
     pub web_client_id: Option<String>,
-    /// Legacy reminder time, retained for older Spotifast versions.
+    /// Legacy reminder time, retained for older Spotifast X versions.
     pub personal_app_nudge_at: Option<String>,
     /// The listener has dismissed or followed the personal-app introduction.
     pub personal_app_intro_seen: bool,
@@ -336,7 +314,7 @@ pub struct Settings {
     pub tray_icon: TrayIcon,
     /// Show the interactive Now Playing widget when hovering over the MacBook notch.
     pub mac_notch_widget: bool,
-    /// macOS: keep Spotifast in the Dock and Cmd-Tab. Off makes it a
+    /// macOS: keep Spotifast X in the Dock and Cmd-Tab. Off makes it a
     /// menu-bar app, whose menu-bar icon is the way back (#837).
     pub mac_show_in_dock: bool,
     /// Ask GitHub once a day whether a newer release exists.
@@ -356,31 +334,9 @@ pub struct Settings {
     pub library_by_you: bool,
     /// Interface zoom, egui's zoom factor; Ctrl+plus/minus changes it.
     pub zoom: f32,
-    /// The Winamp window is open.
-    pub winamp_window: bool,
-    /// Windows and X11: keep a taskbar button while the Winamp window is visible.
-    pub winamp_show_taskbar: bool,
-    /// Windows and Linux: draw Spotifast's own title bar and window buttons
+    /// Windows and Linux: draw Spotifast X's own title bar and window buttons
     /// instead of the desktop frame.
     pub custom_titlebar: bool,
-    /// Skin file or folder name. `None` selects the built-in skin.
-    pub skin: Option<String>,
-    /// Pick a different skin each time the mini player opens; `skin` holds
-    /// the one picked.
-    pub random_skin: bool,
-    /// Screen pixels per skin pixel; `None` picks double size for the
-    /// display.
-    pub skin_scale: Option<u8>,
-    /// The Winamp window stays above other windows.
-    pub winamp_on_top: bool,
-    /// The mini player's visualiser: bars, scope, or off.
-    pub vis: VisMode,
-    /// The playlist window is open under the mini player.
-    pub playlist_open: bool,
-    /// How tall the playlist window is, in skin pixels.
-    pub playlist_height: u32,
-    /// The equalizer window is open under the mini player.
-    pub eq_open: bool,
     /// The equalizer shapes local playback.
     pub eq_on: bool,
     /// The preamp, in decibels, never above zero.
@@ -393,27 +349,6 @@ pub struct Settings {
     pub balance: f32,
     /// Play both channels the same.
     pub mono: bool,
-    /// The playlist window is rolled up to its title bar.
-    pub playlist_shaded: bool,
-    /// The equalizer window is rolled up to its title bar.
-    pub eq_shaded: bool,
-    /// The main window is rolled up to its title bar.
-    pub winamp_shaded: bool,
-    /// The MilkDrop window is open (its own window, not part of the skin).
-    pub milkdrop_open: bool,
-    /// How long each preset plays before the next, in seconds.
-    pub milkdrop_seconds: u32,
-    /// How many frames a second the MilkDrop window draws; 0 is uncapped.
-    pub milkdrop_fps: u32,
-    /// Last reported MilkDrop screen refresh rate. The first value sets the
-    /// default frame rate; this field is not directly configurable.
-    pub milkdrop_screen_hz: u32,
-    /// The picture's inner resolution: 1 full, 2 half, 4 quarter.
-    pub milkdrop_scale: u32,
-    /// The MilkDrop window fills the screen.
-    pub milkdrop_fullscreen: bool,
-    /// The MilkDrop window's size in logical points, when not full-screen.
-    pub milkdrop_size: [f32; 2],
     /// Which proxy to use. Older files without this field stay on `system`.
     #[serde(default, skip_serializing_if = "proxy_mode_is_system")]
     pub proxy_mode: ProxyMode,
@@ -460,7 +395,7 @@ impl Default for Settings {
     /// settings files, including an inactive playlist ownership filter.
     fn default() -> Self {
         Self {
-            device_name: "Spotifast".to_string(),
+            device_name: "Spotifast X".to_string(),
             bitrate: 320,
             normalisation: false,
             autoplay: true,
@@ -481,7 +416,7 @@ impl Default for Settings {
             accent_from_art: true,
             player_bar_vis: PlayerBarVis::Off,
             player_bar_vis_click: true,
-            visualizer_fps: crate::milkdrop::DEFAULT_FPS,
+            visualizer_fps: 60,
             volume: (u16::MAX as u32 * 70 / 100) as u16,
             sidebar_visible: true,
             art_expanded: false,
@@ -510,33 +445,13 @@ impl Default for Settings {
             library_sort: std::collections::BTreeMap::new(),
             library_by_you: false,
             zoom: 1.0,
-            winamp_window: false,
-            winamp_show_taskbar: true,
             custom_titlebar: false,
-            skin: None,
-            random_skin: false,
-            skin_scale: None,
-            winamp_on_top: false,
-            vis: VisMode::default(),
-            playlist_open: false,
-            playlist_height: 174,
-            eq_open: false,
             eq_on: false,
             eq_preamp_db: 0.0,
             eq_bands_db: [0.0; 10],
             eq_user_presets: Vec::new(),
             balance: 0.0,
             mono: false,
-            playlist_shaded: false,
-            eq_shaded: false,
-            winamp_shaded: false,
-            milkdrop_open: false,
-            milkdrop_seconds: crate::milkdrop::DEFAULT_SECONDS,
-            milkdrop_fps: crate::milkdrop::DEFAULT_FPS,
-            milkdrop_screen_hz: 0,
-            milkdrop_scale: 1,
-            milkdrop_fullscreen: false,
-            milkdrop_size: crate::milkdrop::DEFAULT_SIZE,
             proxy_mode: ProxyMode::System,
             proxy: String::new(),
             proxy_host: String::new(),
@@ -576,7 +491,7 @@ impl Settings {
 
     /// The palette to show while the system is `dark` or light: the fixed
     /// one, else Follow system's choice for that appearance. `None` leaves
-    /// Spotifast's own Light or Dark.
+    /// Spotifast X's own Light or Dark.
     pub(crate) fn cached_palette(&self, dark: bool) -> Option<crate::theme::Palette> {
         if let Some(palette) = self.fixed_palette() {
             return Some(palette);
@@ -652,7 +567,6 @@ impl Settings {
                     Self::default()
                 });
                 settings.migrate_proxy(text);
-                settings.forget_unusable_screen_rate();
                 settings.proxy_password_legacy = !settings.proxy_password.is_empty();
                 settings
             }
@@ -676,7 +590,7 @@ impl Settings {
         }
     }
 
-    /// Whether local playback plays through Spotifast's own output, whose
+    /// Whether local playback plays through Spotifast X's own output, whose
     /// device `audio_device` names, rather than a librespot backend such as
     /// PulseAudio, where the desktop's sound settings choose the output.
     pub fn uses_own_output(&self) -> bool {
@@ -702,21 +616,6 @@ impl Settings {
         self.search_history.retain(|entry| entry != query);
         self.search_history.insert(0, query.to_string());
         self.search_history.truncate(12);
-    }
-
-    /// Forgets the frame rate an earlier version set from Windows's 1 Hz
-    /// "hardware default", taken then as MilkDrop's first screen rate, and
-    /// that screen rate with it, so MilkDrop's next real report is learned
-    /// as the first. A frame rate chosen since, or learned from a real
-    /// screen before, stays, and so does the 1 Hz beside it, which no dial
-    /// shows and the next real report replaces.
-    pub(crate) fn forget_unusable_screen_rate(&mut self) {
-        let hz = self.milkdrop_screen_hz;
-        if hz == 0 || crate::milkdrop::is_screen_rate(hz) || self.milkdrop_fps != hz {
-            return;
-        }
-        self.milkdrop_fps = crate::milkdrop::DEFAULT_FPS;
-        self.milkdrop_screen_hz = 0;
     }
 
     pub(crate) fn migrate_proxy(&mut self, text: &str) {
@@ -1160,7 +1059,7 @@ mod tests {
         assert!(single.theme_pair.is_default());
         assert_eq!(single.cached_palette(false), Some(nord));
         assert_eq!(single.cached_palette(true), Some(nord));
-        // Plain Follow system: Spotifast's own Light and Dark.
+        // Plain Follow system: Spotifast X's own Light and Dark.
         let follow: Settings = serde_json::from_str(r#"{"theme":"system"}"#).unwrap();
         assert_eq!(follow.cached_palette(false), None);
         assert_eq!(follow.cached_palette(true), None);
@@ -1178,7 +1077,11 @@ mod tests {
             })
         ));
         assert_eq!(paired.cached_palette(false), Some(latte));
-        assert_eq!(paired.cached_palette(true), None, "dark stays Spotifast's");
+        assert_eq!(
+            paired.cached_palette(true),
+            None,
+            "dark stays Spotifast X's"
+        );
         let encoded = serde_json::to_string(&paired).unwrap();
         let decoded: Settings = serde_json::from_str(&encoded).unwrap();
         assert_eq!(decoded, paired);
@@ -1249,33 +1152,27 @@ mod tests {
         assert!(!settings.home.made_for_you.visible);
     }
 
-    /// Earlier versions kept Windows's 1 Hz "hardware default" as MilkDrop's
-    /// screen rate and, the first time, as its frame rate. Loading forgets
-    /// both, and leaves a frame rate chosen since, and a real rate, alone.
     #[test]
-    fn a_saved_hardware_default_screen_rate_is_forgotten() {
-        let dir =
-            std::env::temp_dir().join(format!("spotifast-screen-default-{}", std::process::id()));
-        let _ = std::fs::create_dir_all(&dir);
-        let path = dir.join("settings.json");
-        let load = |text: &str| {
-            std::fs::write(&path, text).unwrap();
-            let settings = Settings::load(&path);
-            (settings.milkdrop_screen_hz, settings.milkdrop_fps)
-        };
-        let learned = load(r#"{"milkdrop_screen_hz":1,"milkdrop_fps":1}"#);
-        let chosen = load(r#"{"milkdrop_screen_hz":1,"milkdrop_fps":30}"#);
-        let sixty = load(r#"{"milkdrop_screen_hz":1,"milkdrop_fps":60}"#);
-        let real = load(r#"{"milkdrop_screen_hz":144,"milkdrop_fps":144}"#);
-        let _ = std::fs::remove_dir_all(&dir);
-        assert_eq!(learned, (0, crate::milkdrop::DEFAULT_FPS));
-        assert_eq!(chosen, (1, 30), "their rate stands");
-        assert_eq!(
-            sixty,
-            (1, 60),
-            "a chosen 60 is not taken for the default, which a real report would replace"
-        );
-        assert_eq!(real, (144, 144), "a real rate stays");
+    fn removed_window_preferences_do_not_reset_current_settings() {
+        let settings: Settings = serde_json::from_str(
+            r#"{"winamp_window":true,"skin":"old.wsz","vis":"scope","milkdrop_open":true,"milkdrop_fps":144,"volume":12345,"visualizer_fps":30,"eq_on":true}"#,
+        ).unwrap();
+        assert_eq!(settings.volume, 12345);
+        assert_eq!(settings.visualizer_fps, 30);
+        assert!(settings.eq_on);
+        let saved = serde_json::to_value(&settings).unwrap();
+        for key in [
+            "winamp_window",
+            "skin",
+            "vis",
+            "milkdrop_open",
+            "milkdrop_fps",
+        ] {
+            assert!(
+                saved.get(key).is_none(),
+                "removed preference {key} was written"
+            );
+        }
     }
 
     #[test]
@@ -1312,49 +1209,6 @@ mod tests {
         let again: Settings =
             serde_json::from_str(&serde_json::to_string(&settings).unwrap()).unwrap();
         assert_eq!(again.eq_user_presets, settings.eq_user_presets);
-    }
-
-    #[test]
-    fn older_settings_keep_the_winamp_window_closed_and_the_built_in_skin() {
-        let settings: Settings = serde_json::from_str(r#"{"zoom": 1.2}"#).unwrap();
-        assert!(!settings.winamp_window);
-        assert!(settings.winamp_show_taskbar);
-        assert_eq!(settings.skin, None);
-        assert_eq!(settings.skin_scale, None);
-        assert!(!settings.winamp_on_top);
-        assert_eq!(settings.vis, super::VisMode::Bars);
-        assert!(!settings.playlist_open);
-        assert_eq!(settings.playlist_height, 174);
-        assert!(!settings.eq_on);
-        assert_eq!(settings.eq_bands_db, [0.0; 10]);
-        assert_eq!(settings.balance, 0.0);
-        assert!(!settings.mono);
-        assert!(!settings.playlist_shaded);
-        assert!(!settings.eq_shaded);
-        assert!(!settings.winamp_shaded);
-    }
-
-    #[test]
-    fn the_visualiser_cycles_bars_scope_off() {
-        use super::VisMode;
-        assert_eq!(VisMode::Bars.next(), VisMode::Scope);
-        assert_eq!(VisMode::Scope.next(), VisMode::Off);
-        assert_eq!(VisMode::Off.next(), VisMode::Bars);
-        let settings: Settings = serde_json::from_str(r#"{"vis": "scope"}"#).unwrap();
-        assert_eq!(settings.vis, VisMode::Scope);
-    }
-
-    #[test]
-    fn a_chosen_skin_round_trips() {
-        let settings = Settings {
-            winamp_window: true,
-            skin: Some("Zaxon.wsz".into()),
-            skin_scale: Some(3),
-            ..Settings::default()
-        };
-        let json = serde_json::to_string(&settings).unwrap();
-        let restored: Settings = serde_json::from_str(&json).unwrap();
-        assert_eq!(restored, settings);
     }
 
     #[test]
@@ -1418,7 +1272,7 @@ mod tests {
 
     /// The main window's visualizers draw 60 frames a second until the user
     /// picks another rate, and the rate they pick, uncapped included, is
-    /// the rate they get back, without touching MilkDrop's.
+    /// the rate they get back.
     #[test]
     fn the_visualizer_frame_rate_defaults_to_60_and_round_trips() {
         let settings: Settings = serde_json::from_str("{}").unwrap();
@@ -1432,14 +1286,7 @@ mod tests {
             let json = serde_json::to_string(&chosen).unwrap();
             let restored: Settings = serde_json::from_str(&json).unwrap();
             assert_eq!(restored.visualizer_fps, rate);
-            assert_eq!(restored.milkdrop_fps, Settings::default().milkdrop_fps);
         }
-        let milkdrop_only: Settings =
-            serde_json::from_value(serde_json::json!({"milkdrop_fps": 30})).unwrap();
-        assert_eq!(
-            milkdrop_only.visualizer_fps, 60,
-            "MilkDrop's rate is its own"
-        );
     }
 
     /// Older files keep today's colour icon, and the choice round-trips as
@@ -1492,13 +1339,6 @@ mod tests {
         assert_eq!(PlayerBarVis::Off.next(), PlayerBarVis::Spectrum);
         assert_eq!(PlayerBarVis::Spectrum.next(), PlayerBarVis::Waveform);
         assert_eq!(PlayerBarVis::Waveform.next(), PlayerBarVis::Off);
-    }
-
-    #[test]
-    fn older_settings_keep_the_chosen_skin() {
-        let settings: Settings = serde_json::from_str(r#"{"skin":"A.wsz"}"#).unwrap();
-        assert!(!settings.random_skin);
-        assert_eq!(settings.skin.as_deref(), Some("A.wsz"));
     }
 
     #[test]
@@ -1827,10 +1667,6 @@ pub struct SessionState {
     pub queue_open: Option<bool>,
     /// Which tab the queue panel showed: `queue` or `recents`.
     pub queue_tab: Option<String>,
-    /// Last outer position of the Winamp window.
-    pub winamp_pos: Option<[f32; 2]>,
-    /// Last outer position of the MilkDrop window.
-    pub milkdrop_pos: Option<[f32; 2]>,
     /// The window mode fullscreen lyrics left, when the app closed while
     /// showing them. eframe restores the window full screen, so the next
     /// start returns it to this mode instead.
@@ -1887,7 +1723,6 @@ mod session_tests {
         assert_eq!(state.window_size, Some([1100.0, 700.0]));
         assert_eq!(state.window_pos, Some([100.0, 150.0]));
         assert!(!state.window_maximized);
-        assert_eq!(state.winamp_pos, Some([300.0, 200.0]));
     }
 
     #[test]

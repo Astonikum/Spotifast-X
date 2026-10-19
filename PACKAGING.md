@@ -6,7 +6,7 @@ DEB/RPM/AppImage contents, dependencies, the macOS disk image and Windows
 Installer packages, recipe templates and downstream repositories.
 Application assets and native recipes stay in `packaging/`.
 
-Public AUR, Homebrew, DEB/RPM and release download names use Spotifast, and
+Public AUR, Homebrew, DEB/RPM and release download names use Spotifast X, and
 Linux packages install `spotifast` as the only executable.
 
 Linux builds provide `spotifast.desktop` and `spotifast.svg`, matching the
@@ -26,7 +26,7 @@ portable Linux release archives carry the assets with their source/binary
 payloads. Source and binary AUR recipes also accept older releases that predate
 the integration; the git recipe requires the current files. Nix installs the
 Linux desktop assets beside its binaries and packages the signed macOS
-`Spotifast.app` bundle in the same derivation. Flatpak does not install host
+`Spotifast X.app` bundle in the same derivation. Flatpak does not install host
 desktop hooks.
 
 ```sh

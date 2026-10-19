@@ -248,12 +248,12 @@ fn frame_rate_dial(
 ) -> Option<u32> {
     // The dial stops at the rates worth having and passes
     // through nothing in between, the way a gear lever does.
-    let stops = crate::milkdrop::fps_stops(screen_hz, fps);
+    let stops = crate::vis::fps_stops(screen_hz, fps);
     let last = stops.len().saturating_sub(1);
     let mut at = stops.iter().position(|rate| *rate == fps).unwrap_or(1);
     let labels: Vec<String> = stops
         .iter()
-        .map(|rate| crate::milkdrop::fps_label(locale, *rate, screen_hz))
+        .map(|rate| crate::vis::fps_label(locale, *rate, screen_hz))
         .collect();
     let shown = labels.clone();
     let typed = stops.clone();
@@ -661,11 +661,11 @@ pub fn show(app: &mut App, ui: &mut egui::Ui) {
             super::keys::platform_shortcut(
                 &gettext(
                     locale,
-                    "Spotifast hides to the system tray. Quit from the tray menu or with Ctrl+Q.",
+                    "Spotifast X hides to the system tray. Quit from the tray menu or with Ctrl+Q.",
                 ),
                 &gettext(
                     locale,
-                    "Spotifast hides to the system tray. Quit from the tray menu or with Cmd+Q.",
+                    "Spotifast X hides to the system tray. Quit from the tray menu or with Cmd+Q.",
                 ),
             )
             .to_owned(),
@@ -716,7 +716,7 @@ pub fn show(app: &mut App, ui: &mut egui::Ui) {
             show_in_dock.clone(),
             gettext(
                 locale,
-                "When off, Spotifast lives in the menu bar and leaves Cmd+Tab. Open it from its menu-bar icon.",
+                "When off, Spotifast X lives in the menu bar and leaves Cmd+Tab. Open it from its menu-bar icon.",
             ),
         )
         .when(cfg!(target_os = "macos")),
@@ -1223,7 +1223,7 @@ pub fn show(app: &mut App, ui: &mut egui::Ui) {
             custom_titlebar.clone(),
             gettext(
                 locale,
-                "Draw Spotifast's own title bar and window buttons instead of the desktop's.",
+                "Draw Spotifast X's own title bar and window buttons instead of the desktop's.",
             ),
         )
         .when(show_custom_titlebar),
@@ -1242,7 +1242,7 @@ pub fn show(app: &mut App, ui: &mut egui::Ui) {
             gettext(locale, "Frame rate"),
             gettext(
                 locale,
-                "How often the player bar and mini player visualizers draw. Lower rates use fewer resources. MilkDrop has its own.",
+                "How often the player bar visualizer draws. Lower rates use fewer resources.",
             ),
         ),
         pair_row(fastframe_theme::Base::Light),
@@ -1676,388 +1676,6 @@ pub fn show(app: &mut App, ui: &mut egui::Ui) {
         });
     }
 
-    let skins_folder = app.dirs.skins_dir();
-    app.winamp.refresh_choices(&skins_folder);
-    let skins = gettext(locale, "Winamp skins");
-    let always_on_top = gettext(locale, "Always on top");
-    let show_in_taskbar = gettext(locale, "Show Winamp in taskbar");
-    let skins_rows = [
-        RowText::new(
-            gettext(locale, "Mini player"),
-            super::keys::platform_shortcut(
-                &gettext(
-                    locale,
-                    "Use classic Winamp .wsz skins. Press Ctrl+M or click the skin logo to return. Drop a skin on either window to add it.",
-                ),
-                &gettext(
-                    locale,
-                    "Use classic Winamp .wsz skins. Press Cmd+Shift+M or click the skin logo to return. Drop a skin on either window to add it.",
-                ),
-            )
-            .to_owned(),
-        ),
-        RowText::new(
-            gettext(locale, "Skin"),
-            gettext(
-                locale,
-                // Translators: {folder} is the path of the skins folder.
-                "Installed skins are in {folder}. Find more at the Winamp Skin Museum.",
-            )
-            .replace("{folder}", &skins_folder.display().to_string()),
-        ),
-        RowText::new(
-            gettext(locale, "Size"),
-            gettext(locale, "Whole-number scaling keeps skin pixels sharp."),
-        ),
-        RowText::new(
-            always_on_top.clone(),
-            if app.window_level_supported {
-                gettext(locale, "Keep the Winamp window above everything else.")
-            } else {
-                crate::window::on_top_unavailable(locale)
-            },
-        ),
-        RowText::new(
-            gettext(locale, "Show in taskbar"),
-            gettext(
-                locale,
-                "Keep a taskbar button for the mini player. The tray icon stays available when hidden.",
-            ),
-        )
-        .when(app.taskbar_setting_visible()),
-        RowText::new(
-            gettext(locale, "Installed skins"),
-            app.winamp
-                .choices
-                .iter()
-                .map(|choice| choice.name.as_str())
-                .collect::<Vec<_>>()
-                .join(" "),
-        ),
-    ];
-    if section_matches(&needle, &skins, &skins_rows) {
-        any_visible = true;
-        section(ui, &palette, &skins, |ui| {
-            filtered_row(ui, &palette, &needle, &skins, &skins_rows[0], |ui| {
-                if theme::pill_button(ui, &palette, &gettext(locale, "Switch to it"), true)
-                    .clicked()
-                {
-                    app.actions.push(Action::ToggleWinampWindow);
-                }
-            });
-            filtered_row(ui, &palette, &needle, &skins, &skins_rows[1], |ui| {
-                ui.horizontal(|ui| {
-                    ui.spacing_mut().item_spacing.x = 6.0;
-                    if theme::soft_button(
-                        ui,
-                        &palette,
-                        Some(Icon::Globe),
-                        &gettext(locale, "Skin Museum"),
-                        false,
-                    )
-                    .clicked()
-                    {
-                        app.actions
-                            .push(Action::OpenUrl("https://skins.webamp.org/".into()));
-                    }
-                    if theme::soft_button(
-                        ui,
-                        &palette,
-                        Some(Icon::ExternalLink),
-                        &open_folder,
-                        false,
-                    )
-                    .clicked()
-                    {
-                        app.actions.push(Action::OpenSkinsFolder);
-                    }
-                });
-            });
-            let choices = app.winamp.choices.clone();
-            if skins_rows[1].matches(&needle, &skins) || skins_rows[5].matches(&needle, &skins) {
-                // Random comes first; it picks among the others each time
-                // the mini player opens.
-                const RANDOM: usize = usize::MAX;
-                let random = gettext(locale, "Random");
-                let mut options: Vec<(usize, &str)> = vec![(RANDOM, &random), (0, "Spotifast")];
-                options.extend(
-                    choices
-                        .iter()
-                        .enumerate()
-                        .map(|(index, choice)| (index + 1, choice.label())),
-                );
-                let showing = app
-                    .settings
-                    .skin
-                    .as_deref()
-                    .and_then(|name| choices.iter().position(|choice| choice.name == name))
-                    .map_or(0, |index| index + 1);
-                let current = if app.settings.random_skin {
-                    RANDOM
-                } else {
-                    showing
-                };
-                if let Some(picked) = widgets::chips(ui, &palette, &options, current)
-                    && picked != current
-                {
-                    if picked == RANDOM {
-                        app.actions.push(Action::SetRandomSkin(true));
-                    } else {
-                        let name = picked
-                            .checked_sub(1)
-                            .map(|index| choices[index].name.clone());
-                        app.actions.push(Action::SetSkin(name));
-                    }
-                }
-                if app.settings.random_skin {
-                    let label = options
-                        .iter()
-                        .find(|(value, _)| *value == showing)
-                        .map_or("Spotifast", |(_, label)| label);
-                    theme::subtle(
-                        ui,
-                        &palette,
-                        &gettext(locale, "Now showing {skin}. Another one is picked each time the mini player opens.")
-                            .replace("{skin}", label),
-                    );
-                }
-                ui.add_space(4.0);
-            }
-            filtered_row(ui, &palette, &needle, &skins, &skins_rows[2], |ui| {
-                let scale =
-                    crate::winamp::WinampState::scale(&app.settings, ui.ctx().pixels_per_point());
-                ui.horizontal(|ui| {
-                    ui.spacing_mut().item_spacing.x = 6.0;
-                    for candidate in 1..=crate::winamp::MAX_SCALE {
-                        let label = format!("{candidate}x");
-                        if theme::soft_button(ui, &palette, None, &label, candidate == scale)
-                            .clicked()
-                            && candidate != scale
-                        {
-                            app.actions.push(Action::SetSkinScale(candidate as u8));
-                        }
-                    }
-                });
-            });
-            filtered_row(ui, &palette, &needle, &skins, &skins_rows[3], |ui| {
-                ui.add_enabled_ui(app.window_level_supported, |ui| {
-                    let mut on_top = app.settings.winamp_on_top && app.window_level_supported;
-                    if widgets::switch(ui, &palette, &always_on_top, &mut on_top).changed() {
-                        app.actions.push(Action::ToggleWinampOnTop);
-                    }
-                });
-            });
-            if app.taskbar_setting_visible() {
-                filtered_row(ui, &palette, &needle, &skins, &skins_rows[4], |ui| {
-                    let mut visible = app.settings.winamp_show_taskbar;
-                    let response = widgets::switch(ui, &palette, &show_in_taskbar, &mut visible);
-                    if response.changed() {
-                        app.actions.push(Action::SetWinampTaskbar(visible));
-                    }
-                    #[cfg(any(test, feature = "demo"))]
-                    if app.demo_windows_controls {
-                        let id = egui::Id::new("demo-winamp-taskbar-focus");
-                        if !ui.data(|data| data.get_temp::<bool>(id)).unwrap_or(false) {
-                            response.scroll_to_me(Some(Align::Center));
-                            ui.data_mut(|data| data.insert_temp(id, true));
-                        }
-                    }
-                });
-            }
-        });
-    }
-
-    let presets_folder = app.dirs.milkdrop_dir();
-    app.winamp
-        .presets
-        .refresh(&presets_folder, Some(ui.ctx().clone()));
-    let count = app.winamp.presets.count();
-    let screen_hz = app.settings.milkdrop_screen_hz;
-    let milkdrop_window = gettext(locale, "MilkDrop window");
-    let folder = presets_folder.display().to_string();
-    let milkdrop_rows = [
-        RowText::new(
-            milkdrop_window.clone(),
-            super::keys::platform_shortcut(
-                &gettext(
-                    locale,
-                    "A projectM visualiser for local playback. Open it here, from the top bar, with Ctrl+Shift+K, or from the mini player's V menu. Press ? or F1 for its shortcuts.",
-                ),
-                &gettext(
-                    locale,
-                    "A projectM visualiser for local playback. Open it here, from the top bar, with Cmd+Shift+K, or from the mini player's V menu. Press ? or F1 for its shortcuts.",
-                ),
-            )
-            .to_owned(),
-        ),
-        RowText::new(
-            gettext(locale, "Presets"),
-            match count {
-                0 => gettext(
-                    locale,
-                    // Translators: {folder} is the path of the MilkDrop presets folder.
-                    "None yet in {folder}. Add .milk files here. Spotifast downloads presets when MilkDrop first opens with an empty folder.",
-                )
-                .replace("{folder}", &folder),
-                1 => gettext(
-                    locale,
-                    // Translators: {folder} is the path of the MilkDrop presets folder.
-                    "One preset in {folder}. Add .milk files here. Spotifast downloads presets when MilkDrop first opens with an empty folder.",
-                )
-                .replace("{folder}", &folder),
-                n => ngettext(
-                    locale,
-                    // Translators: {count} is the number of presets, {folder} the path of the MilkDrop presets folder.
-                    "{count} preset in {folder}. Add .milk files here. Spotifast downloads presets when MilkDrop first opens with an empty folder.",
-                    "{count} presets in {folder}. Add .milk files here. Spotifast downloads presets when MilkDrop first opens with an empty folder.",
-                    u32::try_from(n).unwrap_or(u32::MAX),
-                )
-                .replace("{count}", &n.to_string())
-                .replace("{folder}", &folder),
-            },
-        ),
-        RowText::new(
-            gettext(locale, "Time per preset"),
-            gettext(
-                locale,
-                "How long each preset plays before the next fades in.",
-            ),
-        ),
-        RowText::new(
-            gettext(locale, "Frame rate"),
-            match screen_hz {
-                hz if !crate::milkdrop::is_screen_rate(hz) => gettext(
-                    locale,
-                    "Lower rates use fewer resources. Uncapped draws as fast as possible.",
-                ),
-                hz => gettext(
-                    locale,
-                    // Translators: {hz} is the screen's refresh rate in hertz.
-                    "Your screen refreshes at {hz} Hz. Higher rates do not add visible frames. Uncapped draws as fast as possible.",
-                )
-                .replace("{hz}", &hz.to_string())
-                .into(),
-            },
-        ),
-        RowText::new(
-            gettext(locale, "Resolution"),
-            gettext(
-                locale,
-                "Half and Quarter use fewer resources and scale the image back up.",
-            ),
-        ),
-        RowText::new(
-            format!(
-                "{} {}",
-                // Translators: search keywords for the MilkDrop preset download buttons.
-                gettext(locale, "Get presets"),
-                open_folder
-            ),
-            crate::milkdrop::PACKS
-                .iter()
-                .map(|pack| pack.name)
-                .collect::<Vec<_>>()
-                .join(" "),
-        ),
-    ];
-    if section_matches(&needle, "MilkDrop", &milkdrop_rows) {
-        any_visible = true;
-        section(ui, &palette, "MilkDrop", |ui| {
-            filtered_row(ui, &palette, &needle, "MilkDrop", &milkdrop_rows[0], |ui| {
-                let mut open = app.settings.milkdrop_open;
-                if widgets::switch(ui, &palette, &milkdrop_window, &mut open).changed() {
-                    app.actions.push(Action::ToggleWinampMilkdrop);
-                }
-            });
-            let downloading = app.winamp.presets.downloading();
-            filtered_row(
-                ui,
-                &palette,
-                &needle,
-                "MilkDrop",
-                &milkdrop_rows[1],
-                |_ui| {},
-            );
-            // Three buttons are wider than a row's control slot; they get a
-            // line of their own under the words.
-            if milkdrop_rows[1].matches(&needle, "MilkDrop")
-                || milkdrop_rows[5].matches(&needle, "MilkDrop")
-            {
-                ui.horizontal(|ui| {
-                    ui.spacing_mut().item_spacing.x = 6.0;
-                    for (index, pack) in crate::milkdrop::PACKS.iter().enumerate() {
-                        let label = match downloading {
-                            Some(name) if name == pack.name => {
-                                gettext(locale, "Fetching...").into_owned()
-                            }
-                            // Translators: {pack} is the name of a MilkDrop preset pack.
-                            _ => gettext(locale, "Get {pack}").replace("{pack}", pack.name),
-                        };
-                        if theme::soft_button(ui, &palette, Some(Icon::Globe), &label, false)
-                            .on_hover_text(pack.note)
-                            .clicked()
-                            && downloading.is_none()
-                        {
-                            app.actions.push(Action::DownloadMilkdropPack(index));
-                        }
-                    }
-                    if theme::soft_button(
-                        ui,
-                        &palette,
-                        Some(Icon::ExternalLink),
-                        &open_folder,
-                        false,
-                    )
-                    .clicked()
-                    {
-                        app.actions.push(Action::OpenMilkdropFolder);
-                    }
-                });
-                ui.add_space(10.0);
-            }
-            filtered_row(ui, &palette, &needle, "MilkDrop", &milkdrop_rows[2], |ui| {
-                let mut seconds = app.settings.milkdrop_seconds.clamp(2, 300);
-                let changed = setting_slider(
-                    ui,
-                    &palette,
-                    &mut seconds,
-                    2..=300,
-                    |slider| slider.logarithmic(true),
-                    |value| value.suffix(" s"),
-                )
-                .changed();
-                if changed {
-                    app.actions.push(Action::SetMilkdropSeconds(seconds));
-                }
-            });
-            filtered_row(ui, &palette, &needle, "MilkDrop", &milkdrop_rows[3], |ui| {
-                if let Some(rate) =
-                    frame_rate_dial(ui, &palette, locale, screen_hz, app.settings.milkdrop_fps)
-                {
-                    app.actions.push(Action::SetMilkdropFps(rate));
-                }
-            });
-            filtered_row(ui, &palette, &needle, "MilkDrop", &milkdrop_rows[4], |ui| {
-                let current = app.settings.milkdrop_scale.max(1);
-                ui.horizontal(|ui| {
-                    ui.spacing_mut().item_spacing.x = 6.0;
-                    for (scale, label) in [
-                        (1u32, pgettext(locale, "resolution", "Full")),
-                        (2, pgettext(locale, "resolution", "Half")),
-                        (4, pgettext(locale, "resolution", "Quarter")),
-                    ] {
-                        if theme::soft_button(ui, &palette, None, &label, scale == current)
-                            .clicked()
-                            && scale != current
-                        {
-                            app.actions.push(Action::SetMilkdropScale(scale));
-                        }
-                    }
-                });
-            });
-        });
-    }
-
     let equalizer = gettext(locale, "Equalizer");
     let equalizer_rows = [
         RowText::new(
@@ -2252,7 +1870,7 @@ pub fn show(app: &mut App, ui: &mut egui::Ui) {
     let source_code = gettext(locale, "Source code");
     let about_rows = [
         RowText::new(
-            format!("Spotifast {}", env!("CARGO_PKG_VERSION")),
+            format!("Spotifast X {}", env!("CARGO_PKG_VERSION")),
             built_with.clone(),
         ),
         RowText::new(
@@ -2269,7 +1887,7 @@ pub fn show(app: &mut App, ui: &mut egui::Ui) {
                 ui.vertical(|ui| {
                     theme::text(
                         ui,
-                        format!("Spotifast {}", env!("CARGO_PKG_VERSION")),
+                        format!("Spotifast X {}", env!("CARGO_PKG_VERSION")),
                         theme::semibold(15.0),
                         palette.text,
                     );
@@ -2363,7 +1981,7 @@ fn start_with_computer_choices(
 
 /// What the row says under its title: how to finish a registration the
 /// system holds for approval, why a start in the tray opens the window
-/// while nothing keeps Spotifast there, or what the choices do.
+/// while nothing keeps Spotifast X there, or what the choices do.
 fn start_with_computer_detail(
     locale: crate::i18n::Locale,
     state: Option<fastframe_autostart::State>,
@@ -2374,7 +1992,7 @@ fn start_with_computer_detail(
     if matches!(state, Some(State::NeedsApproval(_))) && choice.is_some() {
         gettext(
             locale,
-            "Allow Spotifast in System Settings, General, Login Items.",
+            "Allow Spotifast X in System Settings, General, Login Items.",
         )
     } else if choice == Some(Start::Hidden) && !keeps_running {
         gettext(
@@ -2384,7 +2002,7 @@ fn start_with_computer_detail(
     } else {
         gettext(
             locale,
-            "Open Spotifast when you log in, with its window or in the tray.",
+            "Open Spotifast X when you log in, with its window or in the tray.",
         )
     }
 }
@@ -2436,7 +2054,7 @@ fn start_with_computer_row(
 /// A band's frequency the short way: 60, 170, 1K, 16K.
 /// The interface language: System first, then each language by its own name,
 /// so a reader can find theirs whatever language the app is showing.
-/// Follow system's palette for light or dark mode: Spotifast's own, or a
+/// Follow system's palette for light or dark mode: Spotifast X's own, or a
 /// palette file of that base.
 fn pair_picker(app: &mut App, ui: &mut egui::Ui, base: fastframe_theme::Base, name: &str) {
     let locale = app.locale;

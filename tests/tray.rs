@@ -24,13 +24,13 @@ impl Watcher {
 fn config() -> fastframe_tray::Config {
     fastframe_tray::Config {
         id: "spotifast",
-        title: "Spotifast".into(),
+        title: "Spotifast X".into(),
         icon: spotifast::util::app_icon_rgba,
         template_icon: None,
         themed_icon: true,
         menu: vec![fastframe_tray::MenuItem::action(
             "show",
-            "Show or hide Spotifast",
+            "Show or hide Spotifast X",
         )],
     }
 }

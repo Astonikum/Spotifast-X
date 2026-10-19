@@ -1,4 +1,4 @@
-# Spotifast as a Flatpak, built from source: the manifest Flathub builds
+# Spotifast X as a Flatpak, built from source: the manifest Flathub builds
 # from. The copy in the Flathub repository names a tag and its commit in
 # the source below and carries cargo-sources.json next to it; flathub.sh
 # writes both. For a local build, this one takes the checkout as it is:

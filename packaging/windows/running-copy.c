@@ -1,9 +1,9 @@
 /*
- * The Windows Installer package's check for a running Spotifast
+ * The Windows Installer package's check for a running Spotifast X
  * (packaging/windows/spotifast.wxs runs CheckRunningCopy before
  * InstallValidate, so before anything is replaced or removed).
  *
- * Windows keeps a running program's file. Removing Spotifast while it runs
+ * Windows keeps a running program's file. Removing Spotifast X while it runs
  * would remove everything else and leave the program behind (#766), and an
  * update would only finish after a restart. The check opens the installed
  * spotifast.exe for writing, which Windows refuses while it runs, and then:
@@ -12,7 +12,7 @@
  *   again once the user has quit it, Cancel stops;
  * - without one, stops an uninstall before anything is removed, and closes
  *   the installed copy before an install or update replaces it. The updater
- *   quits Spotifast itself before it runs the package.
+ *   quits Spotifast X itself before it runs the package.
  *
  * Only processes running that exact file are closed, so a portable copy with
  * the same name elsewhere keeps running and never blocks anything.
@@ -45,12 +45,12 @@
 
 /* WixUI's ErrorDlg has room for about seven short lines; keep to five. */
 static const wchar_t REMOVE_QUESTION[] =
-    L"Spotifast is running, so it cannot be removed yet.\r\n\r\n"
+    L"Spotifast X is running, so it cannot be removed yet.\r\n\r\n"
     L"Close it now? Yes ends it immediately; unsaved changes may be lost. "
     L"No checks again after you quit it. Cancel keeps it installed.";
 
 static const wchar_t UPDATE_QUESTION[] =
-    L"Spotifast is running, so it cannot be updated yet.\r\n\r\n"
+    L"Spotifast X is running, so it cannot be updated yet.\r\n\r\n"
     L"Close it now? Yes ends it immediately; unsaved changes may be lost. "
     L"No checks again after you quit it. Cancel stops the setup.";
 

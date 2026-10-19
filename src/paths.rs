@@ -1,4 +1,4 @@
-//! Where Spotifast keeps its files.
+//! Where Spotifast X keeps its files.
 //!
 //! Configuration, durable non-secret state, and disposable caches live in the
 //! platform's conventional directories, or, for a copy started from the
@@ -8,7 +8,7 @@
 
 use std::path::PathBuf;
 
-/// Where Spotifast's folders are: the per-user folders, or a portable copy's
+/// Where Spotifast X's folders are: the per-user folders, or a portable copy's
 /// own. A new portable folder copies the per-user settings and state, except
 /// the single-instance files a running installed copy holds locked and the
 /// logs of its runs.
@@ -106,17 +106,6 @@ impl AppDirs {
 
     pub fn settings_file(&self) -> PathBuf {
         self.config.join("settings.json")
-    }
-
-    /// Winamp skins the listener has added, as `.wsz` files or folders.
-    pub fn skins_dir(&self) -> PathBuf {
-        self.config.join("skins")
-    }
-
-    /// MilkDrop presets, as `.milk` files, in folders or not, with any
-    /// textures they use in a `textures` folder inside.
-    pub fn milkdrop_dir(&self) -> PathBuf {
-        self.config.join("milkdrop")
     }
 
     pub fn session_file(&self) -> PathBuf {

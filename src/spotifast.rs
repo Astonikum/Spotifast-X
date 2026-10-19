@@ -1,4 +1,4 @@
-//! Spotifast desktop command.
+//! Spotifast X desktop command.
 
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 

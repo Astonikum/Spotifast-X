@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component type="desktop-application">
   <id>rocks.spotifast.Spotifast</id>
-  <name>Spotifast</name>
+  <name>Spotifast X</name>
   <summary>A native Spotify client</summary>
   <developer id="me.paolino">
     <name>Carmine Paolino</name>
@@ -17,7 +17,7 @@
     <p>
       Browse your library, search Spotify, edit playlists, manage the queue,
       and view lyrics. It also has keyboard shortcuts, media-key support,
-      background playback, and a mini player for classic Winamp skins.
+      and background playback.
       Playback needs Spotify Premium.
     </p>
   </description>
@@ -30,10 +30,6 @@
     <screenshot type="default">
       <caption>A playlist, with the queue open and a track playing on a remote speaker</caption>
       <image>https://raw.githubusercontent.com/crmne/spotifast/main/docs/screenshot.png</image>
-    </screenshot>
-    <screenshot>
-      <caption>The mini player wearing the built-in Winamp skin</caption>
-      <image>https://raw.githubusercontent.com/crmne/spotifast/main/docs/assets/images/winamp.png</image>
     </screenshot>
   </screenshots>
   <branding>

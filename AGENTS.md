@@ -1,11 +1,16 @@
-# Spotifast agent guide
+# Spotifast X agent guide
 
 Follow `CONTRIBUTING.md`; it is the canonical product and contribution policy.
 These instructions add implementation constraints for coding agents.
 
+For every UI change, follow `CONTRIBUTING.md`, Interface design: preserve the
+existing design, localization, right-to-left support, and all themes. Keep UI
+and documentation text minimal. Never add UI subtitles, duplicate headings,
+or slogans.
+
 ## Product boundaries
 
-- Keep Spotifast a small native Spotify client. Do not add a browser engine,
+- Keep Spotifast X a small native Spotify client. Do not add a browser engine,
   telemetry, a hosted backend, or alternate sources for Spotify audio.
 - Playback capabilities come from librespot. Do not advertise or implement a
   capability merely because its name appears in a protobuf or enum. In
@@ -72,7 +77,7 @@ the story from before the user's action is stale, so hold the shown
 state and ask again rather than let the lagging answer undo what the
 user just did. Nothing the user did may ever flicker away and come back.
 
-Every visualiser, the spectrum analyser, the oscilloscope, and MilkDrop,
+Every visualiser, the spectrum analyser and the oscilloscope,
 shows the signal post-equalizer and pre-volume: the EQ shapes what is
 heard so the picture follows it, and the volume knob never moves the
 picture. Zero volume still dances.
@@ -156,6 +161,8 @@ Reviewers treat either problem in a pull request as a blocker.
 <!-- /github-automation: pull-requests -->
 
 ## Branches
+
+Commit and push completed work to `origin/main` after the relevant checks.
 
 Work on `main`. Commit there directly, one topic per commit, each
 compiling and passing the checks on its own. Feature branches and pull

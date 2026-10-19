@@ -698,7 +698,7 @@ pub fn populate(app: &mut App) {
     app.devices = vec![
         Device {
             id: Some("local-demo".into()),
-            name: "Spotifast".into(),
+            name: "Spotifast X".into(),
             is_active: false,
             is_restricted: false,
             volume_percent: Some(70),
@@ -1000,8 +1000,7 @@ fn demo_sound() -> Vec<f64> {
             let sample = PARTIALS
                 .iter()
                 .map(|(hertz, level)| {
-                    // Everything above the bass half again as loud, so the
-                    // skin's bars, four bands each, stand tall too.
+                    // Lift the upper partials above the bass.
                     let level = if *hertz > 100.0 { level * 1.5 } else { *level };
                     level * (time * hertz * std::f64::consts::TAU).sin()
                 })
@@ -1018,7 +1017,6 @@ fn demo_sound() -> Vec<f64> {
 #[cfg(feature = "demo")]
 pub fn apply_flags(app: &mut App, page: Option<&str>, show: Option<&str>) {
     // Default screenshots to the main window regardless of saved settings.
-    app.settings.winamp_window = false;
     if page == Some("prerelease") {
         let uri = "spotify:prerelease:0kRaNkRxpO16BjxJU0IQAL";
         if let Ok(mut data) =
@@ -1108,7 +1106,7 @@ pub fn apply_flags(app: &mut App, page: Option<&str>, show: Option<&str>) {
                 };
                 play_here(app);
                 app.local.playback = crate::player::Playback::Playing;
-                app.winamp.tap.push(&demo_sound(), 1.0);
+                app.audio_tap.push(&demo_sound(), 1.0);
                 // Read the cover's colours, as a change of song does, so the
                 // visualizer draws in them.
                 if let Some(now) = app.now_playing() {
@@ -1196,7 +1194,7 @@ pub fn apply_flags(app: &mut App, page: Option<&str>, show: Option<&str>) {
                 app.home.made_for_you = Loadable::Loading;
                 app.home.top_mixes = Loadable::NotLoaded;
             }
-            // The device picker's audio outputs, as Spotifast's own output
+            // The device picker's audio outputs, as Spotifast X's own output
             // lists them: Linux's default PulseAudio backend has none.
             "audio-outputs" => {
                 app.show_devices = true;
@@ -1383,23 +1381,6 @@ pub fn apply_flags(app: &mut App, page: Option<&str>, show: Option<&str>) {
                 app.resume_position_ms = 19_566;
                 app.actions.push(Action::Next);
             }
-            // Use the built-in skin for deterministic screenshots.
-            "winamp" => {
-                app.settings.winamp_window = true;
-                app.settings.skin = None;
-                // Two screen pixels per skin pixel, whatever the display, so
-                // captures match the pages that show them.
-                app.settings.skin_scale = Some(2);
-            }
-            "playlist" => app.settings.playlist_open = true,
-            "shade" => app.settings.winamp_shaded = true,
-            "playlist-shade" => app.settings.playlist_shaded = true,
-            "eq" => {
-                app.settings.eq_open = true;
-                app.settings.eq_on = true;
-                app.settings.eq_bands_db = crate::eq::PRESETS[13].bands_db;
-            }
-            "presets" => app.winamp.open_presets = true,
             // A headphone correction saved as a preset, and in use.
             "eq-user-presets" => {
                 let bands_db = [1.2, 0.0, -1.9, -2.0, 0.0, 1.6, 1.6, 2.6, 0.0, -4.4];
@@ -1435,7 +1416,6 @@ pub fn apply_flags(app: &mut App, page: Option<&str>, show: Option<&str>) {
                 ];
                 app.collapsed_folders = vec!["f2".into()];
             }
-            "small" => app.settings.skin_scale = Some(1),
             "windows-taskbar" => app.demo_windows_controls = true,
             "start-in-tray" => {
                 app.autostart = Some(fastframe_autostart::State::On(
@@ -1446,11 +1426,6 @@ pub fn apply_flags(app: &mut App, page: Option<&str>, show: Option<&str>) {
                 app.settings.sidebar_compact = true;
                 app.settings.tracklist_compact = true;
             }
-            "eq-shade" => {
-                app.settings.eq_open = true;
-                app.settings.eq_shaded = true;
-            }
-            "milkdrop" => app.settings.milkdrop_open = true,
             "pins" => {
                 app.settings.pinned_contexts =
                     vec!["spotify:playlist:pl2".into(), "spotify:playlist:pl4".into()];
@@ -3428,7 +3403,6 @@ mod tests {
             ("Normalize volume", Role::CheckBox),
             ("Dark", Role::Button),
             ("Switch to it", Role::Button),
-            ("MilkDrop window", Role::CheckBox),
             ("Equalizer", Role::CheckBox),
             ("Clear artwork", Role::Button),
             ("Check for updates", Role::Button),
@@ -3588,19 +3562,6 @@ mod tests {
     #[test]
     fn settings_search_never_shows_a_section_for_an_unavailable_row() {
         let (ctx, mut app) = accessible_app("settings-search-availability");
-        let text = settings_text(&ctx, &mut app, "Show in taskbar");
-        assert_eq!(
-            text.iter().any(|text| text == "Winamp skins"),
-            cfg!(windows)
-        );
-        if !cfg!(windows) {
-            assert!(text.iter().any(|text| text.starts_with("No settings for")));
-        }
-        app.demo_windows_controls = true;
-        let text = settings_text(&ctx, &mut app, "Show in taskbar");
-        assert!(text.iter().any(|text| text == "Winamp skins"));
-        assert!(text.iter().any(|text| text == "Show in taskbar"));
-
         app.settings.web_client_id = None;
         app.web_app = None;
         let text = settings_text(&ctx, &mut app, "Personal app ready");
@@ -4073,45 +4034,6 @@ mod tests {
         app.backend.shutdown();
     }
 
-    #[test]
-    fn the_windows_taskbar_setting_keeps_its_choice_without_closing_settings() {
-        use egui::accesskit::Role;
-        let (ctx, mut app) = accessible_app("winamp-taskbar-setting");
-        app.open(Page::Settings);
-        accessible_frame(&ctx, &mut app, vec![]);
-        let tree = accessible_frame(&ctx, &mut app, vec![]);
-        if !cfg!(windows) {
-            assert!(
-                !tree
-                    .nodes
-                    .iter()
-                    .any(|(_, node)| node.label() == Some("Show Winamp in taskbar"))
-            );
-        }
-        app.demo_windows_controls = true;
-        for _ in 0..4 {
-            accessible_frame(&ctx, &mut app, vec![]);
-        }
-        let tree = accessible_frame(&ctx, &mut app, vec![]);
-        let control = accessible_node(&tree, "Show Winamp in taskbar", Role::CheckBox);
-        accessible_frame(
-            &ctx,
-            &mut app,
-            vec![accessible_action(
-                control,
-                egui::accesskit::Action::Click,
-                None,
-            )],
-        );
-        assert!(!app.settings.winamp_show_taskbar);
-        assert!(!app.settings.winamp_window && !app.switch_intent);
-        let path = app.dirs.config.join("winamp-taskbar-choice.json");
-        app.settings.save(&path);
-        app.settings = Settings::load(&path);
-        assert!(!app.settings.winamp_show_taskbar);
-        app.backend.shutdown();
-    }
-
     /// Linux offers middle-click autoscroll as a switch that starts off and
     /// is saved; Windows always autoscrolls and macOS never does, so neither
     /// shows the row.
@@ -4154,50 +4076,6 @@ mod tests {
         app.settings.save(&path);
         app.settings = Settings::load(&path);
         assert!(app.settings.middle_click_autoscroll);
-        app.backend.shutdown();
-    }
-
-    /// X11 can hide the mini player's taskbar entry, so it gets the same row
-    /// and menu item as Windows; Wayland and macOS never show them.
-    #[test]
-    fn the_taskbar_setting_follows_the_window_backend() {
-        let (ctx, mut app) = accessible_app("x11-taskbar-setting");
-        app.taskbar_hiding_supported = true;
-        let text = settings_text(&ctx, &mut app, "Show in taskbar");
-        assert!(text.iter().any(|text| text == "Winamp skins"));
-        assert!(text.iter().any(|text| text == "Show in taskbar"));
-
-        app.taskbar_hiding_supported = false;
-        let text = settings_text(&ctx, &mut app, "Show in taskbar");
-        assert_eq!(
-            text.iter().any(|text| text == "Winamp skins"),
-            cfg!(windows)
-        );
-        app.backend.shutdown();
-    }
-
-    #[test]
-    fn wayland_on_top_setting_is_disabled_and_does_not_look_active() {
-        use egui::accesskit::{Role, Toggled};
-        let (ctx, mut app) = accessible_app("wayland-on-top");
-        app.window_level_supported = false;
-        app.settings.winamp_on_top = true;
-        app.open(Page::Settings);
-        accessible_frame(&ctx, &mut app, vec![]);
-        let tree = accessible_frame(&ctx, &mut app, vec![]);
-        let id = accessible_node(&tree, "Always on top", Role::CheckBox);
-        let node = &tree
-            .nodes
-            .iter()
-            .find(|(node_id, _)| *node_id == id)
-            .unwrap()
-            .1;
-        assert!(node.is_disabled());
-        assert_eq!(node.toggled(), Some(Toggled::False));
-        assert!(
-            app.settings.winamp_on_top,
-            "the saved preference is preserved"
-        );
         app.backend.shutdown();
     }
 
@@ -5768,7 +5646,7 @@ mod tests {
         let painted = view_frame(&ctx, &mut app, vec![], App::frame_ui);
         let title = sidebar_text(&painted, "Light mode theme");
         assert!(sidebar_text(&painted, "Dark mode theme").top() > title.top());
-        // The picker beside the title shows Spotifast's own Light.
+        // The picker beside the title shows Spotifast X's own Light.
         let picker = painted
             .iter()
             .find(|(text, rect)| {
@@ -6439,65 +6317,6 @@ mod tests {
         output.textures_delta.clear();
     }
 
-    /// A click just past the end of the mini player's volume bar is near
-    /// the balance slider, which egui would hand it to, but it leaves the
-    /// balance alone; a click on the balance slider's own track still moves
-    /// it (#804).
-    #[cfg(feature = "demo")]
-    #[test]
-    fn a_click_beside_the_balance_slider_leaves_the_balance_centred() {
-        let (ctx, mut app) = accessible_app("winamp-balance-halo");
-        app.backend.set_offline(true);
-        apply_flags(&mut app, None, Some("winamp"));
-        let draw = |app: &mut App, events: Vec<egui::Event>| {
-            let mut output = ctx.run_ui(
-                egui::RawInput {
-                    screen_rect: Some(egui::Rect::from_min_size(
-                        egui::Pos2::ZERO,
-                        egui::vec2(550.0, 232.0),
-                    )),
-                    events,
-                    ..Default::default()
-                },
-                |ui| app.frame_ui(ui),
-            );
-            output.textures_delta.clear();
-        };
-        draw(&mut app, Vec::new());
-        draw(&mut app, Vec::new());
-        // Two points per skin pixel. The volume bar ends at x 175 and the
-        // balance slider starts at 177, both centred on y 63.5.
-        let y = 63.5 * 2.0;
-        for x in [175.6, 176.4, 176.9] {
-            draw(
-                &mut app,
-                pointer_click(egui::pos2(x * 2.0, y), egui::PointerButton::Primary),
-            );
-            draw(&mut app, Vec::new());
-            assert_eq!(app.settings.balance, 0.0, "a click at x {x}");
-        }
-        // Just outside the slider, above and below.
-        for dy in [-8.0, 8.0] {
-            draw(
-                &mut app,
-                pointer_click(
-                    egui::pos2(200.0 * 2.0, y + dy * 2.0),
-                    egui::PointerButton::Primary,
-                ),
-            );
-            draw(&mut app, Vec::new());
-            assert_eq!(app.settings.balance, 0.0, "a click {dy} skin pixels off");
-        }
-        // The right end of the balance track.
-        draw(
-            &mut app,
-            pointer_click(egui::pos2(214.0 * 2.0, y), egui::PointerButton::Primary),
-        );
-        draw(&mut app, Vec::new());
-        assert_eq!(app.settings.balance, 1.0);
-        app.backend.shutdown();
-    }
-
     /// Every line of the sign-in card is drawn whole, without a scroll bar,
     /// in each state at the smallest main window and a usual one (#782).
     #[test]
@@ -6546,7 +6365,7 @@ mod tests {
                             "{:?} is cut off at {size:?} in {state:?}",
                             text.galley.job.text
                         );
-                        if text.galley.job.text == "Spotifast" {
+                        if text.galley.job.text == "Spotifast X" {
                             title = Some(rect);
                         }
                     }
@@ -6854,99 +6673,9 @@ mod tests {
         let _ = std::fs::remove_dir_all(root);
     }
 
-    /// The frame rate is a dial with detents: it stops at the rates
-    /// worth having, names the one it is on, and moving it one notch
-    /// lands on the next of them rather than somewhere in between.
-    #[cfg(feature = "milkdrop")]
+    /// The frame-rate dial names the screen showing the main window.
     #[test]
-    fn the_frame_rate_dial_steps_between_its_stops() {
-        let root =
-            std::env::temp_dir().join(format!("spotifast-fps-dial-test-{}", std::process::id()));
-        let dirs = AppDirs {
-            config: root.join("config"),
-            state: root.join("state"),
-            cache: root.join("cache"),
-        };
-        let ctx = egui::Context::default();
-        let waker = crate::backend::Waker::default();
-        waker.attach(&ctx);
-        let mut app = App::new(
-            &waker,
-            dirs,
-            Settings::default(),
-            AppOptions {
-                media_controls: false,
-                restore_sign_in: false,
-                tray: false,
-                autostart: false,
-            },
-        );
-        app.attach(&ctx);
-        populate(&mut app);
-        app.settings.milkdrop_screen_hz = 144;
-        app.settings.milkdrop_fps = 60;
-        // The main window's screen is not MilkDrop's: its dial keeps
-        // the rate MilkDrop reported.
-        app.screen_hz = 60;
-        app.open(Page::Settings);
-
-        // Read labels from the real Settings page.
-        let drawn = |app: &mut App, ctx: &egui::Context| -> Vec<String> {
-            let input = egui::RawInput {
-                // Draw the full Settings page, including MilkDrop.
-                screen_rect: Some(egui::Rect::from_min_size(
-                    egui::Pos2::ZERO,
-                    egui::vec2(1280.0, 4000.0),
-                )),
-                ..Default::default()
-            };
-            let mut output = ctx.run_ui(input, |ui| app.frame_ui(ui));
-            output.textures_delta.clear();
-            let mut said = Vec::new();
-            fn walk(shape: &egui::epaint::Shape, said: &mut Vec<String>) {
-                match shape {
-                    egui::epaint::Shape::Text(text) => said.push(text.galley.job.text.clone()),
-                    egui::epaint::Shape::Vec(shapes) => {
-                        shapes.iter().for_each(|shape| walk(shape, said))
-                    }
-                    _ => {}
-                }
-            }
-            for clipped in &output.shapes {
-                walk(&clipped.shape, &mut said);
-            }
-            said
-        };
-
-        for _ in 0..3 {
-            let said = drawn(&mut app, &ctx);
-            assert!(
-                said.iter().any(|text| text.contains("60 fps")),
-                "the dial names the rate it is on: {said:?}"
-            );
-        }
-
-        // Every stop can be reached, and each names itself.
-        for (rate, expected) in [
-            (144, "144 fps, your screen"),
-            (0, "Uncapped"),
-            (30, "30 fps"),
-        ] {
-            app.settings.milkdrop_fps = rate;
-            let said = drawn(&mut app, &ctx);
-            assert!(
-                said.iter().any(|text| text == expected),
-                "the dial on {rate} should read {expected}: {said:?}"
-            );
-        }
-        app.backend.shutdown();
-    }
-
-    /// The visualizers' frame-rate dial names the rate of the screen showing
-    /// the main window as the screen's with MilkDrop never opened, and
-    /// MilkDrop's until the window's screen has said.
-    #[test]
-    fn the_visualizer_dial_knows_the_screen_without_milkdrop() {
+    fn the_visualizer_dial_knows_the_screen() {
         let root =
             std::env::temp_dir().join(format!("spotifast-screen-dial-test-{}", std::process::id()));
         let dirs = AppDirs {
@@ -6999,7 +6728,6 @@ mod tests {
             said
         };
 
-        assert_eq!(app.settings.milkdrop_screen_hz, 0, "MilkDrop never opened");
         app.screen_hz = 165;
         app.settings.visualizer_fps = 165;
         let mut said = Vec::new();
@@ -7011,14 +6739,6 @@ mod tests {
             "the dial names the window's screen: {said:?}"
         );
 
-        app.screen_hz = 0;
-        app.settings.milkdrop_screen_hz = 144;
-        app.settings.visualizer_fps = 144;
-        let said = drawn(&mut app, &ctx);
-        assert!(
-            said.iter().any(|text| text == "144 fps, your screen"),
-            "MilkDrop's screen until the window's has said: {said:?}"
-        );
         app.backend.shutdown();
         let _ = std::fs::remove_dir_all(root);
     }
@@ -8614,7 +8334,7 @@ mod tests {
         app.backend.shutdown();
     }
 
-    /// "Next up" plays from the current context, not from a list Spotifast
+    /// "Next up" plays from the current context, not from a list Spotifast X
     /// can rewrite, so it is never a drop target: dropping a queued row on
     /// it must not move or insert anything, even though the row sits inside
     /// the same scrollable list as "Playing next".

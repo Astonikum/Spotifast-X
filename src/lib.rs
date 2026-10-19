@@ -1,4 +1,4 @@
-//! Spotifast's internals, exposed so diagnostics and tests can reach them.
+//! Spotifast X's internals, exposed so diagnostics and tests can reach them.
 
 pub mod account_cache;
 pub mod api;
@@ -33,7 +33,6 @@ pub mod mac_notch;
 #[cfg(target_os = "macos")]
 pub mod mac_touchbar_crash_guard;
 pub mod made_for_you;
-pub mod milkdrop;
 pub mod model;
 pub mod motion;
 pub mod new_releases;
@@ -49,15 +48,12 @@ pub mod session_reads;
 pub mod settings;
 pub mod single_instance;
 pub mod sink;
-pub mod skin;
 pub mod sonos;
-pub mod system_fonts;
 pub mod theme;
 pub mod thumbbar;
 pub mod ui;
 pub mod updates;
 pub mod util;
 pub mod vis;
-pub mod winamp;
 pub mod window;
 pub mod zeroconf;

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Check a release's Spotifast downloads and write their checksums."""
+"""Check a release's Spotifast X downloads and write their checksums."""
 
 import argparse
 import fnmatch

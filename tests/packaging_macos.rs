@@ -1,4 +1,4 @@
-//! The macOS bundle carries the launch agent that starts Spotifast in the
+//! The macOS bundle carries the launch agent that starts Spotifast X in the
 //! tray at login (#122), exactly as fastframe-autostart registers it.
 use std::fs;
 use std::path::PathBuf;

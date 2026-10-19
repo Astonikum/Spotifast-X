@@ -27,7 +27,7 @@
   #define InnoArch "x64compatible"
 #endif
 
-#define AppName "Spotifast"
+#define AppName "Spotifast X"
 #define AppExeName "spotifast.exe"
 #define AppIdentity "Spotifast"
 
@@ -42,7 +42,7 @@ AppCopyright=© 2026 Carmine Paolino
 AppPublisherURL=https://spotifast.rocks
 AppSupportURL=https://github.com/crmne/spotifast/issues
 AppUpdatesURL=https://spotifast.rocks/download/
-DefaultDirName={localappdata}\Programs\{#AppName}
+DefaultDirName={localappdata}\Programs\{#AppIdentity}
 DefaultGroupName={#AppName}
 DisableProgramGroupPage=yes
 PrivilegesRequired=lowest
@@ -85,7 +85,7 @@ Name: "{autodesktop}\{#AppName}"; Filename: "{app}\{#AppExeName}"; Tasks: deskto
 ; Spotify links (spotify:track:…) open in Spotifast. Registered for this
 ; user only, like the program itself. The official client registers the same
 ; scheme when it is installed; whichever was set up last has the links, and
-; Settings > Apps > Default apps can hand them to the other, where Spotifast
+; Settings > Apps > Default apps can hand them to the other, where Spotifast X
 ; is listed through the capabilities below.
 Root: HKCU; Subkey: "Software\Classes\spotify"; ValueType: string; ValueName: ""; ValueData: "URL:Spotify link"
 Root: HKCU; Subkey: "Software\Classes\spotify"; ValueType: string; ValueName: "URL Protocol"; ValueData: ""
@@ -137,10 +137,10 @@ begin
       // A portable copy can have the same name. Never close it by name alone.
       if not VarIsNull(Path) then
         if CompareText(Path, Exe) = 0 then
-          Log('Closing installed Spotifast: result ' + IntToStr(Process.Terminate(0)));
+          Log('Closing installed Spotifast X: result ' + IntToStr(Process.Terminate(0)));
     end;
   except
-    Log('Could not close installed Spotifast: ' + GetExceptionMessage);
+    Log('Could not close installed Spotifast X: ' + GetExceptionMessage);
   end;
 end;
 
@@ -166,10 +166,10 @@ begin
     end;
     if UninstallSilent then
       Exit;
-    case SuppressibleTaskDialogMsgBox('Spotifast cannot be removed yet.',
-      'Its program file is in use or inaccessible. Quit Spotifast and retry, or close it here to continue.' + #13#10#13#10 +
-      'Close Spotifast ends the process immediately. Unsaved changes may be lost.',
-      mbError, MB_YESNOCANCEL, ['Retry', 'Close Spotifast'], 0, IDCANCEL) of
+    case SuppressibleTaskDialogMsgBox('Spotifast X cannot be removed yet.',
+      'Its program file is in use or inaccessible. Quit Spotifast X and retry, or close it here to continue.' + #13#10#13#10 +
+      'Close Spotifast X ends the process immediately. Unsaved changes may be lost.',
+      mbError, MB_YESNOCANCEL, ['Retry', 'Close Spotifast X'], 0, IDCANCEL) of
       IDYES: ;
       IDNO: begin
         CloseInstalledSpotifast;

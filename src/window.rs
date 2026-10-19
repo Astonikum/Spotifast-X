@@ -3,16 +3,6 @@
 //! eframe already places the window on-screen. The session can still refer
 //! to a monitor that was unplugged, so check before moving the window there.
 
-/// Why a Wayland window cannot be kept above others from the app, and what
-/// to do instead.
-pub fn on_top_unavailable(locale: crate::i18n::Locale) -> std::borrow::Cow<'static, str> {
-    use crate::i18n::gettext;
-    gettext(
-        locale,
-        "On Wayland, use your desktop's Keep Above shortcut or window rule.",
-    )
-}
-
 /// The message box shown when eframe could not create an OpenGL context on
 /// Windows, and the page its Yes button opens.
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -36,13 +26,13 @@ const DOWNLOAD_PAGE: &str = "https://spotifast.rocks/download/";
 /// Microsoft Basic Display Adapter, which offers OpenGL 1.1.
 pub fn missing_opengl_message(locale: crate::i18n::Locale, arm: bool) -> MissingOpenGl {
     use crate::i18n::gettext;
-    let title = gettext(locale, "Spotifast cannot open its window").into_owned();
+    let title = gettext(locale, "Spotifast X cannot open its window").into_owned();
     if arm {
         return MissingOpenGl {
             title,
             text: gettext(
                 locale,
-                "On Windows on ARM, the OpenGL that Spotifast draws with comes from Microsoft's OpenCL, OpenGL & Vulkan Compatibility Pack. Open its Microsoft Store page to install or repair it?",
+                "On Windows on ARM, the OpenGL that Spotifast X draws with comes from Microsoft's OpenCL, OpenGL & Vulkan Compatibility Pack. Open its Microsoft Store page to install or repair it?",
             )
             .into_owned(),
             page: COMPATIBILITY_PACK_PAGE,
@@ -51,8 +41,8 @@ pub fn missing_opengl_message(locale: crate::i18n::Locale, arm: bool) -> Missing
     let text = gettext(
         locale,
         // Translators: Keep {url} exactly as written. It becomes the address
-        // of the Spotifast download page.
-        "Spotifast needs a graphics driver with OpenGL 2.0 or newer, and this PC or virtual machine does not provide one. Install the graphics driver, or turn on GPU acceleration for the virtual machine. Open {url} to read more?",
+        // of the Spotifast X download page.
+        "Spotifast X needs a graphics driver with OpenGL 2.0 or newer, and this PC or virtual machine does not provide one. Install the graphics driver, or turn on GPU acceleration for the virtual machine. Open {url} to read more?",
     );
     MissingOpenGl {
         title,
@@ -116,99 +106,6 @@ pub fn minimize_window(ctx: &egui::Context) {
     let _ = ctx;
 }
 
-/// The active backend matters: a Wayland session can also host X11 windows.
-/// winit's Wayland backend cannot change a window's stacking level.
-pub fn supports_window_level(display: raw_window_handle::RawDisplayHandle) -> bool {
-    !matches!(display, raw_window_handle::RawDisplayHandle::Wayland(_))
-}
-
-/// Whether the mini player can keep its window without a taskbar entry.
-/// Windows and X11 can; Wayland has no protocol for it, and macOS has the
-/// Dock instead of a taskbar.
-pub fn supports_hiding_from_taskbar(display: raw_window_handle::RawDisplayHandle) -> bool {
-    use raw_window_handle::RawDisplayHandle;
-    matches!(
-        display,
-        RawDisplayHandle::Windows(_) | RawDisplayHandle::Xlib(_) | RawDisplayHandle::Xcb(_)
-    )
-}
-
-/// Keeps an X11 window out of the taskbar with `_NET_WM_STATE_SKIP_TASKBAR`.
-///
-/// winit can only do this on Windows, so this asks the window manager
-/// directly. A window that is not mapped yet carries the state in its
-/// property, which the window manager reads when it maps the window; a
-/// mapped one asks the window manager, as EWMH requires. Any other handle is
-/// left alone.
-#[cfg(target_os = "linux")]
-pub fn skip_x11_taskbar(window: raw_window_handle::RawWindowHandle) {
-    use raw_window_handle::RawWindowHandle;
-    let window = match window {
-        RawWindowHandle::Xlib(handle) => match u32::try_from(handle.window) {
-            Ok(window) => window,
-            Err(_) => return,
-        },
-        RawWindowHandle::Xcb(handle) => handle.window.get(),
-        _ => return,
-    };
-    if let Err(error) = x11::skip_taskbar(window) {
-        log::warn!("could not hide the mini player from the taskbar: {error}");
-    }
-}
-
-#[cfg(target_os = "linux")]
-mod x11 {
-    use x11rb::connection::Connection;
-    use x11rb::protocol::xproto::{
-        AtomEnum, ClientMessageEvent, ConnectionExt as _, EventMask, MapState, PropMode,
-    };
-    use x11rb::wrapper::ConnectionExt as _;
-
-    /// `_NET_WM_STATE_ADD` in a `_NET_WM_STATE` client message.
-    const ADD: u32 = 1;
-    /// The request comes from an ordinary application.
-    const FROM_APPLICATION: u32 = 1;
-
-    pub(super) fn skip_taskbar(window: u32) -> Result<(), Box<dyn std::error::Error>> {
-        let (connection, screen) = x11rb::connect(None)?;
-        let root = connection.setup().roots[screen].root;
-        let state = connection
-            .intern_atom(false, b"_NET_WM_STATE")?
-            .reply()?
-            .atom;
-        let skip = connection
-            .intern_atom(false, b"_NET_WM_STATE_SKIP_TASKBAR")?
-            .reply()?
-            .atom;
-        let mapped =
-            connection.get_window_attributes(window)?.reply()?.map_state != MapState::UNMAPPED;
-        if mapped {
-            let event = ClientMessageEvent::new(32, window, state, message_data(skip));
-            connection.send_event(
-                false,
-                root,
-                EventMask::SUBSTRUCTURE_REDIRECT | EventMask::SUBSTRUCTURE_NOTIFY,
-                event,
-            )?;
-        } else {
-            connection.change_property32(
-                PropMode::APPEND,
-                window,
-                state,
-                AtomEnum::ATOM,
-                &[skip],
-            )?;
-        }
-        connection.flush()?;
-        Ok(())
-    }
-
-    /// The `_NET_WM_STATE` request that adds one state.
-    pub(super) fn message_data(atom: u32) -> [u32; 5] {
-        [ADD, atom, 0, FROM_APPLICATION, 0]
-    }
-}
-
 /// The main window's smallest size with no side panel open. The page and
 /// its top bar fit beside the narrowest sidebar from here.
 pub const MAIN_MIN_SIZE: [f32; 2] = [760.0, 520.0];
@@ -237,122 +134,11 @@ mod tests {
         assert!(arm.text.contains("Compatibility Pack"));
 
         let x64 = missing_opengl_message(crate::i18n::Locale::English, false);
-        assert_eq!(x64.title, "Spotifast cannot open its window");
+        assert_eq!(x64.title, "Spotifast X cannot open its window");
         assert_eq!(x64.page, "https://spotifast.rocks/download/");
         assert!(x64.text.contains("OpenGL 2.0"));
         assert!(x64.text.contains("virtual machine"));
         assert!(x64.text.contains("https://spotifast.rocks/download/"));
         assert!(!x64.text.contains("{url}"));
-    }
-
-    #[test]
-    fn only_the_wayland_backend_lacks_window_level_control() {
-        use raw_window_handle::{
-            RawDisplayHandle, WaylandDisplayHandle, XcbDisplayHandle, XlibDisplayHandle,
-        };
-        let wayland = WaylandDisplayHandle::new(std::ptr::NonNull::dangling());
-        assert!(!supports_window_level(RawDisplayHandle::Wayland(wayland)));
-        assert!(supports_window_level(RawDisplayHandle::Xlib(
-            XlibDisplayHandle::new(None, 0)
-        )));
-        assert!(supports_window_level(RawDisplayHandle::Xcb(
-            XcbDisplayHandle::new(None, 0)
-        )));
-    }
-
-    #[test]
-    fn only_windows_and_x11_can_hide_the_mini_player_from_the_taskbar() {
-        use raw_window_handle::{
-            AppKitDisplayHandle, RawDisplayHandle, WaylandDisplayHandle, WindowsDisplayHandle,
-            XcbDisplayHandle, XlibDisplayHandle,
-        };
-        let wayland = WaylandDisplayHandle::new(std::ptr::NonNull::dangling());
-        assert!(!supports_hiding_from_taskbar(RawDisplayHandle::Wayland(
-            wayland
-        )));
-        assert!(!supports_hiding_from_taskbar(RawDisplayHandle::AppKit(
-            AppKitDisplayHandle::new()
-        )));
-        assert!(supports_hiding_from_taskbar(RawDisplayHandle::Windows(
-            WindowsDisplayHandle::new()
-        )));
-        assert!(supports_hiding_from_taskbar(RawDisplayHandle::Xlib(
-            XlibDisplayHandle::new(None, 0)
-        )));
-        assert!(supports_hiding_from_taskbar(RawDisplayHandle::Xcb(
-            XcbDisplayHandle::new(None, 0)
-        )));
-    }
-
-    /// EWMH's layout: add, the state, no second state, from an application.
-    #[cfg(target_os = "linux")]
-    #[test]
-    fn the_skip_taskbar_request_adds_one_state_as_an_application() {
-        assert_eq!(x11::message_data(42), [1, 42, 0, 1, 0]);
-    }
-
-    /// Needs an X server (`DISPLAY`), so it is not part of the ordinary
-    /// suite. The window is never mapped, so nothing appears on screen.
-    #[cfg(target_os = "linux")]
-    #[test]
-    #[ignore = "needs an X server"]
-    fn an_unmapped_x11_window_keeps_its_states_and_skips_the_taskbar() {
-        use x11rb::connection::Connection;
-        use x11rb::protocol::xproto::{AtomEnum, ConnectionExt as _, CreateWindowAux, WindowClass};
-        use x11rb::wrapper::ConnectionExt as _;
-
-        let (connection, screen) = x11rb::connect(None).expect("an X server");
-        let root = connection.setup().roots[screen].root;
-        let window = connection.generate_id().unwrap();
-        connection
-            .create_window(
-                0,
-                window,
-                root,
-                0,
-                0,
-                1,
-                1,
-                0,
-                WindowClass::INPUT_OUTPUT,
-                0,
-                &CreateWindowAux::new(),
-            )
-            .unwrap();
-        let atom = |name: &[u8]| {
-            connection
-                .intern_atom(false, name)
-                .unwrap()
-                .reply()
-                .unwrap()
-                .atom
-        };
-        let state = atom(b"_NET_WM_STATE");
-        let above = atom(b"_NET_WM_STATE_ABOVE");
-        let skip = atom(b"_NET_WM_STATE_SKIP_TASKBAR");
-        connection
-            .change_property32(
-                x11rb::protocol::xproto::PropMode::REPLACE,
-                window,
-                state,
-                AtomEnum::ATOM,
-                &[above],
-            )
-            .unwrap();
-        connection.flush().unwrap();
-
-        x11::skip_taskbar(window).unwrap();
-
-        let states: Vec<u32> = connection
-            .get_property(false, window, state, AtomEnum::ATOM, 0, 16)
-            .unwrap()
-            .reply()
-            .unwrap()
-            .value32()
-            .unwrap()
-            .collect();
-        connection.destroy_window(window).unwrap();
-        connection.flush().unwrap();
-        assert_eq!(states, vec![above, skip]);
     }
 }

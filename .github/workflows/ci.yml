@@ -68,7 +68,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y libasound2-dev libpulse-dev libxkbcommon-dev \
-            libwayland-dev libgl1-mesa-dev cmake libclang-dev ruby
+            libwayland-dev libgl1-mesa-dev ruby
       # After the toolchain, so the cache key follows the pinned rustc. The
       # key carries no job name, so each job sets its own generation. Only
       # pushes to main save; a pull request restores and builds on top.
@@ -98,9 +98,7 @@ jobs:
   test:
     name: test (${{ matrix.os }})
     runs-on: ${{ matrix.os }}
-    env:
-      CMAKE_GENERATOR: Ninja
-    # A cold mbx cache on Windows (projectM through cmake) needs about 30
+    # A cold mbx cache on Windows needs about 30
     # minutes before the action saves the cache; warm runs take far less.
     # The arm64 runner has four cores and needs longer from cold.
     timeout-minutes: 90
@@ -117,20 +115,8 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y libasound2-dev libpulse-dev libxkbcommon-dev \
-            libwayland-dev libgl1-mesa-dev cmake libclang-dev
-      # libprojectM reads OpenGL through GLEW on Windows; projectm-sys builds
-      # against vcpkg's static-CRT triplet, matching .cargo/config.toml.
-      - name: GLEW for libprojectM
-        if: runner.os == 'Windows'
-        run: vcpkg install glew:${{ runner.arch == 'ARM64' && 'arm64' || 'x64' }}-windows-static
-      # projectm-sys asks CMake for the Visual Studio generator, which the
-      # runner image no longer satisfies; Ninja inside the MSVC environment
-      # builds the same thing without caring which Visual Studio is on. The
-      # generator is job-level env, since a GITHUB_ENV write never reached
-      # the build script.
-      # Native tools on each runner: the action's default is x64, which on
-      # the arm64 runner would compile under emulation.
-      - name: MSVC environment for libprojectM
+            libwayland-dev libgl1-mesa-dev
+      - name: MSVC environment
         if: runner.os == 'Windows'
         uses: ilammy/msvc-dev-cmd@v1
         with:
@@ -159,7 +145,7 @@ jobs:
           mbx build --locked
           $imports = & dumpbin /dependents target\debug\spotifast.exe | Out-String
           $runtime = $imports | Select-String -Pattern 'MSVCP[0-9_]*\.dll|VCRUNTIME[0-9_]*\.dll'
-          if ($runtime) { throw "Spotifast imports an MSVC runtime:`n$runtime" }
+          if ($runtime) { throw "Spotifast X imports an MSVC runtime:`n$runtime" }
           $machine = if ($env:RUNNER_ARCH -eq 'ARM64') { 'AA64 machine \(ARM64\)' } else { '8664 machine \(x64\)' }
           $headers = & dumpbin /headers target\debug\spotifast.exe | Out-String
           if ($headers -notmatch $machine) { throw "spotifast.exe is not built for $env:RUNNER_ARCH`:`n$headers" }
@@ -217,7 +203,7 @@ jobs:
         run: |
           mbx build --locked
           version=$(cargo metadata --no-deps --format-version 1 | python3 -c 'import json,sys; print(json.load(sys.stdin)["packages"][0]["version"])')
-          app="$RUNNER_TEMP/spotifast-bundle-check/Spotifast.app"
+          app="$RUNNER_TEMP/spotifast-bundle-check/Spotifast X.app"
           bash packaging/macos/bundle.sh target/debug/spotifast "$app" "$version"
           executable=$(/usr/libexec/PlistBuddy -c 'Print :CFBundleExecutable' "$app/Contents/Info.plist")
           "$app/Contents/MacOS/$executable" --version
