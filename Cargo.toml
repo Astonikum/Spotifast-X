@@ -24,6 +24,10 @@ thiserror = "2"
 clap = { version = "4.5", features = ["derive"] }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
+# Resource-limited, native scripting without filesystem/module/process access.
+rhai = { version = "1.26", features = ["serde", "no_module", "sync"] }
+# .plugin packages are bounded ZIPs read in memory, never extracted.
+zip = { version = "9", default-features = false, features = ["deflate-flate2-zlib-rs"] }
 log = "0.4"
 # One protected-store API, with only each target's native provider below.
 # Durable Spotify grants must not be copied into ordinary state JSON.

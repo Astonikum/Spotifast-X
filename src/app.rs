@@ -1,5 +1,8 @@
 //! The application: state, event handling, and the actions views ask for.
 
+#[path = "app_plugins.rs"]
+mod plugin_host;
+
 use std::borrow::Cow;
 use std::collections::{HashMap, HashSet};
 use std::path::PathBuf;
@@ -290,6 +293,7 @@ pub enum PlayCountRead {
 const PLAY_COUNT_RETRY: Duration = Duration::from_secs(60);
 
 pub struct App {
+    pub plugins: plugin_host::PluginHost,
     pub dirs: AppDirs,
     pub settings: Settings,
     /// Proxy policy actually handed to network workers. Manual form edits are
@@ -995,6 +999,7 @@ impl App {
 
         let palette = settings.fixed_palette().unwrap_or_else(Palette::dark);
         let mut app = Self {
+            plugins: plugin_host::PluginHost::new(dirs.config.join("plugins"), waker.clone()),
             custom_themes: theme::Catalog::default(),
             dirs,
             settings,
@@ -1834,13 +1839,15 @@ impl App {
         self.requested_track_preview()
             .or_else(|| self.now_playing_live())
             .or_else(|| self.resume_preview())
+            .map(|now| self.plugin_track_patch(now))
     }
 
     fn refresh_frame_now(&mut self) {
         self.frame_now = self
             .requested_track_preview()
             .or_else(|| self.now_playing_live())
-            .or_else(|| self.resume_preview());
+            .or_else(|| self.resume_preview())
+            .map(|now| self.plugin_track_patch(now));
     }
 
     /// Keep the player bar on the same requested song as the playlist marker
@@ -2371,6 +2378,13 @@ impl App {
                 continue;
             }
             match event {
+                Event::PluginChosen(Some(path)) => self.plugins.manager.install(path),
+                Event::PluginChosen(None) => {}
+                Event::PluginProxyApplied(result) => {
+                    if let Err(error) = result {
+                        self.toast_error(error);
+                    }
+                }
                 Event::PlaylistCoverChecked {
                     id,
                     request,
@@ -3869,6 +3883,7 @@ impl App {
                 self.last_proxy_applied = request;
                 self.applied_proxy = config;
                 self.applied_proxy_preferences = preferences;
+                self.reapply_plugin_proxy();
                 self.save_settings();
                 if restarted && self.local_ready {
                     self.toast(gettext(self.locale, "Proxy applied. Restarting local playback."));
@@ -10125,6 +10140,14 @@ impl App {
     /// Apply one queued UI action after drawing, updating optimistic local state
     /// and scheduling any backend work or preference persistence it requires.
     pub(crate) fn apply(&mut self, action: Action, ctx: &egui::Context) {
+        self.emit_plugin_action(&action);
+        if self.plugin_action_blocked(&action) {
+            return;
+        }
+        if let Some(replacement) = self.plugin_action_override(&action) {
+            self.apply_plugin_command(replacement, ctx);
+            return;
+        }
         if matches!(
             &action,
             Action::Open(_)
@@ -10150,6 +10173,58 @@ impl App {
             self.supersede_play_search();
         }
         match action {
+            Action::InstallPlugin => self.backend.choose_plugin(self.locale),
+            Action::PluginEnabled(id, enabled) => {
+                self.plugins.manager.set_enabled(&id, enabled);
+                self.invalidate_plugin(&id);
+            }
+            Action::PluginPermission(id, permission, allowed) => {
+                self.plugins
+                    .manager
+                    .set_permission(&id, permission, allowed);
+                self.invalidate_plugin(&id);
+            }
+            Action::PluginSetting(id, key, value) => {
+                self.plugins.manager.set_setting(&id, &key, value);
+                self.invalidate_plugin(&id);
+            }
+            Action::RemovePlugin(id) => {
+                self.plugins.manager.remove(&id);
+                self.invalidate_plugin(&id);
+            }
+            Action::PluginCommand {
+                id,
+                digest,
+                revision,
+                command,
+            } => {
+                if self.plugins.manager.permits(
+                    &id,
+                    &digest,
+                    revision,
+                    crate::plugins::Permission::UiWrite,
+                ) && let crate::plugins::PluginCommand::Emit { event } = &command
+                {
+                    let snapshot = self.plugin_snapshot();
+                    self.plugins.manager.invoke(
+                        &id,
+                        serde_json::json!({"type":"custom", "name":event}),
+                        snapshot,
+                    );
+                } else if self.plugins.manager.permits(
+                    &id,
+                    &digest,
+                    revision,
+                    crate::plugins::Permission::UiWrite,
+                ) && self.plugins.manager.permits(
+                    &id,
+                    &digest,
+                    revision,
+                    crate::plugins::Permission::PlaybackControl,
+                ) {
+                    self.apply_plugin_command(command, ctx);
+                }
+            }
             Action::Open(page) => self.open(page),
             Action::OpenSongRadio { uri, track } => self.open_song_radio(&uri, &track),
             Action::PrepareTint(url) => {
@@ -11634,6 +11709,7 @@ impl App {
         }
         self.handle_control_commands();
         self.handle_events();
+        self.tick_plugins(ctx);
         self.open_pending_link();
         self.handle_media_commands();
         self.sync_power(ctx);
@@ -18856,6 +18932,326 @@ mod tests {
         );
         app.reveal_theme_changes = false;
         app
+    }
+
+    fn install_test_plugin(app: &mut App) {
+        use std::io::Write;
+        let manifest = serde_json::json!({
+            "id":"integration", "name":{"en":"Integration اختبار", "ar":"اختبار"},
+            "version":"1", "api":1,
+            "permissions":["ui_write", "playback_read", "playback_control", "tracks_write", "behavior_write"],
+            "settings":{
+                "active":{"label":{"en":"Active", "ar":"نشط"},"kind":"bool","default":true},
+                "caption":{"label":"Track caption", "kind":"text", "default":"اختبار 123"},
+                "level":{"label":"Level", "kind":"number", "default":10, "min":0, "max":100},
+                "mode":{"label":"Mode", "kind":"select", "default":"اختبار English 123 ".repeat(24), "options":["اختبار English 123 ".repeat(24),"Default"]}
+            }
+        });
+        let source = r#"
+            fn on_event(input) {
+                if input.event.type == "fail" || input.event.type == "tick" { throw "failed"; }
+                let slots = #{};
+                for slot in ["page_start", "page_end", "sidebar", "topbar", "player_bar", "settings"] {
+                    slots[slot] = [#{type: "label", text: "plugin-slot"}];
+                }
+                #{state: input.event, ui_slots: slots, ui_replace: ["page"],
+                  action_rules: #{seek: #{type: "volume", value: 37}},
+                  track_overrides: #{"spotify:track:abc": #{name: "Patched"}}}
+            }
+        "#;
+        let mut writer = zip::ZipWriter::new(std::io::Cursor::new(Vec::new()));
+        let options = zip::write::SimpleFileOptions::default();
+        writer.start_file("manifest.json", options).unwrap();
+        writer
+            .write_all(&serde_json::to_vec(&manifest).unwrap())
+            .unwrap();
+        writer.start_file("main.rhai", options).unwrap();
+        writer.write_all(source.as_bytes()).unwrap();
+        let path = app.dirs.config.join("integration.plugin");
+        std::fs::create_dir_all(&app.dirs.config).unwrap();
+        std::fs::write(&path, writer.finish().unwrap().into_inner()).unwrap();
+        app.plugins.manager.install(path);
+        let deadline = Instant::now() + Duration::from_secs(30);
+        while app.plugins.manager.records().is_empty() {
+            app.plugins.manager.poll();
+            assert!(
+                Instant::now() < deadline,
+                "plugin installed: {:?}",
+                app.plugins.manager.error
+            );
+            std::thread::sleep(Duration::from_millis(5));
+        }
+        assert!(!app.plugins.manager.records()[0].config.enabled);
+        assert!(app.plugins.manager.records()[0].config.grants.is_empty());
+        for permission in [
+            crate::plugins::Permission::UiWrite,
+            crate::plugins::Permission::PlaybackRead,
+            crate::plugins::Permission::PlaybackControl,
+            crate::plugins::Permission::TracksWrite,
+            crate::plugins::Permission::BehaviorWrite,
+        ] {
+            app.plugins
+                .manager
+                .set_permission("integration", permission, true);
+        }
+        app.plugins.manager.set_enabled("integration", true);
+        app.plugins.manager.invoke(
+            "integration",
+            serde_json::json!({"type":"test"}),
+            serde_json::Value::Null,
+        );
+        await_plugin_output(app, "test");
+    }
+
+    fn await_plugin_output(app: &mut App, event_type: &str) {
+        let deadline = Instant::now() + Duration::from_secs(30);
+        loop {
+            for result in app.plugins.manager.poll() {
+                assert!(result.result.is_ok(), "{:?}", result.result);
+                app.plugins.outputs.insert(result.id.clone(), result);
+            }
+            if app.plugins.outputs.values().any(|result| {
+                result.result.as_ref().is_ok_and(|output| {
+                    output.state.get("type").and_then(serde_json::Value::as_str) == Some(event_type)
+                })
+            }) {
+                break;
+            }
+            assert!(
+                Instant::now() < deadline,
+                "expected plugin event {event_type}: manager={:?}, records={:?}",
+                app.plugins.manager.error,
+                app.plugins
+                    .manager
+                    .records()
+                    .iter()
+                    .map(|record| (&record.config, &record.error))
+                    .collect::<Vec<_>>()
+            );
+            std::thread::sleep(Duration::from_millis(5));
+        }
+    }
+
+    #[test]
+    fn plugin_play_commands_preserve_context_and_cached_queue_metadata() {
+        use crate::plugins::PluginCommand;
+        let ctx = egui::Context::default();
+        let mut app = app_with_local_manual_queue();
+        app.backend.set_offline(true);
+        app.apply_plugin_command(
+            PluginCommand::Play {
+                uri: "spotify:album:album1".into(),
+            },
+            &ctx,
+        );
+        let request = app.queued_play.as_ref().unwrap();
+        assert_eq!(request.context_uri.as_deref(), Some("spotify:album:album1"));
+        assert!(request.uris.is_empty());
+        app.apply_plugin_command(
+            PluginCommand::Play {
+                uri: "spotify:track:cached".into(),
+            },
+            &ctx,
+        );
+        let request = app.queued_play.as_ref().unwrap();
+        assert!(request.context_uri.is_none());
+        assert_eq!(request.uris, ["spotify:track:cached"]);
+        app.backend.shutdown();
+        let mut app = app_with_local_manual_queue();
+        app.backend.set_offline(true);
+        app.track_cache.insert(
+            "cached".into(),
+            Track {
+                uri: "spotify:track:cached".into(),
+                name: "Cached song".into(),
+                duration_ms: 120_000,
+                ..Default::default()
+            },
+        );
+        app.queue
+            .get_mut()
+            .unwrap()
+            .queue
+            .push(PlayableItem::Episode(crate::api::models::Episode {
+                uri: "spotify:episode:episode1".into(),
+                name: "Cached episode".into(),
+                duration_ms: 240_000,
+                ..Default::default()
+            }));
+        app.apply_plugin_command(
+            PluginCommand::PlayNext {
+                uris: vec![
+                    "spotify:track:cached".into(),
+                    "spotify:episode:episode1".into(),
+                ],
+            },
+            &ctx,
+        );
+        let items = &app.queue.get().unwrap().queue;
+        assert_eq!(items[0].name(), "Cached song");
+        assert_eq!(items[0].duration_ms(), 120_000);
+        assert!(matches!(&items[1], PlayableItem::Episode(episode)
+            if episode.name == "Cached episode" && episode.duration_ms == 240_000));
+        app.backend.shutdown();
+    }
+
+    #[test]
+    fn plugin_callbacks_patches_and_revocation_use_live_grants() {
+        let ctx = egui::Context::default();
+        let mut app = test_app("plugin-grants");
+        install_test_plugin(&mut app);
+        let result = &app.plugins.outputs["integration"];
+        let digest = result.digest.clone();
+        let revision = result.revision;
+        let item = PlayableItem::Track(Track {
+            uri: "spotify:track:abc".into(),
+            name: "Original".into(),
+            ..Default::default()
+        });
+        assert_eq!(app.plugin_item_patch(&item).unwrap().name(), "Patched");
+        assert!(matches!(
+            app.plugin_action_override(&Action::Seek(100)),
+            Some(crate::plugins::PluginCommand::Volume { value: 37 })
+        ));
+        app.apply(
+            Action::PluginCommand {
+                id: "integration".into(),
+                digest: digest.clone(),
+                revision,
+                command: crate::plugins::PluginCommand::Emit {
+                    event: "pressed".into(),
+                },
+            },
+            &ctx,
+        );
+        await_plugin_output(&mut app, "custom");
+        assert_eq!(
+            app.plugins.outputs["integration"]
+                .result
+                .as_ref()
+                .unwrap()
+                .state["name"],
+            "pressed"
+        );
+        app.plugins.manager.invoke(
+            "integration",
+            serde_json::json!({"type":"fail"}),
+            serde_json::Value::Null,
+        );
+        let deadline = Instant::now() + Duration::from_secs(5);
+        while app.plugins.manager.records()[0].error.is_none() {
+            app.tick_plugins(&ctx);
+            assert!(Instant::now() < deadline, "expected plugin error");
+            std::thread::sleep(Duration::from_millis(5));
+        }
+        assert!(
+            app.plugins.outputs.contains_key("integration"),
+            "failed scripts retain their last valid effects"
+        );
+        assert_eq!(app.plugin_item_patch(&item).unwrap().name(), "Patched");
+        app.plugins.manager.invoke(
+            "integration",
+            serde_json::json!({"type":"recovered"}),
+            serde_json::Value::Null,
+        );
+        await_plugin_output(&mut app, "recovered");
+        assert!(app.plugins.manager.records()[0].error.is_none());
+        app.apply(
+            Action::PluginPermission(
+                "integration".into(),
+                crate::plugins::Permission::UiWrite,
+                false,
+            ),
+            &ctx,
+        );
+        assert!(!app.plugins.manager.permits(
+            "integration",
+            &digest,
+            revision,
+            crate::plugins::Permission::UiWrite
+        ));
+        assert!(app.plugins.outputs.is_empty());
+        assert!(app.plugin_item_patch(&item).is_none());
+        app.backend.shutdown();
+    }
+
+    #[test]
+    fn plugin_slots_and_settings_render_in_both_themes_and_rtl() {
+        let ctx = egui::Context::default();
+        ctx.enable_accesskit();
+        crate::theme::install(&ctx);
+        let mut app = test_app("plugin-ui");
+        install_test_plugin(&mut app);
+        for dark in [false, true] {
+            app.palette = if dark {
+                crate::theme::Palette::dark()
+            } else {
+                crate::theme::Palette::light()
+            };
+            crate::theme::apply(&ctx, &app.palette);
+            for width in [320.0, 960.0] {
+                for locale in [Locale::English, Locale::Russian] {
+                    app.locale = locale;
+                    for slot in [
+                        "page_start",
+                        "page_end",
+                        "sidebar",
+                        "topbar",
+                        "player_bar",
+                        "settings",
+                    ] {
+                        let mut output = ctx.run_ui(
+                            egui::RawInput {
+                                screen_rect: Some(egui::Rect::from_min_size(
+                                    egui::Pos2::ZERO,
+                                    egui::vec2(width, 600.0),
+                                )),
+                                ..Default::default()
+                            },
+                            |ui| crate::ui::plugins::slot(&mut app, ui, slot),
+                        );
+                        output.textures_delta.clear();
+                        assert!(output.shapes.iter().any(|shape| matches!(&shape.shape, egui::Shape::Text(text) if text.galley.text() == "plugin-slot")), "missing slot {slot}");
+                    }
+                    let mut output = ctx.run_ui(
+                        egui::RawInput {
+                            screen_rect: Some(egui::Rect::from_min_size(
+                                egui::Pos2::ZERO,
+                                egui::vec2(width, 1200.0),
+                            )),
+                            ..Default::default()
+                        },
+                        |ui| crate::ui::plugins::settings(&mut app, ui),
+                    );
+                    output.textures_delta.clear();
+                    let tree = output.platform_output.accesskit_update.unwrap();
+                    for label in ["Track caption", "Level", "Mode"] {
+                        let node = tree
+                            .nodes
+                            .iter()
+                            .find_map(|(_, node)| {
+                                (node.label() == Some(label)
+                                    && node.role() != egui::accesskit::Role::Label)
+                                    .then_some(node)
+                            })
+                            .unwrap_or_else(|| panic!("missing accessible plugin setting {label}"));
+                        let bounds = node.bounds().expect("setting has bounds");
+                        assert!(
+                            bounds.x0 >= 0.0 && bounds.x1 <= f64::from(width),
+                            "{label} extends beyond {width}: {bounds:?}"
+                        );
+                    }
+                    assert!(crate::ui::plugins::matches_search(&app, "integration"));
+                    assert!(crate::ui::plugins::matches_search(&app, "track caption"));
+                    assert!(!crate::ui::plugins::matches_search(&app, "absent setting"));
+                }
+            }
+        }
+        assert!(crate::ui::plugins::replaces_page(&app));
+        app.history = vec![Page::Settings];
+        app.history_index = 0;
+        assert!(!crate::ui::plugins::replaces_page(&app));
+        app.backend.shutdown();
     }
 
     /// Friend activity takes the right panel's place: opening it closes the

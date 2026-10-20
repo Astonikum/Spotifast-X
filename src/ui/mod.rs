@@ -14,6 +14,7 @@ pub mod login;
 mod lyrics;
 pub mod new_releases;
 pub mod player_bar;
+pub mod plugins;
 mod prerelease;
 pub mod queue;
 pub mod radio;
@@ -310,23 +311,28 @@ fn central(app: &mut App, ui: &mut egui::Ui) {
                         })
                         .show(ui, |ui| {
                             ui.set_min_width(ui.available_width());
-                            match page {
-                                Page::Home => home::show(app, ui),
-                                Page::TopSongs => collection::top_songs(app, ui),
-                                Page::NewReleases => new_releases::page(app, ui),
-                                Page::Search => search::show(app, ui),
-                                Page::LikedSongs => collection::liked(app, ui),
-                                Page::Albums | Page::Artists | Page::Podcasts | Page::Episodes => {
-                                    library::show(app, ui, page)
+                            plugins::slot(app, ui, "page_start");
+                            if !plugins::replaces_page(app) {
+                                match page {
+                                    Page::Home => home::show(app, ui),
+                                    Page::TopSongs => collection::top_songs(app, ui),
+                                    Page::NewReleases => new_releases::page(app, ui),
+                                    Page::Search => search::show(app, ui),
+                                    Page::LikedSongs => collection::liked(app, ui),
+                                    Page::Albums
+                                    | Page::Artists
+                                    | Page::Podcasts
+                                    | Page::Episodes => library::show(app, ui, page),
+                                    Page::Playlist(id) => collection::playlist(app, ui, &id),
+                                    Page::Album(id) => collection::album(app, ui, &id),
+                                    Page::Artist(id) => artist::show(app, ui, &id),
+                                    Page::Show(id) => show::show(app, ui, &id),
+                                    Page::Radio(seed) => radio::radio(app, ui, &seed),
+                                    Page::Queue => queue::page(app, ui),
+                                    Page::Settings => settings::show(app, ui),
                                 }
-                                Page::Playlist(id) => collection::playlist(app, ui, &id),
-                                Page::Album(id) => collection::album(app, ui, &id),
-                                Page::Artist(id) => artist::show(app, ui, &id),
-                                Page::Show(id) => show::show(app, ui, &id),
-                                Page::Radio(seed) => radio::radio(app, ui, &seed),
-                                Page::Queue => queue::page(app, ui),
-                                Page::Settings => settings::show(app, ui),
                             }
+                            plugins::slot(app, ui, "page_end");
                         });
                 },
             );

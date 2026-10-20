@@ -395,6 +395,18 @@ pub fn show(app: &mut App, ui: &mut egui::Ui) {
     let mut any_visible = false;
     let open_folder = gettext(locale, "Open folder");
 
+    let plugins_title = gettext(locale, "Plugins");
+    if needle.is_empty()
+        || plugins_title.to_lowercase().contains(&needle)
+        || super::plugins::matches_search(app, &needle)
+    {
+        any_visible = true;
+        section(ui, &palette, &plugins_title, |ui| {
+            super::plugins::settings(app, ui);
+            super::plugins::slot(app, ui, "settings");
+        });
+    }
+
     let wanted = app
         .settings
         .web_client_id

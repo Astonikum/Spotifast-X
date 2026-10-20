@@ -697,6 +697,11 @@ pub enum Command {
         selected:
             std::pin::Pin<Box<dyn std::future::Future<Output = Option<rfd::FileHandle>> + Send>>,
     },
+    ChoosePlugin {
+        selected:
+            std::pin::Pin<Box<dyn std::future::Future<Output = Option<rfd::FileHandle>> + Send>>,
+    },
+    PluginProxy(ProxyConfig),
     ChooseLocalFilesFolder {
         selected:
             std::pin::Pin<Box<dyn std::future::Future<Output = Option<rfd::FileHandle>> + Send>>,
@@ -928,6 +933,8 @@ pub struct LyricsRequest {
 }
 
 pub enum Event {
+    PluginChosen(Option<std::path::PathBuf>),
+    PluginProxyApplied(Result<(), String>),
     /// The folder picked in the local files dialog; `None` when cancelled.
     LocalFilesFolderChosen(Option<std::path::PathBuf>),
     /// The `spotify:local:` URIs the songs in `folder` play for.
@@ -1316,6 +1323,16 @@ impl Backend {
     }
 
     /// Construct the folder dialog on the UI thread, like the cover's.
+    pub fn choose_plugin(&self, locale: crate::i18n::Locale) {
+        let selected = rfd::AsyncFileDialog::new()
+            .set_title(crate::i18n::gettext(locale, "Install plugin"))
+            .add_filter(crate::i18n::gettext(locale, "Plugins"), &["plugin"])
+            .pick_file();
+        self.send(Command::ChoosePlugin {
+            selected: Box::pin(selected),
+        });
+    }
+
     pub fn choose_local_files_folder(&self) {
         if self.offline {
             return;
@@ -2162,6 +2179,22 @@ impl Worker {
                         });
                         waker.wake();
                     });
+                }
+                Command::ChoosePlugin { selected } => {
+                    let events = self.events.clone();
+                    let waker = self.waker.clone();
+                    tokio::spawn(async move {
+                        let path = selected.await.map(|file| file.path().to_path_buf());
+                        let _ = events.send(Event::PluginChosen(path));
+                        waker.wake();
+                    });
+                }
+                Command::PluginProxy(config) => {
+                    let result = self.apply_proxy(config);
+                    if result.as_ref().is_ok_and(|restart| *restart) {
+                        self.replace_engine();
+                    }
+                    self.emit(Event::PluginProxyApplied(result.map(|_| ())));
                 }
                 Command::ChooseLocalFilesFolder { selected } => {
                     let events = self.events.clone();

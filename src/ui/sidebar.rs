@@ -577,6 +577,7 @@ pub fn show(app: &mut App, ui: &mut egui::Ui) {
             reserve_expanded_art(ui, rect);
         }
         contents(app, ui, art_rect.filter(|_| floating_art));
+        super::plugins::slot(app, ui, "sidebar");
         if let Some(rect) = art_rect {
             if floating_art {
                 paint_grid_art_mask(app, ui, rect);
@@ -712,12 +713,25 @@ fn paint_expanded_art(app: &mut App, ui: &mut egui::Ui, rect: Rect) {
     }
 }
 
+// Turkish uppercase I loses the dotless distinction during ordinary lowercasing.
+fn library_search_text(text: &str) -> String {
+    let mut folded = String::new();
+    for ch in text.chars().flat_map(char::to_lowercase) {
+        match ch {
+            '\u{0307}' if folded.ends_with('i') => {}
+            'ı' => folded.push('i'),
+            ch => folded.push(ch),
+        }
+    }
+    folded
+}
+
 /// Project the playlist shelf without changing its saved order or pins.
 /// Ownership filtering is flat, like text search, so matching playlists in
 /// collapsed folders remain reachable. Liked Songs belongs to the account.
 fn playlist_rows(app: &App, sort: LibrarySort, needle: &str, entries: &mut Vec<Entry>) {
     let liked = liked_entry(app);
-    if needle.is_empty() || liked.name.to_lowercase().contains(needle) {
+    if needle.is_empty() || library_search_text(&liked.name).contains(needle) {
         entries.push(liked);
     }
     let user_id = app.user_id().filter(|id| !id.is_empty());
@@ -738,7 +752,7 @@ fn playlist_rows(app: &App, sort: LibrarySort, needle: &str, entries: &mut Vec<E
             if app.settings.library_by_you && !user_id.is_some_and(|id| playlist.owned_by(id)) {
                 continue;
             }
-            if !needle.is_empty() && !playlist.name.to_lowercase().contains(needle) {
+            if !needle.is_empty() && !library_search_text(&playlist.name).contains(needle) {
                 continue;
             }
             entries.push(playlist_entry(
@@ -1177,7 +1191,7 @@ fn contents(app: &mut App, ui: &mut egui::Ui, grid_art: Option<Rect>) {
         }
     }
 
-    let needle = app.library.filter.trim().to_lowercase();
+    let needle = library_search_text(app.library.filter.trim());
     let mut entries: Vec<Entry> = Vec::new();
     let art = EntryArt::of(app);
     let mut loading = false;
@@ -1196,11 +1210,11 @@ fn contents(app: &mut App, ui: &mut egui::Ui, grid_art: Option<Rect>) {
             for saved in &app.library.albums.items {
                 let album = &saved.album;
                 if !needle.is_empty()
-                    && !album.name.to_lowercase().contains(&needle)
+                    && !library_search_text(&album.name).contains(&needle)
                     && !album
                         .artists
                         .iter()
-                        .any(|a| a.name.to_lowercase().contains(&needle))
+                        .any(|a| library_search_text(&a.name).contains(&needle))
                 {
                     continue;
                 }
@@ -1233,7 +1247,7 @@ fn contents(app: &mut App, ui: &mut egui::Ui, grid_art: Option<Rect>) {
         }
         Filter::Artists => {
             for artist in &app.library.artists.items {
-                if !needle.is_empty() && !artist.name.to_lowercase().contains(&needle) {
+                if !needle.is_empty() && !library_search_text(&artist.name).contains(&needle) {
                     continue;
                 }
                 entries.push(Entry {
@@ -1267,7 +1281,7 @@ fn contents(app: &mut App, ui: &mut egui::Ui, grid_art: Option<Rect>) {
                 if app.audiobook_shows.contains(&show.uri) {
                     continue;
                 }
-                if !needle.is_empty() && !show.name.to_lowercase().contains(&needle) {
+                if !needle.is_empty() && !library_search_text(&show.name).contains(&needle) {
                     continue;
                 }
                 entries.push(Entry {
@@ -2190,6 +2204,18 @@ pub fn liked_cover(ui: &egui::Ui, rect: Rect, radius: f32) {
 #[cfg(all(test, feature = "demo"))]
 mod ordering_tests {
     use super::*;
+
+    #[test]
+    fn library_search_matches_turkish_uppercase_and_dotted_i() {
+        let title = "Beğenilen Şarkılar";
+        assert_eq!(
+            library_search_text(title),
+            library_search_text(&title.to_uppercase())
+        );
+        for text in ["İSTANBUL", "istanbul", "ıstanbul", "I\u{0307}STANBUL"] {
+            assert_eq!(library_search_text(text), "istanbul");
+        }
+    }
     use crate::api::models::Playlist;
     use crate::settings::Settings;
 

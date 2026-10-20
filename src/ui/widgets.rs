@@ -1477,6 +1477,11 @@ fn track_row_contents(
     app: &mut App,
     row: TrackRow<'_>,
 ) -> (egui::Response, Option<RowPick>) {
+    let patched = app.plugin_item_patch(row.item);
+    let row = TrackRow {
+        item: patched.as_ref().unwrap_or(row.item),
+        ..row
+    };
     let palette = app.palette;
     let row_height = if row.thin {
         theme::THIN_ROW_HEIGHT

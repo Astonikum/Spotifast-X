@@ -56,6 +56,7 @@ pub fn show(app: &mut App, ui: &mut egui::Ui) {
                 .inner_margin(Margin::symmetric(16, 0)),
         )
         .show(ui, |ui| {
+            super::plugins::slot(app, ui, "player_bar");
             let rect = ui.max_rect();
             let now = app.now_playing();
             // The whole bar, margins included, behind everything else.

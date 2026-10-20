@@ -75,6 +75,8 @@ Documentation: [docs](docs/).
 
 ### Plugin development
 
+[Guide](docs/_guide/plugins.md) · [API](docs/_reference/plugin-api.md) · [Example](plugins/examples/track-tools/)
+
 ## Contributing
 
 Read [CONTRIBUTING.md](CONTRIBUTING.md) before opening an issue or pull

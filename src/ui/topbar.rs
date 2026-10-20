@@ -232,6 +232,7 @@ pub fn show(app: &mut App, ui: &mut egui::Ui) {
         vec2(width, content_height - top_padding),
         Layout::left_to_right(Align::Center),
         |ui| {
+            super::plugins::slot(app, ui, "topbar");
             ui.add_space(super::widgets::PAGE_PADDING);
             ui.spacing_mut().item_spacing.x = ITEM_SPACING;
             if !app.settings.sidebar_visible {

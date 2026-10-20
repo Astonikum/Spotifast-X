@@ -1257,6 +1257,17 @@ pub enum Action {
     ShowUpdate,
     DownloadUpdate,
     InstallUpdate,
+    InstallPlugin,
+    PluginEnabled(String, bool),
+    PluginPermission(String, crate::plugins::Permission, bool),
+    PluginSetting(String, String, serde_json::Value),
+    RemovePlugin(String),
+    PluginCommand {
+        id: String,
+        digest: String,
+        revision: u64,
+        command: crate::plugins::PluginCommand,
+    },
     SettingsChanged,
     SetTheme(crate::settings::ThemeChoice),
     /// Draw the interface in this language from the next frame on.

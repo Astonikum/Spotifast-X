@@ -13,6 +13,7 @@ Spotifast X follows each platform's conventions. On Linux:
 | What | Where | Safe to delete? |
 | --- | --- | --- |
 | Settings | `~/.config/spotifast/settings.json` | Yes, you lose preferences |
+| Plugin packages and configuration | `~/.config/spotifast/plugins/` | Yes, you lose installed plugins, grants and plugin settings |
 | Spotify grants (available since 0.8.0) | System credential store | Use Sign out in Settings |
 | Credential revocation markers (available since 0.8.0) | `~/.local/state/spotifast/credential-storage/` | Keep after a failed sign-out deletion |
 | Legacy shared Web API grant | `~/.local/state/spotifast/shared_web_api_token.json` | Removed after migration or sign-out |

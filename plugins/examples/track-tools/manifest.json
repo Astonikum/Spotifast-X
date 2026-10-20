@@ -1,0 +1,19 @@
+{
+  "id": "track-tools",
+  "name": { "en": "Track tools", "ru": "Треки" },
+  "version": "1.0.0",
+  "api": 1,
+  "permissions": ["playback_read", "playback_control", "tracks_write", "ui_write"],
+  "settings": {
+    "rename": {
+      "label": { "en": "Rename track", "ru": "Переименовать трек" },
+      "kind": "bool",
+      "default": false
+    },
+    "title": {
+      "label": { "en": "Title", "ru": "Название" },
+      "kind": "text",
+      "default": ""
+    }
+  }
+}

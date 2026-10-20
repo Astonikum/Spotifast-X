@@ -31,6 +31,12 @@ current release.
 - **Log.** `spotifast.log` records errors and diagnostics. It stays on your
   computer and never contains credentials; share it only if you choose to
   attach it to a bug report.
+- **Plugins.** Packages, permission grants and plugin settings stay in the
+  configuration directory. Plugin settings are readable JSON. A plugin with
+  playback access can read the supplied playback and track metadata. Scripts
+  have no direct filesystem or network access. A granted proxy permission can
+  route application traffic through a server chosen by that plugin. Review
+  permissions in **Settings → Plugins**; see the [plugin guide](/plugins/).
 
 [Settings & Files](/settings-and-files/) lists every location and what is safe
 to delete. **Sign out** in Settings removes the stored credentials and the
