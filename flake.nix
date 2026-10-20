@@ -116,8 +116,7 @@
                 pname = "spotifast";
                 version = (pkgs.lib.importTOML ./Cargo.toml).package.version;
                 src = self;
-                # Refresh after dependency removal with nix build .#default on a Nix host.
-                hash = "sha256-Zl7eufVaXpmWUMnZOGZXN4eZJaN/BLFifWvgIBBkhBY=";
+                hash = "sha256-7Lf9+k0BO5LlzNFSs/y8fqkYMlCj8kytzjrtkL58c90=";
               };
               nativeBuildInputs =
                 with pkgs;
