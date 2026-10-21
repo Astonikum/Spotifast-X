@@ -46,10 +46,10 @@ jobs:
           mv "packaging/flatpak/$name" packaging/flatpak/built
           # Keep the exact release version and description, with today's app ID.
           python3 packaging/flatpak/prepare-metainfo.py "$RELEASE_TAG" \
-            packaging/flatpak/rocks.spotifast.Spotifast.metainfo.xml
+            packaging/flatpak/io.github.Astonikum.SpotifastX.metainfo.xml
       - uses: flatpak/flatpak-github-actions/flatpak-builder@v6
         with:
-          manifest-path: packaging/flatpak/rocks.spotifast.Spotifast.bundle.yml
+          manifest-path: packaging/flatpak/io.github.Astonikum.SpotifastX.bundle.yml
           bundle: spotifast-${{ inputs.version }}-x86_64.flatpak
           cache: false
           upload-artifact: false

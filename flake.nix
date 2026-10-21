@@ -106,14 +106,14 @@
               );
             in
             rustPlatform.buildRustPackage rec {
-              pname = "spotifast";
+              pname = "spotifast-x";
               version = (pkgs.lib.importTOML ./Cargo.toml).package.version;
               src = self;
 
               # The lock file contains git dependencies. fetchCargoVendor includes
               # them in the fixed-output dependency tree, unlike cargoLock alone.
               cargoDeps = pkgs.rustPlatform.fetchCargoVendor {
-                pname = "spotifast";
+                pname = "spotifast-x";
                 version = (pkgs.lib.importTOML ./Cargo.toml).package.version;
                 src = self;
                 hash = "sha256-7Lf9+k0BO5LlzNFSs/y8fqkYMlCj8kytzjrtkL58c90=";
@@ -152,30 +152,31 @@
               # The GUI dlopens its Wayland, X11 and GL libraries at run time.
               postFixup =
                 pkgs.lib.optionalString pkgs.stdenv.hostPlatform.isLinux ''
-                  wrapProgram $out/bin/spotifast \
+                  wrapProgram $out/bin/spotifast-x \
                     --prefix LD_LIBRARY_PATH : ${pkgs.lib.makeLibraryPath runtimeLibs}
                 ''
                 + pkgs.lib.optionalString pkgs.stdenv.hostPlatform.isDarwin ''
                   rcodesign sign "$out/Applications/Spotifast X.app"
                 '';
 
-              postInstall =
-                pkgs.lib.optionalString pkgs.stdenv.hostPlatform.isLinux ''
-                  install -Dm644 packaging/applications/spotifast.desktop \
-                    $out/share/applications/spotifast.desktop
-                  install -Dm644 packaging/icons/spotifast.svg \
-                    $out/share/icons/hicolor/scalable/apps/spotifast.svg
+              postInstall = ''
+                mv "$out/bin/spotifast" "$out/bin/spotifast-x"
+              '' + pkgs.lib.optionalString pkgs.stdenv.hostPlatform.isLinux ''
+                  install -Dm644 packaging/applications/spotifast-x.desktop \
+                    $out/share/applications/spotifast-x.desktop
+                  install -Dm644 packaging/icons/spotifast-x.svg \
+                    $out/share/icons/hicolor/scalable/apps/spotifast-x.svg
                   install -Dm644 contrib/omarchy/spotifast.json.tpl \
-                    $out/share/spotifast/omarchy/spotifast.json.tpl
+                    $out/share/spotifast-x/omarchy/spotifast.json.tpl
                   install -Dm755 contrib/omarchy/spotifast-theme \
-                    $out/share/spotifast/omarchy/spotifast-theme
+                    $out/share/spotifast-x/omarchy/spotifast-theme
                 ''
                 + pkgs.lib.optionalString pkgs.stdenv.hostPlatform.isDarwin ''
                   app="$out/Applications/Spotifast X.app/Contents"
                   mkdir -p "$app/MacOS" "$app/Resources"
                   executable=Spotifast
-                  identifier=rocks.spotifast.Spotifast
-                  cp "$out/bin/spotifast" "$app/MacOS/$executable"
+                  identifier=io.github.Astonikum.SpotifastX
+                  cp "$out/bin/spotifast-x" "$app/MacOS/$executable"
                   icnsify packaging/macos/icon-1024.png -o "$app/Resources/spotifast.icns"
                   substitute packaging/macos/Info.plist "$app/Info.plist" \
                     --replace-fail __VERSION__ "${version}" \
@@ -188,7 +189,7 @@
                 description = "Fast native Spotify client with local playback and Spotify Connect";
                 homepage = "https://spotifast.rocks";
                 license = pkgs.lib.licenses.mit;
-                mainProgram = "spotifast";
+                mainProgram = "spotifast-x";
               };
             };
 

@@ -72,7 +72,7 @@ You can rename it in Settings.
 - **Spotify links open in Spotifast X.** A `spotify:` link shared from another
   app opens its page, starting Spotifast X if it is not running. Links to
   `open.spotify.com` go through the browser first, which hands them over the
-  same way. `spotifast <link>` does the same from a terminal.
+  same way. `spotifast-x <link>` does the same from a terminal.
 
 ## Match your desktop theme
 
@@ -125,7 +125,7 @@ On Windows, choose the app in **Settings → Apps → Default apps**.
 On Linux, after installing the current app launcher:
 
 ```sh
-xdg-mime default spotifast.desktop x-scheme-handler/spotify
+xdg-mime default spotifast-x.desktop x-scheme-handler/spotify
 ```
 
 ## If your network needs a proxy
@@ -147,7 +147,7 @@ See [proxy options and limits](/how-it-connects/#proxy).
 Build the single binary with Rust 1.98 or newer:
 
 ```bash
-cargo install --git https://github.com/crmne/spotifast --locked
+cargo install --git https://github.com/Astonikum/Spotifast-X --locked
 ```
 
 On Linux, you need the development packages for

@@ -35,43 +35,43 @@ docker run --rm \
     if [ "$FORMAT" = deb ]; then
       apt-get update
       DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends "$1"
-      dpkg-query -W spotifast
+      dpkg-query -W spotifast-x
     else
       dnf install -y --setopt=install_weak_deps=False "$1"
-      rpm -q spotifast
+      rpm -q spotifast-x
     fi
     # --version exercises linked libraries; the probe checks dlopen libraries
     # without installing a desktop, compiler, interpreter or test dependencies.
     # Trace the isolated fixture assertions so a failed check identifies itself.
     set -x
-    spotifast --version
-    test -f /usr/bin/spotifast
-    test ! -L /usr/bin/spotifast
-    test -f /usr/share/licenses/spotifast/LICENSE
+    spotifast-x --version
+    test -f /usr/bin/spotifast-x
+    test ! -L /usr/bin/spotifast-x
+    test -f /usr/share/licenses/spotifast-x/LICENSE
     if [ "$FORMAT" = deb ]; then
       # Slim Debian/Ubuntu images exclude /usr/share/doc at installation time.
       # Verify the regular file in the package, not the intentionally stripped root.
-      dpkg-deb --contents "$1" | grep -E "^-.* ./usr/share/doc/spotifast/README.md$"
+      dpkg-deb --contents "$1" | grep -E "^-.* ./usr/share/doc/spotifast-x/README.md$"
     else
-      test -f /usr/share/doc/spotifast/README.md
+      test -f /usr/share/doc/spotifast-x/README.md
     fi
     /checks/check-runtime-libs
-    test -s /usr/share/applications/spotifast.desktop
-    test -s /usr/share/icons/hicolor/scalable/apps/spotifast.svg
-    grep -qx "Icon=spotifast" /usr/share/applications/spotifast.desktop
-    grep -qx "StartupWMClass=spotifast" /usr/share/applications/spotifast.desktop
-    test -s /usr/share/spotifast/omarchy/spotifast.json.tpl
-    test -x /usr/share/spotifast/omarchy/spotifast-theme
+    test -s /usr/share/applications/spotifast-x.desktop
+    test -s /usr/share/icons/hicolor/scalable/apps/spotifast-x.svg
+    grep -qx "Icon=spotifast-x" /usr/share/applications/spotifast-x.desktop
+    grep -qx "StartupWMClass=spotifast-x" /usr/share/applications/spotifast-x.desktop
+    test -s /usr/share/spotifast-x/omarchy/spotifast.json.tpl
+    test -x /usr/share/spotifast-x/omarchy/spotifast-theme
     test "$(cat /root/.config/spotifast/settings-fixture)" = preserve-existing-settings
     if [ "$FORMAT" = deb ]; then
-      apt-get remove -y spotifast
+      apt-get remove -y spotifast-x
     else
-      dnf remove -y spotifast
+      dnf remove -y spotifast-x
     fi
-    test ! -e /usr/bin/spotifast
-    test ! -e /usr/share/applications/spotifast.desktop
-    test ! -e /usr/share/icons/hicolor/scalable/apps/spotifast.svg
-    test ! -e /usr/share/spotifast/omarchy/spotifast.json.tpl
-    test ! -e /usr/share/spotifast/omarchy/spotifast-theme
+    test ! -e /usr/bin/spotifast-x
+    test ! -e /usr/share/applications/spotifast-x.desktop
+    test ! -e /usr/share/icons/hicolor/scalable/apps/spotifast-x.svg
+    test ! -e /usr/share/spotifast-x/omarchy/spotifast.json.tpl
+    test ! -e /usr/share/spotifast-x/omarchy/spotifast-theme
     test "$(cat /root/.config/spotifast/settings-fixture)" = preserve-existing-settings
   '

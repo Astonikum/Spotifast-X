@@ -763,7 +763,7 @@ const RECENTS_PAGE: u32 = 50;
 /// Who the desktop's media controls belong to. Links to Spotify, as
 /// `spotify:` URIs or web addresses, are what they may ask Spotifast X to open.
 fn media_app() -> fastframe_now_playing::App {
-    let mut app = fastframe_now_playing::App::new("spotifast", "Spotifast X");
+    let mut app = fastframe_now_playing::App::new(crate::identity::SLUG, "Spotifast X");
     app.uri_schemes = vec!["spotify".into(), "https".into(), "http".into()];
     app
 }
@@ -875,7 +875,7 @@ fn tray_icon_colour(choice: crate::settings::TrayIcon) -> fastframe_tray::IconCo
 fn tray_config() -> fastframe_tray::Config {
     use fastframe_tray::MenuItem;
     fastframe_tray::Config {
-        id: "spotifast",
+        id: crate::identity::SLUG,
         title: "Spotifast X".into(),
         icon: util::app_icon_rgba,
         template_icon: Some(util::tray_template_rgba),

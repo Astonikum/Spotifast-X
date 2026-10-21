@@ -3,20 +3,22 @@
 [`native-packages.yaml`](native-packages.yaml) is the packaging configuration:
 it pins the shared CLI and nFPM versions and declares Linux amd64/arm64 inputs,
 DEB/RPM/AppImage contents, dependencies, the macOS disk image and Windows
-Installer packages, recipe templates and downstream repositories.
+Installer packages and recipe templates.
 Application assets and native recipes stay in `packaging/`.
 
-Public AUR, Homebrew, DEB/RPM and release download names use Spotifast X, and
-Linux packages install `spotifast` as the only executable.
+Native packages use the independent `spotifast-x` package and command names.
+The Cargo binary and release archive payload remain `spotifast`; installation
+renames the Linux executable so it can coexist with Spotifast. AUR and Homebrew
+recipes are generated, but publication destinations must be configured for the fork.
 
-Linux builds provide `spotifast.desktop` and `spotifast.svg`, matching the
+Linux builds provide `spotifast-x.desktop` and `spotifast-x.svg`, matching the
 native window and MPRIS desktop-entry ID. Flatpak installs those assets under
 its full application ID and sets the window class to match.
 `python3 packaging/test-launchers.py` exercises the actual AUR and Flatpak
 installation commands with a release payload, using Ruby to read YAML.
 
 Linux packages also install the optional Omarchy template and hook under
-`share/spotifast/omarchy` in their installation prefix. The normal application
+`share/spotifast-x/omarchy` in their installation prefix. The normal application
 launch registers missing per-user files and prepares the current palette on an
 Omarchy desktop, without changing existing files or the selected theme. Setup
 runs in the background; package-manager scripts do not write into user homes.
@@ -67,7 +69,7 @@ Packaging CI builds both architectures using a pinned published release
 runs. It then installs and removes each package in clean Ubuntu 24.04, Debian
 13, Fedora 41 and current Fedora containers on native amd64 and arm64 runners.
 Each case verifies that a settings fixture survives installation and removal,
-runs `spotifast --version`, loads the GUI libraries with `dlopen`, and
+runs `spotifast-x --version`, loads the GUI libraries with `dlopen`, and
 verifies the desktop entry and icon. They cover installation and library
 resolution, not a running desktop or Spotify playback. On release runs these
 checks follow artifact attachment; a failure marks the workflow as failed.
@@ -109,7 +111,7 @@ for commands and supported formats.
 The manual **Flatpak from release** workflow can rebuild a missing Flatpak from
 an existing tag. It verifies the published Linux archive against `checksums.txt`
 and uses that tag's version and description with the current Flatpak app ID,
-`rocks.spotifast.Spotifast`, without compiling or replacing binaries.
+`io.github.Astonikum.SpotifastX`, without compiling or replacing binaries.
 It uploads a workflow artifact only. After checking the bundle, attach it to the
 existing release and add its hash to `checksums.txt`, preserving every existing
 asset and checksum. Release tags stay immutable.
@@ -177,7 +179,7 @@ Later releases can drop the setup program, `spotifast.iss` and
 The updater (fastframe-update) runs `msiexec /i PACKAGE /qn /norestart /l*v LOG
 INSTALLFOLDER="<the app's folder>"` and accepts exit codes 0 and 3010. The package:
 
-- installs per user, without elevation, to `%LOCALAPPDATA%\Programs\Spotifast`
+- installs per user, without elevation, to `%LOCALAPPDATA%\Programs\SpotifastX`
   or `INSTALLFOLDER`. Run by hand, it finds the folder an earlier package or
   the setup program used.
 - keeps one `UpgradeCode`, `{3DFFED43-88FE-4A31-9461-50BE03094316}`, forever.
@@ -244,7 +246,7 @@ the signature covers. AppImages built by the packaging workflow would land in
 the unsigned `packaging-checksums.txt` instead.
 
 Each AppImage carries update information in its `.upd_info` section,
-`gh-releases-zsync|crmne|spotifast|latest|spotifast-*-x86_64.AppImage.zsync`
+`gh-releases-zsync|Astonikum|Spotifast-X|latest|spotifast-*-x86_64.AppImage.zsync`
 (`aarch64` for ARM), so AppImageUpdate, AppImageLauncher, AM and Gear Lever
 find the newest stable release's `.zsync` file and download only the blocks
 that changed. The checks fail loudly instead of shipping a wrong string:

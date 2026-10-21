@@ -4,7 +4,7 @@ use std::path::PathBuf;
 
 #[test]
 fn linux_tray_svg_avoids_filters_qt_rejects() {
-    let path = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("packaging/icons/spotifast.svg");
+    let path = PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("packaging/icons/spotifast-x.svg");
     let svg = fs::read_to_string(&path).expect("spotifast.svg");
     assert!(
         !svg.contains("feFuncA") && !svg.contains("<filter"),
@@ -18,7 +18,7 @@ fn packaging_uses_the_supplied_spotifast_x_svg() {
     let root = PathBuf::from(env!("CARGO_MANIFEST_DIR"));
     let supplied = fs::read(root.join("assets/SpotifastX.svg")).unwrap();
     assert_eq!(
-        fs::read(root.join("packaging/icons/spotifast.svg")).unwrap(),
+        fs::read(root.join("packaging/icons/spotifast-x.svg")).unwrap(),
         supplied
     );
     assert_eq!(

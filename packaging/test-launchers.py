@@ -26,9 +26,9 @@ def yaml(path):
 def payload(root):
     (root / "packaging/applications").mkdir(parents=True)
     (root / "packaging/icons").mkdir(parents=True)
-    shutil.copyfile(ROOT / "packaging/applications/spotifast.desktop",
-                    root / "packaging/applications/spotifast.desktop")
-    shutil.copyfile(ROOT / "packaging/icons/spotifast.svg", root / "packaging/icons/spotifast.svg")
+    shutil.copyfile(ROOT / "packaging/applications/spotifast-x.desktop",
+                    root / "packaging/applications/spotifast-x.desktop")
+    shutil.copyfile(ROOT / "packaging/icons/spotifast-x.svg", root / "packaging/icons/spotifast-x.svg")
     (root / "target/release").mkdir(parents=True)
     for name in ["spotifast", "target/release/spotifast"]:
         shutil.copyfile(shutil.which("true"), root / name)
@@ -36,11 +36,21 @@ def payload(root):
         shutil.copyfile(ROOT / name, root / name)
     shutil.copytree(ROOT / "contrib/omarchy", root / "contrib/omarchy")
     (root / "packaging/flatpak").mkdir()
-    shutil.copyfile(ROOT / "packaging/flatpak/rocks.spotifast.Spotifast.metainfo.xml",
-                    root / "packaging/flatpak/rocks.spotifast.Spotifast.metainfo.xml")
+    shutil.copyfile(ROOT / "packaging/flatpak/io.github.Astonikum.SpotifastX.metainfo.xml",
+                    root / "packaging/flatpak/io.github.Astonikum.SpotifastX.metainfo.xml")
 
 
 class LauncherInstallTest(unittest.TestCase):
+    def test_fork_recipe_names_do_not_conflict_with_upstream(self):
+        for recipe in ["spotifast", "spotifast-bin", "spotifast-git"]:
+            text = (ROOT / f"packaging/arch/{recipe}/PKGBUILD.in").read_text()
+            self.assertIn("pkgname=" + recipe.replace("spotifast", "spotifast-x", 1), text)
+            self.assertNotIn("/usr/bin/spotifast\"", text)
+            self.assertNotIn("'spotifast'", text)
+        cask = (ROOT / "packaging/homebrew/spotifast.rb.in").read_text()
+        self.assertIn('cask "spotifast-x"', cask)
+        self.assertNotIn("me.paolino.spotifast", cask)
+
     def test_generated_aur_versions_start_at_the_requested_release(self):
         for package in ["spotifast", "spotifast-bin", "spotifast-git"]:
             with self.subTest(package=package), tempfile.TemporaryDirectory() as directory:
@@ -61,14 +71,14 @@ class LauncherInstallTest(unittest.TestCase):
         self.assertEqual(entry["Name"], "Spotifast X")
         self.assertEqual(entry["Icon"], icon)
         self.assertEqual(entry["StartupWMClass"], window_class)
-        self.assertEqual(entry["Exec"], "spotifast %u")
+        self.assertEqual(entry["Exec"], "spotifast-x %u")
         self.assertIn("x-scheme-handler/spotify;", entry["MimeType"])
         icons = list((prefix / "share/icons/hicolor/scalable/apps").glob("*.svg"))
         self.assertEqual([p.name for p in icons], [icon + ".svg"])
-        self.assertEqual(icons[0].read_bytes(), (ROOT / "packaging/icons/spotifast.svg").read_bytes())
-        self.assertFalse((prefix / "bin/spotifast").is_symlink())
-        self.assertTrue((prefix / "bin/spotifast").is_file())
-        self.assertEqual([p.name for p in (prefix / "bin").iterdir()], ["spotifast"])
+        self.assertEqual(icons[0].read_bytes(), (ROOT / "packaging/icons/spotifast-x.svg").read_bytes())
+        self.assertFalse((prefix / "bin/spotifast-x").is_symlink())
+        self.assertTrue((prefix / "bin/spotifast-x").is_file())
+        self.assertEqual([p.name for p in (prefix / "bin").iterdir()], ["spotifast-x"])
 
     def test_aur_payloads_install_the_launcher(self):
         for package in ["spotifast", "spotifast-bin", "spotifast-git"]:
@@ -77,7 +87,7 @@ class LauncherInstallTest(unittest.TestCase):
                 if package.endswith("-bin"):
                     relative = "spotifast-v9.8.7-x86_64-unknown-linux-gnu"
                 elif package.endswith("-git"):
-                    relative = package
+                    relative = package.replace("spotifast", "spotifast-x", 1)
                 else:
                     relative = "spotifast-9.8.7"
                 payload(root / "src" / relative)
@@ -87,10 +97,10 @@ class LauncherInstallTest(unittest.TestCase):
                     **os.environ, "CARCH": "x86_64", "srcdir": str(root / "src"),
                     "pkgdir": str(root / "pkg"),
                 })
-                self.check_launcher(root / "pkg/usr", "spotifast", "spotifast", "spotifast")
+                self.check_launcher(root / "pkg/usr", "spotifast-x", "spotifast-x", "spotifast-x")
 
     def test_flatpak_install_commands_keep_app_id_and_icon_aligned(self):
-        for manifest in ["rocks.spotifast.Spotifast.yml", "rocks.spotifast.Spotifast.bundle.yml"]:
+        for manifest in ["io.github.Astonikum.SpotifastX.yml", "io.github.Astonikum.SpotifastX.bundle.yml"]:
             config = yaml(ROOT / "packaging/flatpak" / manifest)
             commands = config["modules"][-1]["build-commands"]
             with self.subTest(manifest=manifest), tempfile.TemporaryDirectory() as directory:
@@ -114,8 +124,8 @@ class LauncherInstallTest(unittest.TestCase):
                 pattern = entry["src"].replace("@PAYLOAD@/", "").replace("@VERSION@", "9.8.7").replace("@TARGET@", "linux-amd64")
                 files = list(root.glob(pattern))
                 self.assertEqual(len(files), 1)
-                self.assertEqual(files[0].stem, "spotifast")
-                self.assertTrue(entry["dst"].endswith("/"))
+                self.assertEqual(files[0].stem, "spotifast-x")
+                self.assertEqual(Path(entry["dst"]).stem, "spotifast-x")
 
 
 if __name__ == "__main__":

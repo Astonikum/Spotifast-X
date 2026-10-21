@@ -124,10 +124,11 @@ def build_inno_setup(root, binary):
     script = (HERE / "spotifast.iss").read_text(encoding="utf-8-sig")
     for old, new in (
         ('#define AppName "Spotifast X"', f'#define AppName "{IDENTITY}"'),
-        ('#define AppIdentity "Spotifast"', f'#define AppIdentity "{IDENTITY}"'),
-        ("AppId={{FCED1EA0-EBF5-4C32-BA3B-A3AD724BACC3}", "AppId={" + INNO_APP_ID),
-        ("Spotifast.spotify", f"{IDENTITY}.spotify"),
+        ('#define AppIdentity "SpotifastX"', f'#define AppIdentity "{IDENTITY}"'),
+        ("AppId={{27C41F04-736F-5218-9F62-736A70106ED4}", "AppId={" + INNO_APP_ID),
+        ("SpotifastX.spotify", f"{IDENTITY}.spotify"),
         ("Software\\Classes\\spotify", f"Software\\Classes\\{SCHEME}"),
+        ("'spotify\\shell\\open\\command'", f"'{SCHEME}\\shell\\open\\command'"),
         ('ValueName: "spotify"', f'ValueName: "{SCHEME}"'),
         ("[Setup]\n", f"[Setup]\nSourceDir={HERE}\n"),
     ):
@@ -417,6 +418,19 @@ class PackageTest(unittest.TestCase):
         other = r'"C:\Other\Spotify.exe" --protocol-uri="%1"'
         set_value(LINK_COMMAND, "", other)
         self.assertSucceeded(self.uninstall(FIRST))
+        self.assertEqual(value(LINK_COMMAND), other)
+        self.assertFalse(key_exists(rf"Software\Classes\{IDENTITY}.spotify"))
+
+    def test_install_preserves_an_existing_clients_link_handler(self):
+        other = r'"C:\Original\Spotifast.exe" "%1"'
+        set_value(LINK_COMMAND, "", other)
+        self.assertSucceeded(self.install_like_the_updater(FIRST))
+        self.assertEqual(value(LINK_COMMAND), other)
+        self.assertEqual(value(OWN_LINK_COMMAND), f'"{self.folder}\\spotifast.exe" "%1"')
+        self.assertEqual(len(installed_products()), 1)
+        self.assertSucceeded(self.install_like_the_updater(SECOND))
+        self.assertEqual(value(LINK_COMMAND), other)
+        self.assertSucceeded(self.uninstall(SECOND))
         self.assertEqual(value(LINK_COMMAND), other)
         self.assertFalse(key_exists(rf"Software\Classes\{IDENTITY}.spotify"))
 

@@ -1,0 +1,37 @@
+# The release workflow's Flatpak: the binary the Linux job built, packaged
+# into the same sandbox as io.github.Astonikum.SpotifastX.yml describes. The
+# job unpacks the release tarball into built/ beside this file first.
+id: io.github.Astonikum.SpotifastX
+runtime: org.freedesktop.Platform
+runtime-version: '25.08'
+sdk: org.freedesktop.Sdk
+command: spotifast-x
+finish-args:
+  - --socket=wayland
+  - --socket=fallback-x11
+  - --share=ipc
+  - --device=dri
+  - --socket=pulseaudio
+  - --share=network
+  # Platform storage for this application's Spotify grants.
+  - --talk-name=org.freedesktop.secrets
+  - --talk-name=org.kde.StatusNotifierWatcher
+  - --own-name=org.mpris.MediaPlayer2.spotifast-x
+  - --persist=.local/state
+modules:
+  - name: spotifast
+    buildsystem: simple
+    build-commands:
+      - install -Dm755 spotifast /app/bin/spotifast-x
+      - install -Dm644 packaging/applications/*.desktop /app/share/applications/io.github.Astonikum.SpotifastX.desktop
+      - sed -i 's/^Icon=.*$/Icon=io.github.Astonikum.SpotifastX/;s/^StartupWMClass=spotifast-x$/StartupWMClass=io.github.Astonikum.SpotifastX/' /app/share/applications/io.github.Astonikum.SpotifastX.desktop
+      - install -Dm644 packaging/icons/*.svg /app/share/icons/hicolor/scalable/apps/io.github.Astonikum.SpotifastX.svg
+      - install -Dm644 packaging/flatpak/io.github.Astonikum.SpotifastX.metainfo.xml /app/share/metainfo/io.github.Astonikum.SpotifastX.metainfo.xml
+      - install -Dm644 LICENSE /app/share/licenses/spotifast/LICENSE
+    sources:
+      - type: dir
+        path: built
+      # Metainfo belongs to this packaging checkout, not the portable archive.
+      - type: file
+        path: io.github.Astonikum.SpotifastX.metainfo.xml
+        dest: packaging/flatpak

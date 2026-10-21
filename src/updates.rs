@@ -14,7 +14,7 @@ use fastframe_update::{MacConfig, ReqwestTransport, UpdateConfig};
 
 pub const CONFIG: UpdateConfig = UpdateConfig {
     macos: MacConfig {
-        bundle_ids: &["rocks.spotifast.Spotifast"],
+        bundle_ids: &[crate::identity::APP_ID],
         executable_names: &["Spotifast"],
         legacy_bundle_names: &[],
     },
@@ -26,7 +26,7 @@ pub const CONFIG: UpdateConfig = UpdateConfig {
     // next one.
     appimage: true,
     ..UpdateConfig::new(
-        "crmne/spotifast",
+        "Astonikum/Spotifast-X",
         "Spotifast X",
         "spotifast",
         env!("CARGO_PKG_VERSION"),

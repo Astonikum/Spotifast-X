@@ -5,7 +5,7 @@ nav_order: 1
 ---
 
 {% assign v = site.spotifast_version %}
-{% assign base = "https://github.com/crmne/spotifast/releases/download/v" | append: v %}
+{% assign base = "https://github.com/Astonikum/Spotifast-X/releases/download/v" | append: v %}
 {% comment %} Releases after 0.12.0 ship a Windows Installer package (.msi). {% endcomment %}
 {% assign version = v | split: "." %}
 {% assign major = version[0] | plus: 0 %}
@@ -14,10 +14,11 @@ nav_order: 1
 {% assign windows_installer = "-setup.exe" %}
 {% if major > 0 or minor > 12 or minor == 12 and patch > 0 %}{% assign windows_installer = ".msi" %}{% endif %}
 
-The current version is **v{{ v }}**. You can use the
+Packages are available when published on the fork's releases page. The version
+shown here is **v{{ v }}**. You can use the
 [download checksums]({{ base }}/checksums.txt) to check that a file has not
 been damaged or changed. Older versions are on the
-[releases page](https://github.com/crmne/spotifast/releases).
+[releases page](https://github.com/Astonikum/Spotifast-X/releases).
 
 ## macOS
 
@@ -27,12 +28,6 @@ One download for both Apple Silicon and Intel:
 
 Open the downloaded file and drag **Spotifast X** to **Applications**.
 
-If you use [Homebrew](https://brew.sh), you can install it with:
-
-```sh
-brew install --cask crmne/tap/spotifast
-```
-
 ### First open on macOS
 
 Open **Spotifast X** from Applications. If your Mac asks whether you want to
@@ -41,10 +36,8 @@ open an app downloaded from the internet, choose **Open**.
 Starting with 0.8.0, the Mac download passes Apple's security checks. You do
 not need to change security settings or run commands in Terminal to open it.
 
-Quit the old app before opening Spotifast X. Your saved settings and sign-ins
-carry over. If an older version reports that its update helper exited before
-it was ready, install the DMG above manually once. The helper changes take
-effect for updates started from 0.9.1 onward.
+Spotifast X has a separate app identity and can run beside Spotifast. Sign in
+to Spotifast X separately; the original app's settings and sign-ins stay unchanged.
 
 ## Windows
 
@@ -105,29 +98,18 @@ as incorrectly detected.
 
 ## Linux
 
-### Arch Linux
-
-Spotifast X is in the AUR, Arch's community package collection. Installing it
-also adds it to your app launcher:
-
-```sh
-yay -S spotifast-bin      # the released build, ready made
-yay -S spotifast          # the release, built from source
-yay -S spotifast-git      # built from the latest commit
-```
-
 ### Flatpak
 
-Download the [Spotifast X Flatpak]({{ base }}/spotifast-v{{ v }}-x86_64.flatpak?flatpak-id=rocks.spotifast.Spotifast).
+Download the [Spotifast X Flatpak]({{ base }}/spotifast-v{{ v }}-x86_64.flatpak?flatpak-id=io.github.Astonikum.SpotifastX).
 It requires Flatpak and the Freedesktop 25.08 runtime, a set of shared
 components used by Flatpak apps:
 
 ```sh
 flatpak install --user ~/Downloads/spotifast-v{{ v }}-x86_64.flatpak
-flatpak run rocks.spotifast.Spotifast
+flatpak run io.github.Astonikum.SpotifastX
 ```
 
-The application ID is **`rocks.spotifast.Spotifast`**.
+The application ID is **`io.github.Astonikum.SpotifastX`**.
 
 To update this Flatpak installation, download and install the new release.
 Flathub support is planned.
@@ -163,7 +145,7 @@ and earlier need one more manual download.
 - [Linux archive (Intel and AMD, 64-bit)]({{ base }}/spotifast-v{{ v }}-x86_64-unknown-linux-gnu.tar.gz)
 - [Linux archive (ARM, 64-bit)]({{ base }}/spotifast-v{{ v }}-aarch64-unknown-linux-gnu.tar.gz)
 
-Unpack, put `spotifast` on your PATH, and copy the desktop entry and icon
+Unpack, install the `spotifast` binary on your PATH as `spotifast-x`, and copy the desktop entry and icon
 from the bundled `packaging/` directory if you want it in your launcher and
 handling `spotify:` links.
 The binary needs ALSA, PulseAudio or PipeWire, and Wayland or X11.
@@ -172,11 +154,11 @@ Or build from source: see the [build instructions](/getting-started/#build-from-
 
 ## Nix
 
-Add the repository [flake](https://github.com/crmne/spotifast) to your
+Add the repository [flake](https://github.com/Astonikum/Spotifast-X) to your
 inputs:
 
 ```nix
-inputs.spotifast.url = "github:crmne/spotifast";
+inputs.spotifast.url = "github:Astonikum/Spotifast-X";
 ```
 
 On NixOS, install the default package:

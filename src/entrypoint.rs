@@ -295,7 +295,7 @@ fn write_reply(out: &mut impl std::io::Write, text: &str) -> i32 {
 /// sandbox's app id, which Flatpak always sets in `FLATPAK_ID`.
 #[cfg(target_os = "linux")]
 fn desktop_entry() -> String {
-    fastframe_now_playing::desktop_entry("spotifast")
+    fastframe_now_playing::desktop_entry(spotifast::identity::SLUG)
 }
 
 #[cfg(target_os = "linux")]
@@ -803,13 +803,14 @@ fn native_options(
     geometry: Geometry,
 ) -> eframe::NativeOptions {
     #[cfg(target_os = "linux")]
-    let persistence_path = eframe::storage_dir("spotifast").map(|dir| dir.join("app.ron"));
+    let persistence_path =
+        eframe::storage_dir(spotifast::identity::APP_ID).map(|dir| dir.join("app.ron"));
     #[cfg(not(target_os = "linux"))]
     let persistence_path = None;
     #[cfg(target_os = "linux")]
     let app_id = desktop_entry();
     #[cfg(not(target_os = "linux"))]
-    let app_id = "spotifast";
+    let app_id = spotifast::identity::APP_ID;
     let icon = if cfg!(target_os = "macos") {
         // macOS takes the dock icon from the bundle's .icns, which is the
         // 1024px drawing with the platform's rounding. Setting a window
@@ -856,7 +857,8 @@ fn native_options(
 
 fn profile_options(mut options: eframe::NativeOptions) -> eframe::NativeOptions {
     if options.persist_window {
-        options.persistence_path = eframe::storage_dir("spotifast").map(|dir| dir.join("app.ron"));
+        options.persistence_path =
+            eframe::storage_dir(spotifast::identity::APP_ID).map(|dir| dir.join("app.ron"));
     }
     options
 }
@@ -900,7 +902,7 @@ mod native_window_tests {
         let main = profile_options(native_options(false, None, Geometry::default()));
         assert_eq!(
             main.persistence_path,
-            eframe::storage_dir("spotifast").map(|dir| dir.join("app.ron"))
+            eframe::storage_dir(spotifast::identity::APP_ID).map(|dir| dir.join("app.ron"))
         );
         let demo_path = std::path::PathBuf::from("temporary/demo.ron");
         let demo = profile_options(demo_native_options(

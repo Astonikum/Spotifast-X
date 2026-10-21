@@ -236,7 +236,8 @@ out, or a reconnection that gives up stops it.
   Helper startup errors are retained in `helper.log`. On macOS the helper runs
   from a copy of the whole signed bundle in that directory, so replacing or
   restoring the installed app never moves the helper's own code.
-  Settings, caches and credential stores are not replaced. Package-manager
+  Settings, caches and credential stores are not replaced. Spotifast X uses its
+  own application and credential-store identity, separate from Spotifast. Package-manager
   installs keep their package-manager update path. Mac updates verify the bundle
   identifier, version and code signature before replacing the whole app bundle.
   A Developer ID installation also requires the same signing team and a passing

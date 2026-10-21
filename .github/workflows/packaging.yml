@@ -67,13 +67,13 @@ jobs:
           brew tap-new --no-git spotifast/validation
           tap="$(brew --repository)/Library/Taps/spotifast/homebrew-validation"
           mkdir -p "$tap/Casks"
-          cp dist/native-packages/recipes/homebrew/spotifast.rb "$tap/Casks/spotifast.rb"
-          brew install --cask spotifast/validation/spotifast
+          cp dist/native-packages/recipes/homebrew/spotifast-x.rb "$tap/Casks/spotifast-x.rb"
+          brew install --cask spotifast/validation/spotifast-x
           app="/Applications/Spotifast X.app"
           executable=$(/usr/libexec/PlistBuddy -c 'Print :CFBundleExecutable' "$app/Contents/Info.plist")
           "$app/Contents/MacOS/$executable" --version
           codesign --verify --strict "$app"
-          brew uninstall --cask spotifast/validation/spotifast
+          brew uninstall --cask spotifast/validation/spotifast-x
           test ! -e "$app"
 
   # Releases build their AppImages before publishing (release.yml), not in
@@ -125,7 +125,7 @@ jobs:
           set -- dist/appimage/packages/"$TARGET"/appimage/spotifast-*-"$ARCH".AppImage
           test "$#" -eq 1
           "$1" --appimage-extract-and-run --version | grep -Ex 'spotifast [0-9]+\.[0-9]+\.[0-9]+.*'
-          expected="gh-releases-zsync|crmne|spotifast|latest|spotifast-*-$ARCH.AppImage.zsync"
+          expected="gh-releases-zsync|Astonikum|Spotifast-X|latest|spotifast-*-$ARCH.AppImage.zsync"
           found=$("$1" --appimage-updateinformation)
           test "$found" = "$expected" || { echo "Update information: $found" >&2; exit 1; }
           python3 packaging/check-appimage.py "$1" "$ARCH"

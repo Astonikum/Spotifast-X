@@ -6,40 +6,44 @@ nav_order: 0
 
 ## Where things live
 
-Linux media controls use `playerctl --player=spotifast`.
+Linux packages install the command `spotifast-x`; source builds and release
+archives retain the binary name `spotifast`. Linux media controls use
+`playerctl --player=spotifast-x`.
 
-Spotifast X follows each platform's conventions. On Linux:
+Spotifast X has its own installation, settings, caches and credential entries.
+It can run beside Spotifast and does not import its sign-ins or files. Sign in
+to Spotifast X separately. On Linux:
 
 | What | Where | Safe to delete? |
 | --- | --- | --- |
-| Settings | `~/.config/spotifast/settings.json` | Yes, you lose preferences |
-| Plugin packages and configuration | `~/.config/spotifast/plugins/` | Yes, you lose installed plugins, grants and plugin settings |
+| Settings | `~/.config/spotifastx/settings.json` | Yes, you lose preferences |
+| Plugin packages and configuration | `~/.config/spotifastx/plugins/` | Yes, you lose installed plugins, grants and plugin settings |
 | Spotify grants (available since 0.8.0) | System credential store | Use Sign out in Settings |
-| Credential revocation markers (available since 0.8.0) | `~/.local/state/spotifast/credential-storage/` | Keep after a failed sign-out deletion |
-| Legacy shared Web API grant | `~/.local/state/spotifast/shared_web_api_token.json` | Removed after migration or sign-out |
-| Legacy personal Web API grant | `~/.local/state/spotifast/personal_web_api_token.json` | Removed after migration or sign-out |
-| Legacy playback credential | `~/.local/state/spotifast/credentials/` | Removed after migration or sign-out |
+| Credential revocation markers (available since 0.8.0) | `~/.local/state/spotifastx/credential-storage/` | Keep after a failed sign-out deletion |
+| Legacy shared Web API grant | `~/.local/state/spotifastx/shared_web_api_token.json` | Removed after migration or sign-out |
+| Legacy personal Web API grant | `~/.local/state/spotifastx/personal_web_api_token.json` | Removed after migration or sign-out |
+| Legacy playback credential | `~/.local/state/spotifastx/credentials/` | Removed after migration or sign-out |
 | Proxy password | System credential store | Clear the password and apply the manual proxy settings |
-| Legacy proxy password | `~/.local/state/spotifast/proxy_password` | Removed after protected migration |
-| Last session | `~/.local/state/spotifast/session.json` | Yes |
-| Play history | `~/.local/state/spotifast/history.json` | Yes |
-| Audio cache | `~/.cache/spotifast/audio/` | Always |
-| Artwork cache | `~/.cache/spotifast/art/` | Always |
-| Lyrics cache | `~/.cache/spotifast/lyrics/` | Always |
-| Account-scoped playlist page cache | `~/.cache/spotifast/playlists/<account-id>/` | Always |
-| Account-scoped playlist list | `~/.cache/spotifast/library/` | Always |
-| Account-scoped Home shelves | `~/.cache/spotifast/home/` | Always |
-| Last run's log | `~/.local/state/spotifast/spotifast.log` | Always |
-| Crash log | `~/.local/state/spotifast/panic.log` | Always |
+| Legacy proxy password | `~/.local/state/spotifastx/proxy_password` | Removed after protected migration |
+| Last session | `~/.local/state/spotifastx/session.json` | Yes |
+| Play history | `~/.local/state/spotifastx/history.json` | Yes |
+| Audio cache | `~/.cache/spotifastx/audio/` | Always |
+| Artwork cache | `~/.cache/spotifastx/art/` | Always |
+| Lyrics cache | `~/.cache/spotifastx/lyrics/` | Always |
+| Account-scoped playlist page cache | `~/.cache/spotifastx/playlists/<account-id>/` | Always |
+| Account-scoped playlist list | `~/.cache/spotifastx/library/` | Always |
+| Account-scoped Home shelves | `~/.cache/spotifastx/home/` | Always |
+| Last run's log | `~/.local/state/spotifastx/spotifast.log` | Always |
+| Crash log | `~/.local/state/spotifastx/panic.log` | Always |
 
 Starting with your computer (Settings > Playback on this computer) is kept
 where each system keeps it, not in `settings.json`:
 
 | Platform | Where |
 | --- | --- |
-| Linux | `~/.config/autostart/spotifast.desktop` (`$XDG_CONFIG_HOME/autostart`), which runs `spotifast`, with `--start-hidden` for the tray |
-| Flatpak | Registered through the background portal; Spotifast X keeps a copy of what it asked for in `~/.var/app/rocks.spotifast.Spotifast/config/autostart/spotifast.desktop` |
-| macOS 13 and later | Login Items: Spotifast X itself to open with the window, or the `rocks.spotifast.Spotifast.autostart` agent inside the app, which opens it with `--start-hidden` |
+| Linux | `~/.config/autostart/spotifast-x.desktop` (`$XDG_CONFIG_HOME/autostart`), which runs `spotifast-x`, with `--start-hidden` for the tray |
+| Flatpak | Registered through the background portal; Spotifast X keeps a copy of what it asked for in `~/.var/app/io.github.Astonikum.SpotifastX/config/autostart/spotifast-x.desktop` |
+| macOS 13 and later | Login Items: Spotifast X itself to open with the window, or the `io.github.Astonikum.SpotifastX.autostart` agent inside the app, which opens it with `--start-hidden` |
 | Windows | The `Spotifast X` value under `HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run` |
 
 Deleting the entry turns it off. Uninstalling Spotifast X does not remove the
@@ -55,7 +59,7 @@ The following credential storage is available since 0.8.0.
 
 Durable grants use **Secret Service on Linux**, **Keychain on macOS**, and
 **Credential Manager on Windows**, under the service name
-`rocks.spotifast.Spotifast`. Entries are separated by application state
+`io.github.Astonikum.SpotifastX`. Entries are separated by application state
 location and grant type; Web grants carry their Client ID and must verify as
 the same account. Playback and receiver activation require that account too.
 Non-secret settings and session data remain readable JSON. Native credential
@@ -252,16 +256,16 @@ automatic requests and shows a Retry button in the reserved row space.
 Since 0.8.0, Flatpak also preserves the fallback
 state directory used when `XDG_STATE_HOME` is unset. Session state, history,
 logs, and credential revocation markers survive a full quit and relaunch under
-`~/.var/app/rocks.spotifast.Spotifast/.local/state/spotifast/`. Configuration
+`~/.var/app/io.github.Astonikum.SpotifastX/.local/state/spotifastx/`. Configuration
 and caches remain under the app's `config/` and `cache/` directories. State
 already lost on quitting an older release cannot be recovered.
 
 On macOS, settings, state, and the logs are in
-`~/Library/Application Support/me.paolino.spotifast` and the caches in
-`~/Library/Caches/me.paolino.spotifast`. On Windows, settings are in
-`%APPDATA%\paolino\spotifast\config`, state and the logs in
-`%LOCALAPPDATA%\paolino\spotifast\data`, and the caches in
-`%LOCALAPPDATA%\paolino\spotifast\cache`.
+`~/Library/Application Support/io.github.Astonikum.SpotifastX` and the caches in
+`~/Library/Caches/io.github.Astonikum.SpotifastX`. On Windows, settings are in
+`%APPDATA%\Astonikum\SpotifastX\config`, state and the logs in
+`%LOCALAPPDATA%\Astonikum\SpotifastX\data`, and the caches in
+`%LOCALAPPDATA%\Astonikum\SpotifastX\cache`.
 
 ### Portable copies
 
@@ -308,15 +312,15 @@ updater may replace the executable. Spotifast X from it keeps the folders above:
 set `XDG_CONFIG_HOME`, `XDG_STATE_HOME` and `XDG_CACHE_HOME` to move them.
 
 The running copy keeps its single-instance files in a private directory:
-`$XDG_RUNTIME_DIR/spotifast` on Linux (inside Flatpak, the app's own runtime
-directory), a `spotifast` folder in your private temporary directory
+`$XDG_RUNTIME_DIR/spotifast-x` on Linux (inside Flatpak, the app's own runtime
+directory), a `spotifast-x` folder in your private temporary directory
 (`$TMPDIR`) on macOS, and an `instance` folder in the state directory on
 Windows. A portable copy has its own, `instance\scope-portable-<id>` in the
 installed state directory, with one `<id>` per portable folder, so it runs
 beside the installed copy and other portable copies instead of handing your
 launches to them. `instance.lock` marks the running copy; the system releases it when
 Spotifast X quits or crashes. `instance.sock` (Linux and macOS) is the socket
-a second launch and the `spotifast` command reach it through, which only your
+a second launch and the `spotifast-x` command reach it through, which only your
 user can open. On Windows, `instance.key` holds the loopback port and a
 random token that every request must carry. Spotifast X writes them on each
 start; nothing in them needs keeping.
@@ -494,7 +498,7 @@ rewrites them, and a deleted one stays deleted; `.installed-palettes` in
 the folder records which it has already put there.
 
 To make your own, add JSON files to the `themes` folder.
-Run `spotifast reload-themes` if the app is already open, then select it
+Run `spotifast-x reload-themes` if the app is already open, then select it
 under **Settings → Appearance → Theme**, where it is listed by its filename
 without `.json`.
 The default is **Follow system**. It uses your desktop’s light/dark appearance,
@@ -523,7 +527,7 @@ already follows your desktop theme, so the two pickers are not shown.
 needed and opens it in your file
 manager.
 After adding or editing a JSON file on macOS or Windows, run
-`spotifast reload-themes` to refresh the list and the selected palette without
+`spotifast-x reload-themes` to refresh the list and the selected palette without
 restarting playback. Since 0.10.2, Spotifast X on Linux notices changes to the
 themes folder by itself.
 Choosing a built-in theme clears the custom selection.
@@ -557,7 +561,7 @@ colour it: with **Colour from album art** off, or on a page without a cover.
 Its alpha is the strength, so `#00000018` is a faint dark wash and `#ffffff20`
 a faint light one. Leave it out for a plain page.
 
-Files are read in the background at launch and when `spotifast reload-themes`
+Files are read in the background at launch and when `spotifast-x reload-themes`
 is called. The command updates the selected palette without interrupting
 playback, changing your selection or showing the window. It does not start a
 stopped app. Repeated requests are combined while a scan is running. On Linux,
@@ -629,10 +633,10 @@ page should keep the theme's fixed colors.
 
 The hook uses Omarchy's current theme at
 `~/.local/state/omarchy/current/theme` and Spotifast X's existing
-`${XDG_CONFIG_HOME:-~/.config}/spotifast/themes` directory. The shipped hook
+`${XDG_CONFIG_HOME:-~/.config}/spotifastx/themes` directory. The shipped hook
 is updated automatically if its contents have not been customized. A custom profile can set
 `SPOTIFAST_THEMES_DIR` in the installed hook; this example uses the native
-`spotifast` command, not a Flatpak launcher. Themes without `colors.toml` need
+`spotifast-x` command, not a Flatpak launcher. Themes without `colors.toml` need
 their own `spotifast.json` file. Missing or invalid palettes leave the last
 accepted appearance in place.
 

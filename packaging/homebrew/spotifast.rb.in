@@ -1,8 +1,8 @@
-cask "spotifast" do
+cask "spotifast-x" do
   version "@VERSION@"
   sha256 "@MACOS_SHA256@"
 
-  url "https://github.com/crmne/spotifast/releases/download/v#{version}/spotifast-v#{version}-macos-universal.dmg"
+  url "https://github.com/Astonikum/Spotifast-X/releases/download/v#{version}/spotifast-v#{version}-macos-universal.dmg"
   name "Spotifast X"
   desc "Native Spotify client"
   homepage "https://spotifast.rocks"
@@ -15,7 +15,7 @@ cask "spotifast" do
   app "Spotifast X.app"
 
   zap trash: [
-    "~/Library/Application Support/me.paolino.spotifast",
-    "~/Library/Caches/me.paolino.spotifast",
+    "~/Library/Application Support/io.github.Astonikum.SpotifastX",
+    "~/Library/Caches/io.github.Astonikum.SpotifastX",
   ]
 end

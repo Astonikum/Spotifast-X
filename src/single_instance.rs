@@ -11,7 +11,7 @@
 //! port that answers only requests carrying the random token the running
 //! instance writes beside the lock.
 //!
-//! Clients send one `spotifast:<verb>` line and receive one reply. Commands
+//! Clients send one `spotifast-x:<verb>` line and receive one reply. Commands
 //! enter the same action queue as tray and media-key events. Read commands use
 //! snapshots, so the listener thread never accesses app state. The
 //! `spotifast` command-line subcommands are clients of this channel; MPRIS
@@ -26,7 +26,7 @@
 
 /// The name every request and reply starts with, so a copy of another app
 /// never obeys Spotifast X's requests.
-const NAME: &str = "spotifast";
+const NAME: &str = crate::identity::SLUG;
 
 /// The reply to an accepted command.
 const OK_REPLY: &str = "ok";
@@ -178,7 +178,7 @@ pub fn send(verb: &str) -> std::io::Result<Reply> {
     reply(&slot().send(verb)?)
 }
 
-/// Reads the running instance's reply, without the `spotifast:` prefix the
+/// Reads the running instance's reply, without the `spotifast-x:` prefix the
 /// channel already checked.
 fn reply(line: &str) -> std::io::Result<Reply> {
     if line == OK_REPLY {
@@ -297,7 +297,7 @@ enum Request {
 }
 
 /// Reads one request line, the channel having already checked and removed
-/// its `spotifast:` prefix.
+/// its `spotifast-x:` prefix.
 fn parse(line: &str) -> Option<Request> {
     let verb = line.trim_end();
     let (verb, argument) = match verb.split_once(' ') {

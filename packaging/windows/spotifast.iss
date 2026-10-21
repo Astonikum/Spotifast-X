@@ -29,19 +29,19 @@
 
 #define AppName "Spotifast X"
 #define AppExeName "spotifast.exe"
-#define AppIdentity "Spotifast"
+#define AppIdentity "SpotifastX"
 
 [Setup]
 ; Never change: this is how Windows tells an update from a new program.
-AppId={{FCED1EA0-EBF5-4C32-BA3B-A3AD724BACC3}
+AppId={{27C41F04-736F-5218-9F62-736A70106ED4}
 AppName={#AppName}
 AppVersion={#Version}
 AppVerName={#AppName} {#Version}
-AppPublisher=Carmine Paolino
+AppPublisher=Spotifast X
 AppCopyright=© 2026 Carmine Paolino
-AppPublisherURL=https://spotifast.rocks
+AppPublisherURL=https://github.com/Astonikum/Spotifast-X
 AppSupportURL=https://github.com/crmne/spotifast/issues
-AppUpdatesURL=https://spotifast.rocks/download/
+AppUpdatesURL=https://github.com/Astonikum/Spotifast-X/releases
 DefaultDirName={localappdata}\Programs\{#AppIdentity}
 DefaultGroupName={#AppName}
 DisableProgramGroupPage=yes
@@ -84,26 +84,36 @@ Name: "{autodesktop}\{#AppName}"; Filename: "{app}\{#AppExeName}"; Tasks: deskto
 [Registry]
 ; Spotify links (spotify:track:…) open in Spotifast. Registered for this
 ; user only, like the program itself. The official client registers the same
-; scheme when it is installed; whichever was set up last has the links, and
+; scheme when it is installed; the existing handler is kept, and
 ; Settings > Apps > Default apps can hand them to the other, where Spotifast X
 ; is listed through the capabilities below.
-Root: HKCU; Subkey: "Software\Classes\spotify"; ValueType: string; ValueName: ""; ValueData: "URL:Spotify link"
-Root: HKCU; Subkey: "Software\Classes\spotify"; ValueType: string; ValueName: "URL Protocol"; ValueData: ""
-Root: HKCU; Subkey: "Software\Classes\spotify\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: """{app}\{#AppExeName}"",0"
-Root: HKCU; Subkey: "Software\Classes\spotify\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#AppExeName}"" ""%1"""
-Root: HKCU; Subkey: "Software\Classes\Spotifast.spotify"; ValueType: string; ValueName: ""; ValueData: "URL:Spotify link"; Flags: uninsdeletekey
-Root: HKCU; Subkey: "Software\Classes\Spotifast.spotify"; ValueType: string; ValueName: "URL Protocol"; ValueData: ""
-Root: HKCU; Subkey: "Software\Classes\Spotifast.spotify\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: """{app}\{#AppExeName}"",0"
-Root: HKCU; Subkey: "Software\Classes\Spotifast.spotify\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#AppExeName}"" ""%1"""
+Root: HKCU; Subkey: "Software\Classes\spotify"; ValueType: string; ValueName: ""; ValueData: "URL:Spotify link"; Check: CanClaimSpotifyLinks
+Root: HKCU; Subkey: "Software\Classes\spotify"; ValueType: string; ValueName: "URL Protocol"; ValueData: ""; Check: CanClaimSpotifyLinks
+Root: HKCU; Subkey: "Software\Classes\spotify\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: """{app}\{#AppExeName}"",0"; Check: CanClaimSpotifyLinks
+Root: HKCU; Subkey: "Software\Classes\spotify\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#AppExeName}"" ""%1"""; Check: CanClaimSpotifyLinks
+Root: HKCU; Subkey: "Software\Classes\SpotifastX.spotify"; ValueType: string; ValueName: ""; ValueData: "URL:Spotify link"; Flags: uninsdeletekey
+Root: HKCU; Subkey: "Software\Classes\SpotifastX.spotify"; ValueType: string; ValueName: "URL Protocol"; ValueData: ""
+Root: HKCU; Subkey: "Software\Classes\SpotifastX.spotify\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: """{app}\{#AppExeName}"",0"
+Root: HKCU; Subkey: "Software\Classes\SpotifastX.spotify\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#AppExeName}"" ""%1"""
 Root: HKCU; Subkey: "Software\{#AppIdentity}\Capabilities"; ValueType: string; ValueName: "ApplicationName"; ValueData: "{#AppName}"; Flags: uninsdeletekey
 Root: HKCU; Subkey: "Software\{#AppIdentity}\Capabilities"; ValueType: string; ValueName: "ApplicationDescription"; ValueData: "A native Spotify client"
-Root: HKCU; Subkey: "Software\{#AppIdentity}\Capabilities\URLAssociations"; ValueType: string; ValueName: "spotify"; ValueData: "Spotifast.spotify"
+Root: HKCU; Subkey: "Software\{#AppIdentity}\Capabilities\URLAssociations"; ValueType: string; ValueName: "spotify"; ValueData: "SpotifastX.spotify"
 Root: HKCU; Subkey: "Software\RegisteredApplications"; ValueType: string; ValueName: "{#AppIdentity}"; ValueData: "Software\{#AppIdentity}\Capabilities"; Flags: uninsdeletevalue
 
 [Run]
 Filename: "{app}\{#AppExeName}"; Description: "Launch {#AppName}"; Flags: nowait postinstall skipifsilent
 
 [Code]
+// Leave an existing client's handler alone; Default apps can select this one.
+function CanClaimSpotifyLinks: Boolean;
+var
+  Command: String;
+begin
+  Result := not RegQueryStringValue(HKCR, 'spotify\shell\open\command', '', Command) or
+    (Command = '') or
+    (CompareText(Command, '"' + ExpandConstant('{app}\{#AppExeName}') + '" "%1"') = 0);
+end;
+
 #if Arch == "x86_64"
 // x64compatible lets this installer run on an ARM PC under emulation, and a
 // copy installed from it keeps updating to x64. The ARM installer has

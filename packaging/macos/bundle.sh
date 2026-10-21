@@ -19,7 +19,7 @@ rm -rf "$app"
 mkdir -p "$app/Contents/MacOS" "$app/Contents/Resources"
 
 executable=Spotifast
-identifier=rocks.spotifast.Spotifast
+identifier=io.github.Astonikum.SpotifastX
 cp "$binary" "$app/Contents/MacOS/$executable"
 chmod 755 "$app/Contents/MacOS/$executable"
 # The build number has to be numbers: a release candidate's -rc1 comes off.

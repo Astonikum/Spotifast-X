@@ -665,7 +665,7 @@ pub enum AutostartRequest {
 /// Spotifast X's registration to start at login. The hidden start passes
 /// `--start-hidden`, which the command line takes.
 pub fn autostart() -> fastframe_autostart::Autostart {
-    fastframe_autostart::Autostart::new("spotifast", "Spotifast X")
+    fastframe_autostart::Autostart::new(crate::identity::SLUG, "Spotifast X")
 }
 
 pub enum Command {

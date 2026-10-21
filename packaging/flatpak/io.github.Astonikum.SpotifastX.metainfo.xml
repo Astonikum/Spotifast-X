@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component type="desktop-application">
-  <id>rocks.spotifast.Spotifast</id>
+  <id>io.github.Astonikum.SpotifastX</id>
   <name>Spotifast X</name>
   <summary>A native Spotify client</summary>
   <developer id="me.paolino">
@@ -21,11 +21,11 @@
       Playback needs Spotify Premium.
     </p>
   </description>
-  <launchable type="desktop-id">rocks.spotifast.Spotifast.desktop</launchable>
+  <launchable type="desktop-id">io.github.Astonikum.SpotifastX.desktop</launchable>
   <url type="homepage">https://spotifast.rocks/</url>
   <url type="bugtracker">https://github.com/crmne/spotifast/issues</url>
   <url type="help">https://spotifast.rocks/getting-started/</url>
-  <url type="vcs-browser">https://github.com/crmne/spotifast</url>
+  <url type="vcs-browser">https://github.com/Astonikum/Spotifast-X</url>
   <screenshots>
     <screenshot type="default">
       <caption>A playlist, with the queue open and a track playing on a remote speaker</caption>

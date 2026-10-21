@@ -11,39 +11,39 @@ libraries:
     deb: libasound2t64
     rpm: alsa-lib
 nfpm:
-  name: spotifast
+  name: spotifast-x
   maintainer: Carmine Paolino <carmine@paolino.me>
-  homepage: https://github.com/crmne/spotifast
+  homepage: https://github.com/Astonikum/Spotifast-X
   description: A native Spotify client
   license: MIT
   contents:
-  # A glob source makes nFPM append its basename to the destination directory.
-  - src: "@PAYLOAD@/*-v@VERSION@-@TARGET@/spotifast"
-    dst: "/usr/bin/"
+  # Exact sources let nFPM rename the installed command without changing archives.
+  - src: "@PAYLOAD@/spotifast-v@VERSION@-@TARGET@/spotifast"
+    dst: "/usr/bin/spotifast-x"
     file_info:
       mode: 493
-  - src: "@PAYLOAD@/*-v@VERSION@-@TARGET@/LICENSE"
-    dst: "/usr/share/licenses/spotifast/"
+  - src: "@PAYLOAD@/spotifast-v@VERSION@-@TARGET@/LICENSE"
+    dst: "/usr/share/licenses/spotifast-x/LICENSE"
     file_info:
       mode: 420
-  - src: "@PAYLOAD@/*-v@VERSION@-@TARGET@/README.md"
-    dst: "/usr/share/doc/spotifast/"
+  - src: "@PAYLOAD@/spotifast-v@VERSION@-@TARGET@/README.md"
+    dst: "/usr/share/doc/spotifast-x/README.md"
     file_info:
       mode: 420
-  - src: "@PAYLOAD@/*-v@VERSION@-@TARGET@/packaging/applications/*.desktop"
-    dst: "/usr/share/applications/"
+  - src: "@PAYLOAD@/spotifast-v@VERSION@-@TARGET@/packaging/applications/spotifast-x.desktop"
+    dst: "/usr/share/applications/spotifast-x.desktop"
     file_info:
       mode: 420
-  - src: "@PAYLOAD@/*-v@VERSION@-@TARGET@/packaging/icons/*.svg"
-    dst: "/usr/share/icons/hicolor/scalable/apps/"
+  - src: "@PAYLOAD@/spotifast-v@VERSION@-@TARGET@/packaging/icons/spotifast-x.svg"
+    dst: "/usr/share/icons/hicolor/scalable/apps/spotifast-x.svg"
     file_info:
       mode: 420
   - src: contrib/omarchy/spotifast.json.tpl
-    dst: /usr/share/spotifast/omarchy/spotifast.json.tpl
+    dst: /usr/share/spotifast-x/omarchy/spotifast.json.tpl
     file_info:
       mode: 420
   - src: contrib/omarchy/spotifast-theme
-    dst: /usr/share/spotifast/omarchy/spotifast-theme
+    dst: /usr/share/spotifast-x/omarchy/spotifast-theme
     file_info:
       mode: 493
   overrides:
@@ -136,7 +136,7 @@ targets:
     compiler_target: x86_64-unknown-linux-gnu
     formats: [appimage]
     appimage:
-      update_information: gh-releases-zsync|crmne|spotifast|latest|spotifast-*-x86_64.AppImage.zsync
+      update_information: gh-releases-zsync|Astonikum|Spotifast-X|latest|spotifast-*-x86_64.AppImage.zsync
     input:
       local: dist/spotifast-v@VERSION@-x86_64-unknown-linux-gnu.tar.gz
       release_asset: spotifast-v@VERSION@-x86_64-unknown-linux-gnu.tar.gz
@@ -147,7 +147,7 @@ targets:
     compiler_target: aarch64-unknown-linux-gnu
     formats: [appimage]
     appimage:
-      update_information: gh-releases-zsync|crmne|spotifast|latest|spotifast-*-aarch64.AppImage.zsync
+      update_information: gh-releases-zsync|Astonikum|Spotifast-X|latest|spotifast-*-aarch64.AppImage.zsync
     input:
       local: dist/spotifast-v@VERSION@-aarch64-unknown-linux-gnu.tar.gz
       release_asset: spotifast-v@VERSION@-aarch64-unknown-linux-gnu.tar.gz
@@ -176,7 +176,7 @@ targets:
       command: [python, packaging/windows/build-msi.py, '@PAYLOAD@', '@PACKAGE@', '@VERSION@', '@ARCH@']
       output: 'spotifast-@TAG@-@TARGET@.msi'
 release:
-  repository: crmne/spotifast
+  repository: Astonikum/Spotifast-X
   prereleases: true
   checksums: checksums.txt
 assets:
@@ -193,55 +193,13 @@ assets:
     file: spotifast-v@VERSION@-macos-universal.dmg
     local: dist/spotifast-v@VERSION@-macos-universal.dmg
 templates:
-  arch/spotifast/PKGBUILD: packaging/arch/spotifast/PKGBUILD.in
-  arch/spotifast/spotifast.install: packaging/arch/spotifast.install
-  arch/spotifast-bin/PKGBUILD: packaging/arch/spotifast-bin/PKGBUILD.in
-  arch/spotifast-bin/spotifast-bin.install: packaging/arch/spotifast.install
-  arch/spotifast-git/PKGBUILD: packaging/arch/spotifast-git/PKGBUILD.in
-  arch/spotifast-git/spotifast-git.install: packaging/arch/spotifast.install
-  homebrew/spotifast.rb: packaging/homebrew/spotifast.rb.in
-repositories:
-  aur-source:
-    group: aur
-    url: https://aur.archlinux.org/spotifast.git
-    push_url: ssh://aur@aur.archlinux.org/spotifast.git
-    branch: master
-    package_path: "."
-    files:
-      arch/spotifast: "."
-    version_file: ".SRCINFO"
-    version_pattern: "^\\s*pkgver = (\\S+)"
-    publish: push
-  aur-bin:
-    group: aur
-    url: https://aur.archlinux.org/spotifast-bin.git
-    push_url: ssh://aur@aur.archlinux.org/spotifast-bin.git
-    branch: master
-    package_path: "."
-    files:
-      arch/spotifast-bin: "."
-    version_file: ".SRCINFO"
-    version_pattern: "^\\s*pkgver = (\\S+)"
-    publish: push
-  aur-git:
-    group: aur
-    url: https://aur.archlinux.org/spotifast-git.git
-    push_url: ssh://aur@aur.archlinux.org/spotifast-git.git
-    branch: master
-    package_path: "."
-    files:
-      arch/spotifast-git: "."
-    version_file: ".SRCINFO"
-    version_pattern: "^\\s*pkgver = (\\S+)"
-    publish: push
-  homebrew:
-    url: https://github.com/crmne/homebrew-tap.git
-    push_url: https://github.com/crmne/homebrew-tap.git
-    branch: main
-    package_path: Casks
-    files:
-      homebrew/spotifast.rb: Casks/spotifast.rb
-    version_file: Casks/spotifast.rb
-    version_pattern: version "([^"]+)"
-    publish: push
+  arch/spotifast-x/PKGBUILD: packaging/arch/spotifast/PKGBUILD.in
+  arch/spotifast-x/spotifast-x.install: packaging/arch/spotifast.install
+  arch/spotifast-x-bin/PKGBUILD: packaging/arch/spotifast-bin/PKGBUILD.in
+  arch/spotifast-x-bin/spotifast-x-bin.install: packaging/arch/spotifast.install
+  arch/spotifast-x-git/PKGBUILD: packaging/arch/spotifast-git/PKGBUILD.in
+  arch/spotifast-x-git/spotifast-x-git.install: packaging/arch/spotifast.install
+  homebrew/spotifast-x.rb: packaging/homebrew/spotifast.rb.in
+# Configure fork-owned AUR/Homebrew destinations before publishing recipes.
+repositories: {}
 version_file: Cargo.toml

@@ -14,7 +14,12 @@ use std::path::PathBuf;
 /// logs of its runs.
 const FOLDERS: fastframe_dirs::App = fastframe_dirs::App {
     not_copied: &["instance", "spotifast.log", "panic.log"],
-    ..fastframe_dirs::App::new("spotifast", "me", "paolino", "spotifast")
+    ..fastframe_dirs::App::new(
+        "spotifast",
+        crate::identity::QUALIFIER,
+        crate::identity::ORGANIZATION,
+        crate::identity::APPLICATION,
+    )
 };
 
 #[derive(Clone, Debug)]
@@ -98,9 +103,9 @@ impl AppDirs {
     fn fallback() -> Self {
         let fallback = std::env::current_dir().unwrap_or_default();
         Self {
-            config: fallback.join("spotifast-config"),
-            state: fallback.join("spotifast-state"),
-            cache: fallback.join("spotifast-cache"),
+            config: fallback.join("spotifast-x-config"),
+            state: fallback.join("spotifast-x-state"),
+            cache: fallback.join("spotifast-x-cache"),
         }
     }
 
@@ -301,11 +306,14 @@ mod tests {
         );
     }
 
-    /// Installed copies, and every copy on Linux and macOS, keep the folders
-    /// they always had.
+    /// The fork never reads or migrates the original client's data.
     #[test]
-    fn the_per_user_folders_are_the_ones_spotifast_always_used() {
-        let Some(project) = directories::ProjectDirs::from("me", "paolino", "spotifast") else {
+    fn the_per_user_folders_are_private_to_the_fork() {
+        let Some(project) = directories::ProjectDirs::from(
+            crate::identity::QUALIFIER,
+            crate::identity::ORGANIZATION,
+            crate::identity::APPLICATION,
+        ) else {
             return;
         };
         let dirs = AppDirs::installed();
@@ -315,5 +323,12 @@ mod tests {
             project.state_dir().unwrap_or(project.data_local_dir())
         );
         assert_eq!(dirs.cache, project.cache_dir());
+        let original = directories::ProjectDirs::from("me", "paolino", "spotifast").unwrap();
+        assert_ne!(dirs.config, original.config_dir());
+        assert_ne!(dirs.cache, original.cache_dir());
+        assert_ne!(
+            dirs.state,
+            original.state_dir().unwrap_or(original.data_local_dir())
+        );
     }
 }
