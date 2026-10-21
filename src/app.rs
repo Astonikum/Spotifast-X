@@ -18949,7 +18949,7 @@ mod tests {
         });
         let source = r#"
             fn on_event(input) {
-                if input.event.type == "fail" || input.event.type == "tick" { throw "failed"; }
+                if input.event.type == "fail" { throw "failed"; }
                 let slots = #{};
                 for slot in ["page_start", "page_end", "sidebar", "topbar", "player_bar", "settings"] {
                     slots[slot] = [#{type: "label", text: "plugin-slot"}];
@@ -19100,6 +19100,8 @@ mod tests {
         let ctx = egui::Context::default();
         let mut app = test_app("plugin-grants");
         install_test_plugin(&mut app);
+        // This test drives explicit events; background ticks must not clear the deliberate error.
+        app.defer_plugin_ticks(Duration::from_secs(60));
         let result = &app.plugins.outputs["integration"];
         let digest = result.digest.clone();
         let revision = result.revision;
@@ -19149,6 +19151,11 @@ mod tests {
             "failed scripts retain their last valid effects"
         );
         assert_eq!(app.plugin_item_patch(&item).unwrap().name(), "Patched");
+        app.plugins.manager.invoke(
+            "integration",
+            serde_json::json!({"type":"tick"}),
+            serde_json::Value::Null,
+        );
         app.plugins.manager.invoke(
             "integration",
             serde_json::json!({"type":"recovered"}),

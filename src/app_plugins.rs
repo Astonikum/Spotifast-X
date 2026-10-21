@@ -30,6 +30,11 @@ impl PluginHost {
 }
 
 impl App {
+    #[cfg(test)]
+    pub(super) fn defer_plugin_ticks(&mut self, duration: Duration) {
+        self.plugins.last_dispatch = Instant::now() + duration;
+    }
+
     pub(crate) fn invalidate_plugin(&mut self, id: &str) {
         self.plugins.outputs.remove(id);
         self.plugins.last_dispatch = Instant::now() - Duration::from_secs(1);
