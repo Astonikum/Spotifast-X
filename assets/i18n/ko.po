@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: Spotifast X\n"
 "Report-Msgid-Bugs-To: https://github.com/crmne/spotifast/issues/new?"
 "template=translation.yml\n"
-"POT-Creation-Date: 2026-10-22 14:35+0300\n"
+"POT-Creation-Date: 2026-10-22 21:09+0300\n"
 "PO-Revision-Date: 2026-10-15 12:00+0900\n"
 "Last-Translator: Spotifast X contributors\n"
 "Language-Team: Korean\n"
@@ -28,12 +28,12 @@ msgstr "{name} 일시정지"
 msgid "Play {name}"
 msgstr "{name} 재생"
 
-#: src/ui/sidebar.rs:302 src/app.rs:3284 src/app.rs:21547
+#: src/ui/sidebar.rs:302 src/app.rs:3284 src/app.rs:21518
 #: src/ui/collection.rs:2119 src/ui/collection.rs:2336
 msgid "Playlist"
 msgstr "플레이리스트"
 
-#: src/ui/sidebar.rs:312 src/ui/friends.rs:286 src/app.rs:3258 src/app.rs:21552
+#: src/ui/sidebar.rs:312 src/ui/friends.rs:286 src/app.rs:3258 src/app.rs:21523
 #: src/ui/collection.rs:2329 src/ui/home.rs:93 src/ui/keys.rs:245
 msgid "Liked Songs"
 msgstr "좋아요 표시한 곡"
@@ -313,7 +313,7 @@ msgid "Recent"
 msgstr "최근 항목"
 
 #: src/ui/queue.rs:92 src/ui/queue.rs:241 src/ui/lyrics.rs:78
-#: src/ui/friends.rs:65 src/ui/mod.rs:574
+#: src/ui/friends.rs:65 src/ui/mod.rs:575
 msgid "Close"
 msgstr "닫기"
 
@@ -789,7 +789,7 @@ msgid "Queue cleared"
 msgstr "재생목록을 지웠습니다"
 
 #. Translators: Keep {date} unchanged. It is a date in YYYY-MM-DD form.
-#: src/app.rs:5808 src/app.rs:21537
+#: src/app.rs:5808 src/app.rs:21508
 #, rust-format
 msgid "Queue {date}"
 msgstr "재생목록 {date}"
@@ -1130,7 +1130,7 @@ msgstr "커버를 업로드하지 못했습니다: {error}. 다시 시도하세�
 
 #. Translators: Keep {track} unchanged. It is the name of the song,
 #. playlist, album, or artist the radio is based on, not translated.
-#: src/app.rs:21557 src/app/radio.rs:38
+#: src/app.rs:21528 src/app/radio.rs:38
 #, rust-format
 msgid "{track} Radio"
 msgstr "{track} 라디오"
@@ -2171,7 +2171,7 @@ msgstr ""
 "설정에는 몇 분 정도 걸립니다. 나중에 설정의 개인 Spotify 앱에서도 찾을 수 있"
 "습니다."
 
-#: src/ui/dialogs.rs:56 src/ui/mod.rs:418
+#: src/ui/dialogs.rs:56 src/ui/mod.rs:419
 msgid "Set up personal app"
 msgstr "개인 앱 설정"
 
@@ -2580,15 +2580,15 @@ msgstr "프록시 설정"
 msgid "Spotifast X {version} • not affiliated with Spotify"
 msgstr "Spotifast X {version} • Spotify와 관련 없음"
 
-#: src/ui/mod.rs:383
+#: src/ui/mod.rs:384
 msgid "Close banner"
 msgstr "배너 닫기"
 
-#: src/ui/mod.rs:395
+#: src/ui/mod.rs:396
 msgid "Spotify is being slow on the shared app."
 msgstr "공유 앱에서 Spotify가 느려지고 있습니다."
 
-#: src/ui/mod.rs:406
+#: src/ui/mod.rs:407
 msgid ""
 "Set up your own personal Spotify app and you won't have to wait. It's free "
 "and takes a few minutes."
@@ -2598,19 +2598,19 @@ msgstr ""
 
 #. Translators: a button that opens a page explaining
 #. why the shared app is slow and what a personal app is.
-#: src/ui/mod.rs:427
+#: src/ui/mod.rs:428
 msgid "Why?"
 msgstr "이유는?"
 
-#: src/ui/mod.rs:571
+#: src/ui/mod.rs:572
 msgid "Minimize"
 msgstr "최소화"
 
-#: src/ui/mod.rs:572
+#: src/ui/mod.rs:573
 msgid "Maximize"
 msgstr "최대화"
 
-#: src/ui/mod.rs:573
+#: src/ui/mod.rs:574
 msgid "Restore"
 msgstr "복원"
 

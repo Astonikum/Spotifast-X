@@ -51,7 +51,7 @@
               apple-sdk
             ]
             ++ lib.optionals stdenv.hostPlatform.isLinux [
-              bindgenHook
+              pkgs.rustPlatform.bindgenHook
               dbus
               alsa-lib
               pipewire
@@ -125,7 +125,7 @@
                   pkg-config
                 ]
                 ++ pkgs.lib.optionals pkgs.stdenv.hostPlatform.isLinux [
-                  bindgenHook
+                  pkgs.rustPlatform.bindgenHook
                   makeWrapper
                 ]
                 ++ pkgs.lib.optionals pkgs.stdenv.hostPlatform.isDarwin [

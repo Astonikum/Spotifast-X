@@ -6,7 +6,7 @@ msgstr ""
 "Project-Id-Version: Spotifast X\n"
 "Report-Msgid-Bugs-To: https://github.com/crmne/spotifast/issues/new?"
 "template=translation.yml\n"
-"POT-Creation-Date: 2026-10-22 14:35+0300\n"
+"POT-Creation-Date: 2026-10-22 21:09+0300\n"
 "PO-Revision-Date: 2026-09-09 13:30+0000\n"
 "Last-Translator: Spotifast X contributors\n"
 "Language-Team: Simplified Chinese\n"
@@ -28,12 +28,12 @@ msgstr "暂停 {name}"
 msgid "Play {name}"
 msgstr "播放 {name}"
 
-#: src/ui/sidebar.rs:302 src/app.rs:3284 src/app.rs:21547
+#: src/ui/sidebar.rs:302 src/app.rs:3284 src/app.rs:21518
 #: src/ui/collection.rs:2119 src/ui/collection.rs:2336
 msgid "Playlist"
 msgstr "歌单"
 
-#: src/ui/sidebar.rs:312 src/ui/friends.rs:286 src/app.rs:3258 src/app.rs:21552
+#: src/ui/sidebar.rs:312 src/ui/friends.rs:286 src/app.rs:3258 src/app.rs:21523
 #: src/ui/collection.rs:2329 src/ui/home.rs:93 src/ui/keys.rs:245
 msgid "Liked Songs"
 msgstr "已赞歌曲"
@@ -313,7 +313,7 @@ msgid "Recent"
 msgstr "最近播放"
 
 #: src/ui/queue.rs:92 src/ui/queue.rs:241 src/ui/lyrics.rs:78
-#: src/ui/friends.rs:65 src/ui/mod.rs:574
+#: src/ui/friends.rs:65 src/ui/mod.rs:575
 msgid "Close"
 msgstr "关闭"
 
@@ -783,7 +783,7 @@ msgid "Queue cleared"
 msgstr "播放队列已清空"
 
 #. Translators: Keep {date} unchanged. It is a date in YYYY-MM-DD form.
-#: src/app.rs:5808 src/app.rs:21537
+#: src/app.rs:5808 src/app.rs:21508
 #, rust-format
 msgid "Queue {date}"
 msgstr "队列 {date}"
@@ -1113,7 +1113,7 @@ msgstr "无法上传封面：{error}。请重试。"
 
 #. Translators: Keep {track} unchanged. It is the name of the song,
 #. playlist, album, or artist the radio is based on, not translated.
-#: src/app.rs:21557 src/app/radio.rs:38
+#: src/app.rs:21528 src/app/radio.rs:38
 #, rust-format
 msgid "{track} Radio"
 msgstr "{track} 电台"
@@ -2123,7 +2123,7 @@ msgid ""
 "Personal Spotify app."
 msgstr "设置只需几分钟。之后也可以在“设置”的“个人 Spotify 应用”中找到。"
 
-#: src/ui/dialogs.rs:56 src/ui/mod.rs:418
+#: src/ui/dialogs.rs:56 src/ui/mod.rs:419
 msgid "Set up personal app"
 msgstr "设置个人应用"
 
@@ -2527,15 +2527,15 @@ msgstr "代理设置"
 msgid "Spotifast X {version} • not affiliated with Spotify"
 msgstr "Spotifast X {version} • 与 Spotify 无关"
 
-#: src/ui/mod.rs:383
+#: src/ui/mod.rs:384
 msgid "Close banner"
 msgstr "关闭横幅"
 
-#: src/ui/mod.rs:395
+#: src/ui/mod.rs:396
 msgid "Spotify is being slow on the shared app."
 msgstr "Spotify 在共享应用上响应很慢。"
 
-#: src/ui/mod.rs:406
+#: src/ui/mod.rs:407
 msgid ""
 "Set up your own personal Spotify app and you won't have to wait. It's free "
 "and takes a few minutes."
@@ -2543,19 +2543,19 @@ msgstr "设置你自己的个人 Spotify 应用，就不用再等了。它是免
 
 #. Translators: a button that opens a page explaining
 #. why the shared app is slow and what a personal app is.
-#: src/ui/mod.rs:427
+#: src/ui/mod.rs:428
 msgid "Why?"
 msgstr "为什么？"
 
-#: src/ui/mod.rs:571
+#: src/ui/mod.rs:572
 msgid "Minimize"
 msgstr "最小化"
 
-#: src/ui/mod.rs:572
+#: src/ui/mod.rs:573
 msgid "Maximize"
 msgstr "最大化"
 
-#: src/ui/mod.rs:573
+#: src/ui/mod.rs:574
 msgid "Restore"
 msgstr "还原"
 
