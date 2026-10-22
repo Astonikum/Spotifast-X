@@ -42,7 +42,10 @@ fn windows_packages_keep_the_forks_own_stable_upgrade_identity() {
     assert!(inno.contains("AppId={{27C41F04-736F-5218-9F62-736A70106ED4}"));
     assert!(inno.contains("#define AppIdentity \"SpotifastX\""));
     assert!(inno.contains("Software\\Classes\\SpotifastX.spotify"));
-    // HKCR includes both per-user and system-wide handlers.
-    assert!(msi.contains("Id=\"LinkCommand\" Root=\"HKCR\""));
+    // MSI searches each hive explicitly to preserve both handler scopes.
+    assert!(msi.contains("Id=\"LinkCommand\" Root=\"HKCU\""));
+    assert!(msi.contains("Id=\"MachineLinkCommand\" Root=\"HKLM\""));
+    assert!(msi.contains(r"Software\Classes\$(LinkScheme)\shell\open\command"));
+    assert!(msi.contains("(NOT LINKCOMMAND AND NOT MACHINELINKCOMMAND)"));
     assert!(inno.contains("RegQueryStringValue(HKCR, 'spotify\\shell\\open\\command'"));
 }
