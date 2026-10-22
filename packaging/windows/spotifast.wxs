@@ -148,11 +148,16 @@
 
     <!--
       The spotify: link command as it is now, and as this installation wrote
-      it, read before anything is removed.
+      it, read before anything is removed. Read HKCU explicitly: MSI
+      AppSearch does not merge the current user into an HKCR search.
     -->
     <Property Id="LINKCOMMAND">
-      <RegistrySearch Id="LinkCommand" Root="HKCR" Key="$(LinkScheme)\shell\open\command"
+      <RegistrySearch Id="LinkCommand" Root="HKCU" Key="Software\Classes\$(LinkScheme)\shell\open\command"
         Type="raw" />
+    </Property>
+    <Property Id="MACHINELINKCOMMAND">
+      <RegistrySearch Id="MachineLinkCommand" Root="HKLM"
+        Key="Software\Classes\$(LinkScheme)\shell\open\command" Type="raw" />
     </Property>
     <Property Id="OWNLINKCOMMAND">
       <RegistrySearch Id="OwnLinkCommand" Root="HKCU"
@@ -223,7 +228,7 @@
         and only while it still names this installation.
       -->
       <Component Id="SharedLinks" Guid=""
-        Condition="NOT LINKCOMMAND OR LINKCOMMAND ~= OWNLINKCOMMAND OR REMOVE">
+        Condition="(NOT LINKCOMMAND AND NOT MACHINELINKCOMMAND) OR LINKCOMMAND ~= OWNLINKCOMMAND OR REMOVE">
         <RegistryKey Root="HKCU" Key="Software\Classes\$(LinkScheme)">
           <RegistryValue Type="string" Value="URL:Spotify link" />
           <RegistryValue Name="URL Protocol" Type="string" Value="" />

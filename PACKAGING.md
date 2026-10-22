@@ -182,6 +182,8 @@ INSTALLFOLDER="<the app's folder>"` and accepts exit codes 0 and 3010. The packa
 - installs per user, without elevation, to `%LOCALAPPDATA%\Programs\SpotifastX`
   or `INSTALLFOLDER`. Run by hand, it finds the folder an earlier package or
   the setup program used.
+- preserves another client's Spotify link handler, registered for the user or
+  for the machine. Uninstall removes only Spotifast X's own link registration.
 - keeps one `UpgradeCode`, `{18C9FCBE-EA54-5950-A90D-2C892B456B93}`, forever.
   An update replaces the earlier version in one transaction, so a failed
   update restores it.

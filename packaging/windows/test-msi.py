@@ -151,9 +151,9 @@ def read_log(path):
     return data.decode("utf-16" if data.startswith(b"\xff\xfe") else "mbcs", errors="replace")
 
 
-def value(key, name=""):
+def value(key, name="", root=None):
     try:
-        with winreg.OpenKey(winreg.HKEY_CURRENT_USER, key) as handle:
+        with winreg.OpenKey(winreg.HKEY_CURRENT_USER if root is None else root, key) as handle:
             return winreg.QueryValueEx(handle, name)[0]
     except FileNotFoundError:
         return None
@@ -172,16 +172,17 @@ def set_value(key, name, data):
         winreg.SetValueEx(handle, name, 0, winreg.REG_SZ, data)
 
 
-def delete_tree(key):
+def delete_tree(key, root=None):
+    root = winreg.HKEY_CURRENT_USER if root is None else root
     try:
-        with winreg.OpenKey(winreg.HKEY_CURRENT_USER, key) as handle:
+        with winreg.OpenKey(root, key) as handle:
             while True:
                 try:
                     child = winreg.EnumKey(handle, 0)
                 except OSError:
                     break
-                delete_tree(rf"{key}\{child}")
-        winreg.DeleteKey(winreg.HKEY_CURRENT_USER, key)
+                delete_tree(rf"{key}\{child}", root)
+        winreg.DeleteKey(root, key)
     except FileNotFoundError:
         pass
 
@@ -433,6 +434,26 @@ class PackageTest(unittest.TestCase):
         self.assertSucceeded(self.uninstall(SECOND))
         self.assertEqual(value(LINK_COMMAND), other)
         self.assertFalse(key_exists(rf"Software\Classes\{IDENTITY}.spotify"))
+
+    def test_install_preserves_a_machine_clients_link_handler(self):
+        other = r'"C:\Original\Spotifast.exe" "%1"'
+        try:
+            handle = winreg.CreateKey(winreg.HKEY_LOCAL_MACHINE, LINK_COMMAND)
+        except PermissionError:
+            if os.environ.get("GITHUB_ACTIONS"):
+                raise
+            self.skipTest("machine handler fixture requires administrator rights")
+        self.addCleanup(delete_tree, rf"Software\Classes\{SCHEME}", winreg.HKEY_LOCAL_MACHINE)
+        with handle:
+            winreg.SetValueEx(handle, "", 0, winreg.REG_SZ, other)
+        for version in (FIRST, SECOND):
+            self.assertSucceeded(self.install_like_the_updater(version))
+            self.assertIsNone(value(LINK_COMMAND))
+            self.assertEqual(value(LINK_COMMAND, root=winreg.HKEY_LOCAL_MACHINE), other)
+            self.assertEqual(value(OWN_LINK_COMMAND), f'"{self.folder}\\spotifast.exe" "%1"')
+        self.assertSucceeded(self.uninstall(SECOND))
+        self.assertRemoved()
+        self.assertEqual(value(LINK_COMMAND, root=winreg.HKEY_LOCAL_MACHINE), other)
 
     def test_running_copy_stops_a_silent_uninstall_before_anything_goes(self):
         self.assertSucceeded(self.install_like_the_updater(FIRST))
