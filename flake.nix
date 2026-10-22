@@ -117,7 +117,7 @@
                 pname = "spotifast-x";
                 version = (pkgs.lib.importTOML ./Cargo.toml).package.version;
                 src = self;
-                hash = "sha256-ksOjfmz12n82sIxRAsSDqfvFF+53jcQd+/t/ONiD11o=";
+                hash = "sha256-lISYWmlHSRYFp4CBulizJN+Rj6tYFfPrT4fw4wpvrrw=";
               };
               nativeBuildInputs =
                 with pkgs;
