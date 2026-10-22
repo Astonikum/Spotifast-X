@@ -3,6 +3,11 @@ name: Release
 on:
   push:
     tags: ["v*"]
+  workflow_dispatch:
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
 
 permissions:
   contents: write
@@ -11,7 +16,22 @@ env:
   CARGO_TERM_COLOR: always
 
 jobs:
+  release-ref:
+    name: Validate release tag
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Require a versioned tag and written notes
+        shell: bash
+        run: |
+          [[ "$GITHUB_REF" == refs/tags/v* ]] || { echo 'Release requires a v* tag' >&2; exit 1; }
+          version=$(python3 -c 'import tomllib; print(tomllib.load(open("Cargo.toml", "rb"))["package"]["version"])')
+          test "$GITHUB_REF_NAME" = "v$version"
+          test "$(git rev-parse HEAD)" = "$(git rev-parse "$GITHUB_REF^{commit}")"
+          test -s "packaging/release-notes/$GITHUB_REF_NAME.md"
+
   build:
+    needs: release-ref
     name: build (${{ matrix.target }})
     runs-on: ${{ matrix.os }}
     strategy:
@@ -182,6 +202,7 @@ jobs:
           if-no-files-found: error
 
   macos:
+    needs: release-ref
     name: macOS universal app
     runs-on: macos-latest
     env:
