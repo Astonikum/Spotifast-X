@@ -51,9 +51,10 @@
               apple-sdk
             ]
             ++ lib.optionals stdenv.hostPlatform.isLinux [
+              bindgenHook
               dbus
               alsa-lib
-              libpulseaudio
+              pipewire
               libxkbcommon
               wayland
               libGL
@@ -116,14 +117,17 @@
                 pname = "spotifast-x";
                 version = (pkgs.lib.importTOML ./Cargo.toml).package.version;
                 src = self;
-                hash = "sha256-7Lf9+k0BO5LlzNFSs/y8fqkYMlCj8kytzjrtkL58c90=";
+                hash = "sha256-ksOjfmz12n82sIxRAsSDqfvFF+53jcQd+/t/ONiD11o=";
               };
               nativeBuildInputs =
                 with pkgs;
                 [
                   pkg-config
                 ]
-                ++ pkgs.lib.optionals pkgs.stdenv.hostPlatform.isLinux [ makeWrapper ]
+                ++ pkgs.lib.optionals pkgs.stdenv.hostPlatform.isLinux [
+                  bindgenHook
+                  makeWrapper
+                ]
                 ++ pkgs.lib.optionals pkgs.stdenv.hostPlatform.isDarwin [
                   rcodesign
                   icnsify
@@ -136,7 +140,9 @@
                   with pkgs;
                   [
                     alsa-lib
-                    libpulseaudio
+                    pipewire
+                    libGL
+                    libx11
                   ]
                 )
                 ++ pkgs.lib.optionals pkgs.stdenv.hostPlatform.isDarwin [ pkgs.apple-sdk ];
@@ -187,7 +193,7 @@
 
               meta = {
                 description = "Fast native Spotify client with local playback and Spotify Connect";
-                homepage = "https://spotifast.rocks";
+                homepage = "https://github.com/Astonikum/Spotifast-X";
                 license = pkgs.lib.licenses.mit;
                 mainProgram = "spotifast-x";
               };

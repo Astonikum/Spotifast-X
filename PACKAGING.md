@@ -182,11 +182,11 @@ INSTALLFOLDER="<the app's folder>"` and accepts exit codes 0 and 3010. The packa
 - installs per user, without elevation, to `%LOCALAPPDATA%\Programs\SpotifastX`
   or `INSTALLFOLDER`. Run by hand, it finds the folder an earlier package or
   the setup program used.
-- keeps one `UpgradeCode`, `{3DFFED43-88FE-4A31-9461-50BE03094316}`, forever.
+- keeps one `UpgradeCode`, `{18C9FCBE-EA54-5950-A90D-2C892B456B93}`, forever.
   An update replaces the earlier version in one transaction, so a failed
   update restores it.
 - takes over a setup program install in the same transaction. It replaces the
-  files, removes `unins000.*` and the `{FCED1EA0-EBF5-4C32-BA3B-A3AD724BACC3}_is1`
+  files, removes `unins000.*` and the `{27C41F04-736F-5218-9F62-736A70106ED4}_is1`
   uninstall entry, and keeps the Start menu entry and the desktop shortcut
   task. It never runs Inno's uninstaller, which would delete the package's files.
 - installs the `spotifast-installer.txt` marker the updater looks for.

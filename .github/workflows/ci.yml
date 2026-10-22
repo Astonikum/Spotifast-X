@@ -67,8 +67,8 @@ jobs:
       - name: GUI build dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y libasound2-dev libpulse-dev libxkbcommon-dev \
-            libwayland-dev libgl1-mesa-dev ruby
+          sudo apt-get install -y libasound2-dev libpipewire-0.3-dev libxkbcommon-dev \
+            libwayland-dev libgl1-mesa-dev cmake libclang-dev ruby
       # After the toolchain, so the cache key follows the pinned rustc. The
       # key carries no job name, so each job sets its own generation. Only
       # pushes to main save; a pull request restores and builds on top.
@@ -114,8 +114,8 @@ jobs:
         if: runner.os == 'Linux'
         run: |
           sudo apt-get update
-          sudo apt-get install -y libasound2-dev libpulse-dev libxkbcommon-dev \
-            libwayland-dev libgl1-mesa-dev
+          sudo apt-get install -y libasound2-dev libpipewire-0.3-dev libxkbcommon-dev \
+            libwayland-dev libgl1-mesa-dev cmake libclang-dev
       - name: MSVC environment
         if: runner.os == 'Windows'
         uses: ilammy/msvc-dev-cmd@v1

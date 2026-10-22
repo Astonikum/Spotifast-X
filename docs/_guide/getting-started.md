@@ -150,24 +150,25 @@ Build the single binary with Rust 1.98 or newer:
 cargo install --git https://github.com/Astonikum/Spotifast-X --locked
 ```
 
-On Linux, you need the development packages for
-ALSA, PulseAudio or PipeWire, and the windowing libraries. On Arch:
+On Linux, you need libclang for PipeWire bindings and the development packages for
+ALSA and PipeWire, and the windowing libraries. On Arch:
 
 ```bash
-sudo pacman -S --needed alsa-lib libpulse libxkbcommon wayland
+sudo pacman -S --needed alsa-lib pipewire libxkbcommon wayland cmake clang
 ```
 
 On Debian or Ubuntu:
 
 ```bash
-sudo apt install libasound2-dev libpulse-dev libxkbcommon-dev libwayland-dev
+sudo apt install libasound2-dev libpipewire-0.3-dev libxkbcommon-dev libwayland-dev \
+  cmake clang libclang-dev
 ```
 
 On Fedora:
 
 ```bash
-sudo dnf install alsa-lib-devel pulseaudio-libs-devel libxkbcommon-devel \
-  wayland-devel
+sudo dnf install alsa-lib-devel pipewire-devel libxkbcommon-devel \
+  wayland-devel cmake clang clang-devel
 ```
 
 With [Nix](https://nixos.org), `nix develop` in a checkout provides all of it,

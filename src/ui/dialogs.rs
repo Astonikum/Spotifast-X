@@ -41,7 +41,7 @@ pub fn show(app: &mut App, ctx: &egui::Context) {
                 // Drawn by cover_art above.
                 Dialog::CoverArt { .. } => {}
                 Dialog::PersonalAppIntro => {
-                    theme::text(ui, gettext(locale, "Spend less time waiting for Spotify"), theme::bold(20.0), palette.text);
+                    theme::text(ui, gettext(locale, "Spotify can be slow on the shared app"), theme::bold(20.0), palette.text);
                     ui.add_space(12.0);
                     for text in [
                         gettext(locale, "Spotifast X's default connection shares Spotify's request limit with other listeners. When it gets busy, loading music and using playback controls can take longer."),
@@ -56,7 +56,7 @@ pub fn show(app: &mut App, ctx: &egui::Context) {
                         if theme::pill_button(ui, &palette, &gettext(locale, "Set up personal app"), true).clicked() {
                             app.actions.push(Action::OpenPersonalAppSetup);
                         }
-                        if theme::pill_button(ui, &palette, &gettext(locale, "Keep shared app"), false).clicked() {
+                        if theme::pill_button(ui, &palette, &gettext(locale, "Not now"), false).clicked() {
                             app.actions.push(Action::CloseDialog);
                         }
                     });

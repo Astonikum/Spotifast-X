@@ -337,7 +337,7 @@ fn local_files_detail(app: &App) -> String {
     let Some(folder) = app.settings.local_files_folder() else {
         return gettext(
             locale,
-            "Play the local files your playlists list from a folder on this computer. Only 44.1 kHz files play.",
+            "Play the local files your playlists list from a folder on this computer.",
         )
         .into_owned();
     };
@@ -687,14 +687,6 @@ pub fn show(app: &mut App, ui: &mut egui::Ui) {
             gettext(locale, "Checks GitHub once a day. No personal data is sent."),
         ),
         RowText::new(
-            gettext(locale, "Audio output"),
-            gettext(
-                locale,
-                "PulseAudio also covers PipeWire. Rodio talks to ALSA directly.",
-            ),
-        )
-        .when(cfg!(target_os = "linux")),
-        RowText::new(
             gettext(locale, "Output buffer"),
             gettext(
                 locale,
@@ -877,7 +869,7 @@ pub fn show(app: &mut App, ui: &mut egui::Ui) {
             });
             // Applied by the app's next pass (App::sync_dock_icon).
             #[cfg(target_os = "macos")]
-            filtered_row(ui, &palette, &needle, &playback, &playback_rows[16], |ui| {
+            filtered_row(ui, &palette, &needle, &playback, &playback_rows[15], |ui| {
                 if widgets::switch(
                     ui,
                     &palette,
@@ -907,7 +899,7 @@ pub fn show(app: &mut App, ui: &mut egui::Ui) {
                     &palette,
                     &needle,
                     &playback,
-                    &playback_rows[17],
+                    &playback_rows[16],
                     choices_width,
                     |ui| {
                         let mut choose = |ui: &mut egui::Ui, icon: TrayIcon, label: &str| {
@@ -951,12 +943,12 @@ pub fn show(app: &mut App, ui: &mut egui::Ui) {
                     &palette,
                     &needle,
                     &playback,
-                    &playback_rows[18],
+                    &playback_rows[17],
                     start_choice,
                 );
             }
             #[cfg(target_os = "macos")]
-            filtered_row(ui, &palette, &needle, &playback, &playback_rows[14], |ui| {
+            filtered_row(ui, &palette, &needle, &playback, &playback_rows[13], |ui| {
                 if widgets::switch(
                     ui,
                     &palette,
@@ -980,7 +972,7 @@ pub fn show(app: &mut App, ui: &mut egui::Ui) {
                     changed = true;
                 }
             });
-            filtered_row(ui, &palette, &needle, &playback, &playback_rows[13], |ui| {
+            filtered_row(ui, &palette, &needle, &playback, &playback_rows[12], |ui| {
                 if widgets::switch(
                     ui,
                     &palette,
@@ -992,34 +984,8 @@ pub fn show(app: &mut App, ui: &mut egui::Ui) {
                     changed = true;
                 }
             });
-            if cfg!(target_os = "linux") {
-                filtered_row(ui, &palette, &needle, &playback, &playback_rows[8], |ui| {
-                    let current = app
-                        .settings
-                        .platform_backend()
-                        .unwrap_or_else(|| "rodio".into());
-                    ui.horizontal(|ui| {
-                        ui.spacing_mut().item_spacing.x = 6.0;
-                        for backend in ["rodio", "pulseaudio"] {
-                            let label = if backend == "pulseaudio" {
-                                "PulseAudio / PipeWire"
-                            } else {
-                                "ALSA (rodio)"
-                            };
-                            if theme::soft_button(ui, &palette, None, label, current == backend)
-                                .clicked()
-                                && current != backend
-                            {
-                                app.settings.audio_backend = Some(backend.to_string());
-                                changed = true;
-                                playback_dirty = true;
-                            }
-                        }
-                    });
-                });
-            }
             #[cfg(windows)]
-            filtered_row(ui, &palette, &needle, &playback, &playback_rows[9], |ui| {
+            filtered_row(ui, &palette, &needle, &playback, &playback_rows[8], |ui| {
                 ui.horizontal(|ui| {
                     ui.spacing_mut().item_spacing.x = 6.0;
                     let current = app.settings.audio_buffer_ms;
@@ -1055,7 +1021,7 @@ pub fn show(app: &mut App, ui: &mut egui::Ui) {
                 &palette,
                 &needle,
                 &playback,
-                &playback_rows[15],
+                &playback_rows[14],
                 folder_controls_width,
                 |ui| {
                     // The control area lays out right-to-left: add the rightmost item first.
@@ -1081,7 +1047,7 @@ pub fn show(app: &mut App, ui: &mut egui::Ui) {
                     }
                 },
             );
-            filtered_row(ui, &palette, &needle, &playback, &playback_rows[10], |ui| {
+            filtered_row(ui, &palette, &needle, &playback, &playback_rows[9], |ui| {
                 // The control area lays out right-to-left: add the rightmost item first.
                 ui.horizontal(|ui| {
                     ui.spacing_mut().item_spacing.x = 6.0;
@@ -1114,8 +1080,8 @@ pub fn show(app: &mut App, ui: &mut egui::Ui) {
             });
             ui.add_space(4.0);
             if playback_dirty
+                || playback_rows[10].matches(&needle, &playback)
                 || playback_rows[11].matches(&needle, &playback)
-                || playback_rows[12].matches(&needle, &playback)
             {
                 ui.horizontal(|ui| {
                     if playback_dirty {
@@ -2390,7 +2356,7 @@ mod tests {
         assert_eq!(
             RELEASE_NOTES_URL,
             format!(
-                "https://github.com/crmne/spotifast/releases/tag/v{}",
+                "https://github.com/Astonikum/Spotifast-X/releases/tag/v{}",
                 env!("CARGO_PKG_VERSION")
             )
         );

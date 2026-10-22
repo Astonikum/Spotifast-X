@@ -1070,7 +1070,11 @@ mod tests {
         let lines = |text: &str| text.replace("\r\n", "\n");
         assert_eq!(
             lines(include_str!("../contrib/omarchy/spotifast-theme")),
-            lines(&fastframe_theme::omarchy::hook_script("spotifast"))
+            lines(
+                &fastframe_theme::omarchy::hook_script("spotifast")
+                    .replace("/spotifast/themes", "/spotifastx/themes")
+                    .replace("spotifast reload-themes", "spotifast-x reload-themes"),
+            )
         );
         assert_eq!(
             lines(include_str!("../contrib/omarchy/spotifast.json.tpl")),
