@@ -126,6 +126,10 @@ immutable workflow reference, and the gem installation pins in the release and
 CI workflows together.
 Applications need no packaging Gemfile, lockfile or Ruby wrapper.
 
+The manual **Build MSI and DMG** workflow builds Windows x64 MSI and macOS
+universal DMG packages from the selected ref and saves them as Actions artifacts,
+without creating a tag or publishing a release.
+
 ## Automatic macOS notarization
 
 The macOS release job builds the app first, then selects

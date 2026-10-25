@@ -1,0 +1,132 @@
+name: Build MSI and DMG
+'on':
+  workflow_dispatch: null
+permissions:
+  contents: read
+jobs:
+  windows:
+    name: build (${{ matrix.target }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+        - os: windows-latest
+          target: x86_64-pc-windows-msvc
+          msvc-arch: x64
+          pe-machine: 8664 machine \(x64\)
+          package-target: windows-amd64
+    steps:
+    - uses: actions/checkout@v7
+    - name: Read package version
+      shell: bash
+      run: |-
+        version=$(python3 -c 'import tomllib; print(tomllib.load(open("Cargo.toml", "rb"))["package"]["version"])')
+        echo "PACKAGE_VERSION=$version" >> "$GITHUB_ENV"
+    - uses: dtolnay/rust-toolchain@stable
+      with:
+        targets: ${{ matrix.target }}
+    - run: rustup target add ${{ matrix.target }}
+    - name: MSVC environment
+      if: runner.os == 'Windows'
+      uses: ilammy/msvc-dev-cmd@v1
+      with:
+        arch: ${{ matrix.msvc-arch }}
+    - run: cargo build --locked --release --target ${{ matrix.target }} ${{ matrix.features }}
+    - name: Verify standalone Windows runtime
+      if: runner.os == 'Windows'
+      shell: pwsh
+      run: |
+        $binary = "target\${{ matrix.target }}\release\spotifast.exe"
+        $imports = & dumpbin /dependents $binary | Out-String
+        $runtime = $imports | Select-String -Pattern 'MSVCP[0-9_]*\.dll|VCRUNTIME[0-9_]*\.dll'
+        if ($runtime) { throw "Spotifast X imports an MSVC runtime:`n$runtime" }
+        # The updater picks its download by the running executable's
+        # architecture, so a binary of the wrong one under this name would
+        # keep every copy installed from it on the wrong architecture.
+        $headers = & dumpbin /headers $binary | Out-String
+        if ($headers -notmatch '${{ matrix.pe-machine }}') { throw "$binary is not built for ${{ matrix.target }}:`n$headers" }
+        # Each Windows build runs on its own processor: start it once.
+        $version = (& $binary --version | Out-String).Trim()
+        if ($version -notmatch '^spotifast \d+\.\d+\.\d+') { throw "Unexpected --version output: $version" }
+    - uses: ruby/setup-ruby@v1
+      if: runner.os == 'Windows'
+      with:
+        ruby-version: '4.0'
+    - name: Windows Installer package
+      if: runner.os == 'Windows'
+      shell: pwsh
+      run: |
+        dotnet tool install wix --version 5.0.2 --tool-path "$env:RUNNER_TEMP\wix"
+        if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+        $env:PATH = "$env:RUNNER_TEMP\wix;$env:PATH"
+        gem install native-packages --version 0.10.0 --no-document
+        if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+        $version = $env:PACKAGE_VERSION
+        $payload = "dist\msi-input-${{ matrix.target }}"
+        New-Item -ItemType Directory -Force $payload | Out-Null
+        $files = "target\${{ matrix.target }}\release\spotifast.exe", "README.md", "LICENSE", "packaging\windows\spotifast-installer.txt"
+        Copy-Item $files $payload
+        $packages = "$env:RUNNER_TEMP\windows-packages"
+        native-packages build --version $version --target ${{ matrix.package-target }} --defer-recipes --output $packages
+        if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+        Copy-Item "$packages\packages\${{ matrix.package-target }}\msi\*.msi" dist\
+    - uses: actions/upload-artifact@v7
+      with:
+        name: windows-msi
+        path: dist/*.msi
+        if-no-files-found: error
+  macos:
+    name: macOS universal app
+    runs-on: macos-latest
+    env:
+      APPLE_CERTIFICATE_P12: ${{ secrets.APPLE_CERTIFICATE_P12 }}
+      APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+      APPLE_SIGNING_IDENTITY: ${{ secrets.APPLE_SIGNING_IDENTITY }}
+      APPLE_ID: ${{ secrets.APPLE_ID }}
+      APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+      APPLE_APP_PASSWORD: ${{ secrets.APPLE_APP_PASSWORD }}
+    steps:
+    - uses: actions/checkout@v7
+    - name: Read package version
+      shell: bash
+      run: |-
+        version=$(python3 -c 'import tomllib; print(tomllib.load(open("Cargo.toml", "rb"))["package"]["version"])')
+        echo "PACKAGE_VERSION=$version" >> "$GITHUB_ENV"
+    - uses: dtolnay/rust-toolchain@stable
+      with:
+        targets: aarch64-apple-darwin,x86_64-apple-darwin
+    - run: rustup target add aarch64-apple-darwin x86_64-apple-darwin
+    - name: Build both architectures
+      run: |
+        cargo build --locked --release --target aarch64-apple-darwin
+        cargo build --locked --release --target x86_64-apple-darwin
+    - name: Universal binary
+      run: |
+        mkdir -p universal
+        lipo -create \
+          target/aarch64-apple-darwin/release/spotifast \
+          target/x86_64-apple-darwin/release/spotifast \
+          -output universal/spotifast
+    - uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: '4.0'
+    - name: Install native packaging
+      run: gem install native-packages --version 0.10.0 --no-document
+    - name: App bundle
+      run: |
+        version="${PACKAGE_VERSION}"
+        mkdir -p dist/macos-input
+        bash packaging/macos/bundle.sh universal/spotifast "dist/macos-input/Spotifast X.app" "$version"
+        cp README.md LICENSE dist/macos-input/
+    - name: Package, sign and notarize macOS app
+      run: |
+        native-packages build \
+          --version "${PACKAGE_VERSION}" --target macos-universal --defer-recipes \
+          --output "$RUNNER_TEMP/macos-packages"
+        cp "$RUNNER_TEMP/macos-packages/packages/macos-universal/dmg/"*.dmg dist/
+    - uses: actions/upload-artifact@v7
+      with:
+        name: macos-universal
+        path: dist/*.dmg
+        if-no-files-found: error
